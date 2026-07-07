@@ -17,7 +17,9 @@
       --line: #e8e8e4;
       --accent: #0f766e;
       --accent-soft: #ecfdf5;
-      --sidebar-w: 272px;
+      --sidebar-w: 260px;
+      --sidebar-rail: 3.25rem;
+      --sidebar-current: var(--sidebar-rail);
       --content-max: 780px;
       --ease: cubic-bezier(0.4, 0, 0.2, 1);
       --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -34,104 +36,95 @@
     .shell { min-height: 100vh; }
     nav#toc {
       position: fixed; inset: 0 auto 0 0;
-      width: var(--sidebar-w);
+      width: var(--sidebar-rail);
       background: var(--surface);
       border-right: 1px solid var(--line);
-      padding: 0 0 2rem;
+      padding: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       font-size: 0.8125rem;
       z-index: 200;
-      transform: translateX(-100%);
-      transition: transform 0.28s var(--ease);
+      transition: width 0.25s var(--ease);
     }
-    body.sidebar-open nav#toc { transform: translateX(0); }
-    .sidebar-tab {
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 220;
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      height: 2.75rem;
-      padding: 0 0.85rem;
-      background: var(--surface);
-      border: none;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      border-radius: 0 0 6px 0;
-      cursor: pointer;
-      font: inherit;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--text);
+    body.sidebar-open {
+      --sidebar-current: var(--sidebar-w);
     }
-    .sidebar-tab:hover { background: var(--bg); }
-    .sidebar-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-    body.sidebar-open .sidebar-tab { display: none; }
-    .sidebar-tab svg { flex-shrink: 0; color: var(--muted); }
+    body.sidebar-open nav#toc { width: var(--sidebar-w); }
     .toc-head {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.85rem 1rem;
+      gap: 0.65rem;
+      padding: 0.65rem 0.75rem;
       border-bottom: 1px solid var(--line);
       flex-shrink: 0;
       min-height: 2.75rem;
     }
-    .sidebar-close {
+    body:not(.sidebar-open) .toc-head { justify-content: center; padding-inline: 0.5rem; }
+    .sidebar-toggle {
       flex-shrink: 0;
-      width: 1.625rem;
-      height: 1.625rem;
+      width: 2rem;
+      height: 2rem;
       border: none;
       background: transparent;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       color: var(--muted);
-      font-size: 1.25rem;
-      line-height: 1;
       display: grid;
       place-items: center;
     }
-    .sidebar-close:hover { background: var(--bg); color: var(--text); }
-    .sidebar-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .sidebar-toggle:hover { background: var(--bg); color: var(--text); }
+    .sidebar-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .sidebar-toggle .tog-close { display: none; }
+    body.sidebar-open .sidebar-toggle .tog-open { display: none; }
+    body.sidebar-open .sidebar-toggle .tog-close { display: block; }
     .toc-title {
       font-size: 0.6875rem;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
     }
+    body:not(.sidebar-open) .toc-title { display: none; }
     .toc-scroll {
       overflow-y: auto;
-      padding: 0.5rem 1rem 1rem;
+      overflow-x: hidden;
+      padding: 0.35rem 0.65rem 1rem;
       flex: 1;
     }
+    body:not(.sidebar-open) .toc-scroll { padding-inline: 0.35rem; }
     nav#toc .label { display: none; }
     nav#toc a {
       display: block;
       color: var(--text);
       text-decoration: none;
-      padding: 0.3rem 0.55rem;
+      padding: 0.35rem 0.5rem;
       border-radius: 6px;
-      line-height: 1.4;
+      line-height: 1.35;
     }
     nav#toc a:hover { background: var(--bg); }
     nav#toc a.active { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
-    nav#toc .part { font-weight: 600; margin-top: 0.75rem; color: var(--text); }
-    nav#toc .sub { padding-left: 0.85rem; color: var(--muted); font-weight: 400; }
+    nav#toc .part { font-weight: 600; margin-top: 0.4rem; color: var(--text); }
+    nav#toc .sub { padding-left: 0.75rem; color: var(--muted); font-weight: 400; font-size: 0.8rem; }
     nav#toc .sub:hover { color: var(--text); }
+    .toc-full { display: inline; }
+    .toc-short { display: none; }
+    body:not(.sidebar-open) nav#toc .toc-full { display: none; }
+    body:not(.sidebar-open) nav#toc .toc-short { display: block; }
+    body:not(.sidebar-open) nav#toc .sub { display: none; }
+    body:not(.sidebar-open) nav#toc .part {
+      text-align: center;
+      padding: 0.45rem 0.15rem;
+      font-size: 0.75rem;
+      letter-spacing: -0.02em;
+    }
     main {
       min-height: 100vh;
-      padding: 3.5rem max(1.25rem, calc((100vw - var(--content-max)) / 2)) 6rem;
-      transition: padding 0.28s var(--ease);
-    }
-    body.sidebar-open main {
-      padding-left: calc(var(--sidebar-w) + max(1.25rem, (100vw - var(--sidebar-w) - var(--content-max)) / 2));
-      padding-right: max(1.25rem, calc((100vw - var(--sidebar-w) - var(--content-max)) / 2));
+      padding: 2.75rem max(1.25rem, calc((100vw - var(--sidebar-current) - var(--content-max)) / 2)) 6rem;
+      padding-left: calc(var(--sidebar-current) + max(1.25rem, (100vw - var(--sidebar-current) - var(--content-max)) / 2));
+      transition: padding 0.25s var(--ease);
     }
     .content {
       width: 100%;
@@ -218,25 +211,6 @@
       border-top: 1px solid var(--line);
       color: var(--muted);
       font-size: 0.8125rem;
-    }
-    .sidebar-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.18);
-      z-index: 150;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.28s var(--ease);
-    }
-    body.sidebar-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
-    @media (min-width: 1100px) {
-      body.sidebar-open .sidebar-backdrop { display: none; }
-    }
-    @media (max-width: 1099px) {
-      body.sidebar-open main {
-        padding-left: max(1.25rem, calc((100vw - var(--content-max)) / 2));
-        padding-right: max(1.25rem, calc((100vw - var(--content-max)) / 2));
-      }
     }
     /* —— Audio reader —— */
     .reader-fab {
@@ -491,14 +465,6 @@
   </style>
 </head>
 <body>
-<div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
-
-<button class="sidebar-tab" id="sidebar-open" type="button" aria-controls="toc-links" aria-expanded="false" aria-label="Open menu">
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-    <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-  </svg>
-  Menu
-</button>
 
 <button class="reader-fab" id="reader-fab" type="button" aria-label="Open audio reader" aria-expanded="false" aria-controls="reader-panel">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -544,53 +510,60 @@
 <div class="shell">
   <nav id="toc">
     <div class="toc-head">
+      <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-controls="toc-links" aria-expanded="false" aria-label="Expand sidebar">
+        <svg class="tog-open" width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg class="tog-close" width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 4L6 8l4 4M13 4v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
       <span class="toc-title">Contents</span>
-      <button class="sidebar-close" id="sidebar-close" type="button" aria-label="Close menu">&times;</button>
     </div>
     <div class="toc-scroll" id="toc-links">
-    <a class="part" href="#intro">Introduction</a>
-    <a class="part" href="#logic">I · Logic &amp; Proof</a>
+    <a class="part" href="#intro" title="Introduction"><span class="toc-full">Introduction</span><span class="toc-short">⌂</span></a>
+    <a class="part" href="#logic" title="Logic &amp; Proof"><span class="toc-full">I · Logic &amp; Proof</span><span class="toc-short">I</span></a>
     <a class="sub" href="#propositional">Propositional logic</a>
     <a class="sub" href="#predicate">Predicate logic</a>
     <a class="sub" href="#proofs">Proof techniques</a>
-    <a class="part" href="#discrete">II · Discrete Structures</a>
+    <a class="part" href="#discrete" title="Discrete Structures"><span class="toc-full">II · Discrete Structures</span><span class="toc-short">II</span></a>
     <a class="sub" href="#sets">Sets &amp; functions</a>
     <a class="sub" href="#relations">Relations</a>
     <a class="sub" href="#combinatorics">Combinatorics</a>
     <a class="sub" href="#graphs">Graph theory</a>
-    <a class="part" href="#numbers">III · Number Theory</a>
+    <a class="part" href="#numbers" title="Number Theory"><span class="toc-full">III · Number Theory</span><span class="toc-short">III</span></a>
     <a class="sub" href="#divisibility">Divisibility &amp; GCD</a>
     <a class="sub" href="#modular">Modular arithmetic</a>
     <a class="sub" href="#crypto-math">Cryptography</a>
-    <a class="part" href="#probability">IV · Probability</a>
+    <a class="part" href="#probability" title="Probability"><span class="toc-full">IV · Probability</span><span class="toc-short">IV</span></a>
     <a class="sub" href="#prob-basics">Axioms &amp; rules</a>
     <a class="sub" href="#conditional">Bayes &amp; independence</a>
     <a class="sub" href="#rv">Random variables</a>
     <a class="sub" href="#distributions">Distributions</a>
     <a class="sub" href="#markov-chains">Markov chains</a>
-    <a class="part" href="#linear">V · Linear Algebra</a>
+    <a class="part" href="#linear" title="Linear Algebra"><span class="toc-full">V · Linear Algebra</span><span class="toc-short">V</span></a>
     <a class="sub" href="#vectors">Vectors &amp; matrices</a>
     <a class="sub" href="#systems">Linear systems</a>
     <a class="sub" href="#eigen">Eigenvalues &amp; SVD</a>
-    <a class="part" href="#calculus">VI · Calculus for CS</a>
+    <a class="part" href="#calculus" title="Calculus for CS"><span class="toc-full">VI · Calculus for CS</span><span class="toc-short">VI</span></a>
     <a class="sub" href="#derivatives">Derivatives &amp; gradients</a>
     <a class="sub" href="#optimization">Optimization</a>
-    <a class="part" href="#analysis">VII · Algorithm Analysis</a>
+    <a class="part" href="#analysis" title="Algorithm Analysis"><span class="toc-full">VII · Algorithm Analysis</span><span class="toc-short">VII</span></a>
     <a class="sub" href="#asymptotic">Asymptotic notation</a>
     <a class="sub" href="#summations">Summations &amp; logs</a>
     <a class="sub" href="#recurrences">Recurrences</a>
-    <a class="part" href="#boolean">VIII · Boolean Algebra</a>
-    <a class="part" href="#formal">IX · Formal Languages</a>
-    <a class="part" href="#info">X · Information Theory</a>
-    <a class="part" href="#computability">XI · Computability</a>
-    <a class="part" href="#ml">XII · ML &amp; Language Models</a>
+    <a class="part" href="#boolean" title="Boolean Algebra"><span class="toc-full">VIII · Boolean Algebra</span><span class="toc-short">VIII</span></a>
+    <a class="part" href="#formal" title="Formal Languages"><span class="toc-full">IX · Formal Languages</span><span class="toc-short">IX</span></a>
+    <a class="part" href="#info" title="Information Theory"><span class="toc-full">X · Information Theory</span><span class="toc-short">X</span></a>
+    <a class="part" href="#computability" title="Computability"><span class="toc-full">XI · Computability</span><span class="toc-short">XI</span></a>
+    <a class="part" href="#ml" title="ML &amp; Language Models"><span class="toc-full">XII · ML &amp; Language Models</span><span class="toc-short">XII</span></a>
     <a class="sub" href="#ml-overview">How LLMs use math</a>
     <a class="sub" href="#embeddings">Embeddings</a>
     <a class="sub" href="#softmax-ce">Softmax &amp; cross-entropy</a>
     <a class="sub" href="#training">Training &amp; backprop</a>
     <a class="sub" href="#attention">Attention &amp; transformers</a>
     <a class="sub" href="#inference">Inference &amp; perplexity</a>
-    <a class="part" href="#reference">Quick Reference</a>
+    <a class="part" href="#reference" title="Quick Reference"><span class="toc-full">Quick Reference</span><span class="toc-short">Ref</span></a>
     </div>
   </nav>
 
@@ -1214,16 +1187,14 @@
 <script>
 (function(){
   const body = document.body;
-  const openBtn = document.getElementById('sidebar-open');
-  const closeBtn = document.getElementById('sidebar-close');
-  const backdrop = document.getElementById('sidebar-backdrop');
+  const toggle = document.getElementById('sidebar-toggle');
   const mq = window.matchMedia('(min-width: 1100px)');
   const KEY = 'cs-math-sidebar';
 
   function setOpen(open) {
     body.classList.toggle('sidebar-open', open);
-    openBtn.setAttribute('aria-expanded', String(open));
-    backdrop.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Collapse sidebar' : 'Expand sidebar');
     try { localStorage.setItem(KEY, open ? '1' : '0'); } catch (_) {}
   }
 
@@ -1235,12 +1206,10 @@
 
   setOpen(defaultOpen());
 
-  openBtn.addEventListener('click', () => setOpen(true));
-  closeBtn.addEventListener('click', () => setOpen(false));
-  backdrop.addEventListener('click', () => setOpen(false));
+  toggle.addEventListener('click', () => setOpen(!body.classList.contains('sidebar-open')));
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.getElementById('reader-panel')?.classList.contains('open')) return;
-    if (e.key === 'Escape') setOpen(false);
+    if (e.key === 'Escape' && body.classList.contains('sidebar-open')) setOpen(false);
   });
 
   mq.addEventListener('change', e => {
@@ -1249,7 +1218,7 @@
 
   document.querySelectorAll('nav#toc a[href^="#"]').forEach(a => {
     a.addEventListener('click', () => {
-      if (!mq.matches) setOpen(false);
+      if (!mq.matches && body.classList.contains('sidebar-open')) setOpen(false);
     });
   });
 
