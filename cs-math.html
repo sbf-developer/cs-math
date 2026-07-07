@@ -18,7 +18,6 @@
       --accent: #0f766e;
       --accent-soft: #ecfdf5;
       --sidebar-w: 272px;
-      --tab-w: 42px;
       --content-max: 780px;
       --ease: cubic-bezier(0.4, 0, 0.2, 1);
       --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -44,10 +43,42 @@
       flex-direction: column;
       font-size: 0.8125rem;
       z-index: 200;
-      transform: translateX(calc(-1 * (var(--sidebar-w) - var(--tab-w))));
+      transform: translateX(-100%);
       transition: transform 0.28s var(--ease);
     }
     body.sidebar-open nav#toc { transform: translateX(0); }
+    .sidebar-edge-toggle {
+      position: fixed;
+      left: 0;
+      top: 1rem;
+      z-index: 220;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.7rem 0.5rem 0.55rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+      box-shadow: 2px 1px 10px rgba(0,0,0,0.07);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: left 0.28s var(--ease), background 0.2s, box-shadow 0.2s;
+    }
+    .sidebar-edge-toggle:hover { background: var(--accent-soft); color: var(--accent); }
+    .sidebar-edge-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    body.sidebar-open .sidebar-edge-toggle { left: var(--sidebar-w); }
+    .sidebar-edge-toggle .chev {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.28s var(--ease);
+    }
+    body.sidebar-open .sidebar-edge-toggle .chev { transform: rotate(180deg); }
+    .sidebar-edge-label { white-space: nowrap; }
     .toc-head {
       display: flex;
       align-items: center;
@@ -63,11 +94,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      transition: opacity 0.2s;
     }
-    body:not(.sidebar-open) .toc-title { opacity: 0; width: 0; }
     .toc-scroll {
       overflow-y: auto;
       padding: 0.5rem 1rem 1rem;
@@ -182,24 +209,6 @@
       color: var(--muted);
       font-size: 0.8125rem;
     }
-    .sidebar-toggle {
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      width: 1.75rem;
-      height: 1.75rem;
-      background: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      cursor: pointer;
-      color: var(--muted);
-      transition: color 0.2s, border-color 0.2s, transform 0.28s var(--ease);
-    }
-    .sidebar-toggle:hover { color: var(--text); border-color: #ccc; }
-    .sidebar-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    body.sidebar-open .sidebar-toggle { transform: rotate(180deg); }
-    body:not(.sidebar-open) .toc-head { justify-content: center; padding-inline: 0; }
-    .sidebar-toggle svg { display: block; }
     .sidebar-backdrop {
       position: fixed;
       inset: 0;
@@ -219,17 +228,257 @@
         padding-right: max(1.25rem, calc((100vw - var(--content-max)) / 2));
       }
     }
+    /* —— Audio reader —— */
+    .reader-fab {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 320;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: grid;
+      place-items: center;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--muted);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .reader-fab:hover { color: var(--accent); border-color: #ccc; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .reader-fab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .reader-fab.is-active { color: var(--accent); background: var(--accent-soft); border-color: #99dccf; }
+    .reader-fab.is-playing { box-shadow: 0 0 0 3px var(--accent-soft); }
+    .reader-panel {
+      position: fixed;
+      top: 4rem;
+      right: 1rem;
+      z-index: 310;
+      width: min(340px, calc(100vw - 2rem));
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.22s var(--ease), transform 0.22s var(--ease);
+    }
+    .reader-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .reader-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.85rem;
+    }
+    .reader-head h2 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .reader-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.25rem;
+      line-height: 1;
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+    }
+    .reader-close:hover { color: var(--text); background: var(--bg); }
+    .reader-transport {
+      display: flex;
+      gap: 0.45rem;
+      margin-bottom: 0.85rem;
+    }
+    .reader-transport button {
+      flex: 1;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      font: inherit;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .reader-transport button:hover { border-color: #ccc; }
+    .reader-transport button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .reader-transport button.primary:hover { background: #0d6b63; }
+    .reader-transport button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .reader-time-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 0.35rem;
+    }
+    .reader-scrub {
+      width: 100%;
+      height: 1.35rem;
+      margin: 0 0 0.35rem;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .reader-now {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.35;
+      min-height: 2.5em;
+      margin-bottom: 0.85rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .reader-field { margin-bottom: 0.75rem; }
+    .reader-field label {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .reader-field input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .reader-rate-val {
+      float: right;
+      font-weight: 500;
+      color: var(--text);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .reader-search {
+      width: 100%;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.8125rem;
+      background: var(--bg);
+      margin-bottom: 0.45rem;
+    }
+    .reader-search:focus {
+      outline: 2px solid var(--accent-soft);
+      border-color: var(--accent);
+    }
+    .reader-voices {
+      max-height: 140px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+    }
+    .reader-voice {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.45rem 0.65rem;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      font: inherit;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .reader-voice:last-child { border-bottom: none; }
+    .reader-voice:hover { background: var(--surface); }
+    .reader-voice.selected { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+    .reader-voice small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.6875rem;
+      margin-top: 0.1rem;
+    }
+    .reader-note {
+      font-size: 0.6875rem;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-top: 0.65rem;
+    }
+    .content [data-speech].reading-active {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 6px;
+      background: var(--accent-soft);
+    }
   </style>
 </head>
 <body>
 <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+
+<button class="sidebar-edge-toggle" id="sidebar-toggle" type="button" aria-controls="toc-links" aria-expanded="false" aria-label="Open table of contents">
+  <span class="chev" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2.5 9.5 7 5 11.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </span>
+  <span class="sidebar-edge-label">Menu</span>
+</button>
+
+<button class="reader-fab" id="reader-fab" type="button" aria-label="Open audio reader" aria-expanded="false" aria-controls="reader-panel">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M11 5L6 9H2v6h4l5 4V5z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+    <path d="M15.5 8.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+    <path d="M18 6a8.5 8.5 0 010 12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+  </svg>
+</button>
+
+<div class="reader-panel" id="reader-panel" role="dialog" aria-label="Audio reader" hidden>
+  <div class="reader-head">
+    <h2>Listen</h2>
+    <button class="reader-close" id="reader-close" type="button" aria-label="Close">&times;</button>
+  </div>
+  <div class="reader-transport">
+    <button type="button" class="primary" id="reader-play">Play</button>
+    <button type="button" id="reader-pause" disabled>Pause</button>
+    <button type="button" id="reader-stop" disabled>Stop</button>
+  </div>
+  <div class="reader-time-row">
+    <span id="reader-elapsed">0:00</span>
+    <span id="reader-total">0:00</span>
+  </div>
+  <input class="reader-scrub" id="reader-scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Seek timeline">
+  <div class="reader-now" id="reader-now">Ready — uses your browser’s built-in voices (Edge, Chrome, etc.).</div>
+  <div class="reader-field">
+    <label>Speed <span class="reader-rate-val" id="reader-rate-val">1.0×</span></label>
+    <input type="range" id="reader-rate" min="0.5" max="2" step="0.1" value="1">
+  </div>
+  <div class="reader-field">
+    <label>Voice</label>
+    <input class="reader-search" id="reader-voice-search" type="search" placeholder="Search voices…" autocomplete="off">
+    <div class="reader-voices" id="reader-voices" role="listbox" aria-label="Available voices"></div>
+  </div>
+  <p class="reader-note">Drag the timeline to jump ahead or back. Math is read as plain text from the page.</p>
+</div>
+
 <div class="shell">
   <nav id="toc">
     <div class="toc-head">
       <span class="toc-title">Contents</span>
-      <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-controls="toc-links" aria-expanded="false" aria-label="Toggle table of contents">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 2.5 9.5 7 5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
     </div>
     <div class="toc-scroll" id="toc-links">
     <a class="part" href="#intro">Introduction</a>
@@ -906,6 +1155,8 @@
   function setOpen(open) {
     body.classList.toggle('sidebar-open', open);
     toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close table of contents' : 'Open table of contents');
+    toggle.querySelector('.sidebar-edge-label').textContent = open ? 'Close' : 'Menu';
     backdrop.hidden = !open;
     try { localStorage.setItem(KEY, open ? '1' : '0'); } catch (_) {}
   }
@@ -921,6 +1172,7 @@
   toggle.addEventListener('click', () => setOpen(!body.classList.contains('sidebar-open')));
   backdrop.addEventListener('click', () => setOpen(false));
   document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('reader-panel')?.classList.contains('open')) return;
     if (e.key === 'Escape') setOpen(false);
   });
 
@@ -946,6 +1198,315 @@
     });
   }, { rootMargin: '-40% 0px -55% 0px' });
   sections.forEach(s => obs.observe(s));
+})();
+
+(function readerModule(){
+  if (!('speechSynthesis' in window)) return;
+
+  const WPM = 155;
+  const KEY = 'cs-math-reader';
+  const fab = document.getElementById('reader-fab');
+  const panel = document.getElementById('reader-panel');
+  const closeBtn = document.getElementById('reader-close');
+  const playBtn = document.getElementById('reader-play');
+  const pauseBtn = document.getElementById('reader-pause');
+  const stopBtn = document.getElementById('reader-stop');
+  const scrub = document.getElementById('reader-scrub');
+  const elapsedEl = document.getElementById('reader-elapsed');
+  const totalEl = document.getElementById('reader-total');
+  const nowEl = document.getElementById('reader-now');
+  const rateInput = document.getElementById('reader-rate');
+  const rateVal = document.getElementById('reader-rate-val');
+  const voiceSearch = document.getElementById('reader-voice-search');
+  const voiceList = document.getElementById('reader-voices');
+  const content = document.querySelector('.content');
+
+  let segments = [];
+  let voices = [];
+  let currentIndex = 0;
+  let playing = false;
+  let paused = false;
+  let scrubbing = false;
+  let selectedVoiceURI = null;
+  let prefs = { rate: 1, voiceURI: null };
+
+  try { prefs = { ...prefs, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch (_) {}
+
+  function savePrefs() {
+    try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (_) {}
+  }
+
+  function fmt(sec) {
+    sec = Math.max(0, Math.floor(sec));
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    if (h) return h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function speechText(el) {
+    const clone = el.cloneNode(true);
+    clone.querySelectorAll('.katex-mathml, script, style').forEach(n => n.remove());
+    let t = (clone.textContent || '').replace(/\s+/g, ' ').trim();
+    t = t.replace(/→/g, ' implies ').replace(/∀/g, ' for all ').replace(/∃/g, ' there exists ')
+         .replace(/≤/g, ' less than or equal ').replace(/≥/g, ' greater than or equal ')
+         .replace(/≠/g, ' not equal ').replace(/≈/g, ' approximately ').replace(/·/g, ', ');
+    return t;
+  }
+
+  function buildSegments() {
+    const nodes = content.querySelectorAll('h2, h3, h4, p, li, .plain, .box, td, footer');
+    const out = [];
+    nodes.forEach(el => {
+      if (el.closest('nav, .reader-panel')) return;
+      const text = speechText(el);
+      if (text.length < 4) return;
+      el.setAttribute('data-speech', '');
+      const words = text.split(/\s+/).length;
+      out.push({ el, text, words, duration: (words / WPM) * 60 });
+    });
+    let t = 0;
+    out.forEach(s => { s.start = t; t += s.duration; });
+    return out;
+  }
+
+  function recalcDurations() {
+    const rate = parseFloat(rateInput.value) || 1;
+    let t = 0;
+    segments.forEach(s => {
+      s.duration = (s.words / WPM) * 60 / rate;
+      s.start = t;
+      t += s.duration;
+    });
+    const total = t || 0;
+    scrub.max = Math.max(0, Math.ceil(total));
+    totalEl.textContent = fmt(total);
+    return total;
+  }
+
+  function indexAtTime(sec) {
+    for (let i = segments.length - 1; i >= 0; i--) {
+      if (sec >= segments[i].start) return i;
+    }
+    return 0;
+  }
+
+  function timeAtIndex(i) {
+    return segments[i] ? segments[i].start : 0;
+  }
+
+  function setHighlight(i) {
+    content.querySelectorAll('.reading-active').forEach(n => n.classList.remove('reading-active'));
+    if (segments[i]) {
+      segments[i].el.classList.add('reading-active');
+      segments[i].el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function updateUI() {
+    const t = timeAtIndex(currentIndex);
+    if (!scrubbing) scrub.value = Math.floor(t);
+    elapsedEl.textContent = fmt(scrub.value);
+    nowEl.textContent = playing || paused
+      ? (segments[currentIndex]?.text.slice(0, 120) + (segments[currentIndex]?.text.length > 120 ? '…' : ''))
+      : 'Ready — pick a voice and press Play.';
+    playBtn.textContent = playing && !paused ? 'Playing' : (paused ? 'Resume' : 'Play');
+    playBtn.classList.toggle('primary', !playing || paused);
+    pauseBtn.disabled = !playing;
+    stopBtn.disabled = !playing && !paused && currentIndex === 0;
+    fab.classList.toggle('is-playing', playing && !paused);
+    fab.classList.toggle('is-active', panel.classList.contains('open'));
+  }
+
+  function stop() {
+    speechSynthesis.cancel();
+    playing = false;
+    paused = false;
+    updateUI();
+  }
+
+  function speakFrom(index) {
+    if (!segments.length) return;
+    currentIndex = Math.min(index, segments.length - 1);
+    speechSynthesis.cancel();
+    playing = true;
+    paused = false;
+    setHighlight(currentIndex);
+    updateUI();
+
+    function next() {
+      if (!playing || currentIndex >= segments.length) {
+        playing = false;
+        paused = false;
+        updateUI();
+        return;
+      }
+      const seg = segments[currentIndex];
+      setHighlight(currentIndex);
+      nowEl.textContent = seg.text.slice(0, 140) + (seg.text.length > 140 ? '…' : '');
+      if (!scrubbing) {
+        scrub.value = Math.floor(seg.start);
+        elapsedEl.textContent = fmt(seg.start);
+      }
+
+      const u = new SpeechSynthesisUtterance(seg.text);
+      u.rate = parseFloat(rateInput.value) || 1;
+      u.pitch = 1;
+      const v = voices.find(v => v.voiceURI === selectedVoiceURI);
+      if (v) u.voice = v;
+
+      u.onend = () => {
+        currentIndex++;
+        if (playing) next();
+        else updateUI();
+      };
+      u.onerror = () => {
+        currentIndex++;
+        if (playing) next();
+      };
+
+      speechSynthesis.speak(u);
+    }
+    next();
+  }
+
+  function togglePanel(open) {
+    const isOpen = open ?? !panel.classList.contains('open');
+    panel.classList.toggle('open', isOpen);
+    panel.hidden = !isOpen;
+    fab.setAttribute('aria-expanded', String(isOpen));
+    fab.classList.toggle('is-active', isOpen);
+    updateUI();
+  }
+
+  function renderVoices(filter) {
+    const q = (filter || '').toLowerCase();
+    voiceList.innerHTML = '';
+    const list = voices.filter(v => {
+      const hay = (v.name + ' ' + v.lang + (v.localService ? ' local' : '')).toLowerCase();
+      return !q || hay.includes(q);
+    });
+    if (!list.length) {
+      voiceList.innerHTML = '<div style="padding:0.65rem;color:var(--muted);font-size:0.8125rem">No voices match.</div>';
+      return;
+    }
+    list.forEach(v => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'reader-voice' + (v.voiceURI === selectedVoiceURI ? ' selected' : '');
+      btn.setAttribute('role', 'option');
+      btn.innerHTML = v.name + '<small>' + v.lang + (v.localService ? ' · local' : ' · network') + '</small>';
+      btn.addEventListener('click', () => {
+        selectedVoiceURI = v.voiceURI;
+        prefs.voiceURI = v.voiceURI;
+        savePrefs();
+        renderVoices(voiceSearch.value);
+        if (playing) speakFrom(currentIndex);
+      });
+      voiceList.appendChild(btn);
+    });
+  }
+
+  function loadVoices() {
+    voices = speechSynthesis.getVoices().slice();
+    voices.sort((a, b) => {
+      if (a.localService !== b.localService) return a.localService ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+    if (!selectedVoiceURI) {
+      const en = voices.find(v => v.lang.startsWith('en') && v.localService)
+        || voices.find(v => v.lang.startsWith('en'))
+        || voices[0];
+      selectedVoiceURI = prefs.voiceURI || (en && en.voiceURI);
+    } else if (prefs.voiceURI) selectedVoiceURI = prefs.voiceURI;
+    renderVoices(voiceSearch.value);
+  }
+
+  function initContent() {
+    segments = buildSegments();
+    recalcDurations();
+    scrub.value = 0;
+    elapsedEl.textContent = '0:00';
+  }
+
+  rateInput.value = prefs.rate || 1;
+  rateVal.textContent = parseFloat(rateInput.value).toFixed(1) + '×';
+
+  fab.addEventListener('click', () => togglePanel());
+  closeBtn.addEventListener('click', () => togglePanel(false));
+
+  playBtn.addEventListener('click', () => {
+    if (paused) {
+      speechSynthesis.resume();
+      paused = false;
+      playing = true;
+      updateUI();
+      return;
+    }
+    if (playing) return;
+    speakFrom(currentIndex);
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    if (!playing || paused) return;
+    speechSynthesis.pause();
+    paused = true;
+    playing = true;
+    updateUI();
+  });
+
+  stopBtn.addEventListener('click', () => {
+    stop();
+    currentIndex = 0;
+    scrub.value = 0;
+    elapsedEl.textContent = '0:00';
+    content.querySelectorAll('.reading-active').forEach(n => n.classList.remove('reading-active'));
+    updateUI();
+  });
+
+  rateInput.addEventListener('input', () => {
+    rateVal.textContent = parseFloat(rateInput.value).toFixed(1) + '×';
+    prefs.rate = parseFloat(rateInput.value);
+    savePrefs();
+    recalcDurations();
+    if (playing) speakFrom(currentIndex);
+  });
+
+  scrub.addEventListener('mousedown', () => { scrubbing = true; });
+  scrub.addEventListener('touchstart', () => { scrubbing = true; }, { passive: true });
+  scrub.addEventListener('input', () => {
+    elapsedEl.textContent = fmt(scrub.value);
+    const idx = indexAtTime(parseFloat(scrub.value));
+    nowEl.textContent = (segments[idx]?.text.slice(0, 120) || '') + (segments[idx] ? '…' : '');
+  });
+  scrub.addEventListener('change', () => {
+    scrubbing = false;
+    const idx = indexAtTime(parseFloat(scrub.value));
+    currentIndex = idx;
+    setHighlight(idx);
+    if (playing) speakFrom(idx);
+    updateUI();
+  });
+
+  voiceSearch.addEventListener('input', () => renderVoices(voiceSearch.value));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) {
+      togglePanel(false);
+      e.stopPropagation();
+    }
+  });
+
+  speechSynthesis.addEventListener('voiceschanged', loadVoices);
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      initContent();
+      loadVoices();
+      updateUI();
+    }, 400);
+  });
+  loadVoices();
 })();
 </script>
 </body>
