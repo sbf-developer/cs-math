@@ -47,47 +47,57 @@
       transition: transform 0.28s var(--ease);
     }
     body.sidebar-open nav#toc { transform: translateX(0); }
-    .sidebar-edge-toggle {
+    .sidebar-tab {
       position: fixed;
       left: 0;
-      top: 1rem;
+      top: 0;
       z-index: 220;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 0.7rem 0.5rem 0.55rem;
+      gap: 0.45rem;
+      height: 2.75rem;
+      padding: 0 0.85rem;
       background: var(--surface);
-      border: 1px solid var(--line);
-      border-left: none;
-      border-radius: 0 10px 10px 0;
-      box-shadow: 2px 1px 10px rgba(0,0,0,0.07);
+      border: none;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      border-radius: 0 0 6px 0;
       cursor: pointer;
       font: inherit;
       font-size: 0.8125rem;
       font-weight: 500;
       color: var(--text);
-      transition: left 0.28s var(--ease), background 0.2s, box-shadow 0.2s;
     }
-    .sidebar-edge-toggle:hover { background: var(--accent-soft); color: var(--accent); }
-    .sidebar-edge-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    body.sidebar-open .sidebar-edge-toggle { left: var(--sidebar-w); }
-    .sidebar-edge-toggle .chev {
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      transition: transform 0.28s var(--ease);
-    }
-    body.sidebar-open .sidebar-edge-toggle .chev { transform: rotate(180deg); }
-    .sidebar-edge-label { white-space: nowrap; }
+    .sidebar-tab:hover { background: var(--bg); }
+    .sidebar-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    body.sidebar-open .sidebar-tab { display: none; }
+    .sidebar-tab svg { flex-shrink: 0; color: var(--muted); }
     .toc-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
-      padding: 1rem 0.85rem 0.85rem;
+      padding: 0.85rem 1rem;
       border-bottom: 1px solid var(--line);
       flex-shrink: 0;
+      min-height: 2.75rem;
     }
+    .sidebar-close {
+      flex-shrink: 0;
+      width: 1.625rem;
+      height: 1.625rem;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.25rem;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+    }
+    .sidebar-close:hover { background: var(--bg); color: var(--text); }
+    .sidebar-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
     .toc-title {
       font-size: 0.6875rem;
       font-weight: 600;
@@ -421,6 +431,57 @@
       line-height: 1.4;
       margin-top: 0.65rem;
     }
+    .reader-status {
+      font-size: 0.75rem;
+      line-height: 1.45;
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .reader-status.warn {
+      background: #fffbeb;
+      border-color: #fde68a;
+      color: #92400e;
+    }
+    .reader-status.ok {
+      background: var(--accent-soft);
+      border-color: #99dccf;
+      color: #0f766e;
+    }
+    .reader-filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.45rem;
+    }
+    .reader-filter-row label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text);
+      text-transform: none;
+      letter-spacing: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+    .reader-preview-btn {
+      font: inherit;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .reader-preview-btn:hover { color: var(--accent); border-color: #ccc; }
+    .reader-voice.unreliable { opacity: 0.55; }
     .content [data-speech].reading-active {
       outline: 2px solid var(--accent);
       outline-offset: 3px;
@@ -432,11 +493,11 @@
 <body>
 <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
 
-<button class="sidebar-edge-toggle" id="sidebar-toggle" type="button" aria-controls="toc-links" aria-expanded="false" aria-label="Open table of contents">
-  <span class="chev" aria-hidden="true">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2.5 9.5 7 5 11.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </span>
-  <span class="sidebar-edge-label">Menu</span>
+<button class="sidebar-tab" id="sidebar-open" type="button" aria-controls="toc-links" aria-expanded="false" aria-label="Open menu">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  Menu
 </button>
 
 <button class="reader-fab" id="reader-fab" type="button" aria-label="Open audio reader" aria-expanded="false" aria-controls="reader-panel">
@@ -462,23 +523,29 @@
     <span id="reader-total">0:00</span>
   </div>
   <input class="reader-scrub" id="reader-scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Seek timeline">
-  <div class="reader-now" id="reader-now">Ready — uses your browser’s built-in voices (Edge, Chrome, etc.).</div>
+  <div class="reader-now" id="reader-now">Ready — pick a local voice and press Play.</div>
+  <div class="reader-status" id="reader-status">Loading voices…</div>
   <div class="reader-field">
     <label>Speed <span class="reader-rate-val" id="reader-rate-val">1.0×</span></label>
     <input type="range" id="reader-rate" min="0.5" max="2" step="0.1" value="1">
   </div>
   <div class="reader-field">
     <label>Voice</label>
+    <div class="reader-filter-row">
+      <label><input type="checkbox" id="reader-local-only" checked> Local voices only (recommended)</label>
+      <button type="button" class="reader-preview-btn" id="reader-preview">Preview</button>
+    </div>
     <input class="reader-search" id="reader-voice-search" type="search" placeholder="Search voices…" autocomplete="off">
     <div class="reader-voices" id="reader-voices" role="listbox" aria-label="Available voices"></div>
   </div>
-  <p class="reader-note">Drag the timeline to jump ahead or back. Math is read as plain text from the page.</p>
+  <p class="reader-note">Edge “Online” voices need internet and may fail on local files. Use voices marked <strong>local</strong> for reliable playback.</p>
 </div>
 
 <div class="shell">
   <nav id="toc">
     <div class="toc-head">
       <span class="toc-title">Contents</span>
+      <button class="sidebar-close" id="sidebar-close" type="button" aria-label="Close menu">&times;</button>
     </div>
     <div class="toc-scroll" id="toc-links">
     <a class="part" href="#intro">Introduction</a>
@@ -1147,16 +1214,15 @@
 <script>
 (function(){
   const body = document.body;
-  const toggle = document.getElementById('sidebar-toggle');
+  const openBtn = document.getElementById('sidebar-open');
+  const closeBtn = document.getElementById('sidebar-close');
   const backdrop = document.getElementById('sidebar-backdrop');
   const mq = window.matchMedia('(min-width: 1100px)');
   const KEY = 'cs-math-sidebar';
 
   function setOpen(open) {
     body.classList.toggle('sidebar-open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Close table of contents' : 'Open table of contents');
-    toggle.querySelector('.sidebar-edge-label').textContent = open ? 'Close' : 'Menu';
+    openBtn.setAttribute('aria-expanded', String(open));
     backdrop.hidden = !open;
     try { localStorage.setItem(KEY, open ? '1' : '0'); } catch (_) {}
   }
@@ -1169,7 +1235,8 @@
 
   setOpen(defaultOpen());
 
-  toggle.addEventListener('click', () => setOpen(!body.classList.contains('sidebar-open')));
+  openBtn.addEventListener('click', () => setOpen(true));
+  closeBtn.addEventListener('click', () => setOpen(false));
   backdrop.addEventListener('click', () => setOpen(false));
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.getElementById('reader-panel')?.classList.contains('open')) return;
@@ -1205,6 +1272,9 @@
 
   const WPM = 155;
   const KEY = 'cs-math-reader';
+  const PREVIEW = 'This is a voice preview. Computer science mathematics.';
+  const isFileProtocol = location.protocol === 'file:';
+
   const fab = document.getElementById('reader-fab');
   const panel = document.getElementById('reader-panel');
   const closeBtn = document.getElementById('reader-close');
@@ -1215,10 +1285,13 @@
   const elapsedEl = document.getElementById('reader-elapsed');
   const totalEl = document.getElementById('reader-total');
   const nowEl = document.getElementById('reader-now');
+  const statusEl = document.getElementById('reader-status');
   const rateInput = document.getElementById('reader-rate');
   const rateVal = document.getElementById('reader-rate-val');
   const voiceSearch = document.getElementById('reader-voice-search');
   const voiceList = document.getElementById('reader-voices');
+  const localOnlyCheck = document.getElementById('reader-local-only');
+  const previewBtn = document.getElementById('reader-preview');
   const content = document.querySelector('.content');
 
   let segments = [];
@@ -1228,9 +1301,12 @@
   let paused = false;
   let scrubbing = false;
   let selectedVoiceURI = null;
-  let prefs = { rate: 1, voiceURI: null };
+  let utteranceGen = 0;
+  let keepAliveTimer = null;
+  let prefs = { rate: 1, voiceURI: null, localOnly: true };
 
   try { prefs = { ...prefs, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch (_) {}
+  localOnlyCheck.checked = prefs.localOnly !== false;
 
   function savePrefs() {
     try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (_) {}
@@ -1245,13 +1321,44 @@
     return m + ':' + String(s).padStart(2, '0');
   }
 
+  function setStatus(msg, kind) {
+    statusEl.textContent = msg;
+    statusEl.className = 'reader-status' + (kind ? ' ' + kind : '');
+  }
+
+  function bestLocalVoice() {
+    return voices.find(v => v.localService && v.lang.startsWith('en'))
+      || voices.find(v => v.localService)
+      || voices.find(v => v.lang.startsWith('en'))
+      || voices[0]
+      || null;
+  }
+
+  function getVoice(uri) {
+    return voices.find(v => v.voiceURI === uri) || null;
+  }
+
+  function getSelectedVoice() {
+    let v = getVoice(selectedVoiceURI);
+    if (localOnlyCheck.checked && v && !v.localService) v = null;
+    if (!v) v = bestLocalVoice();
+    if (v && v.voiceURI !== selectedVoiceURI) {
+      selectedVoiceURI = v.voiceURI;
+      prefs.voiceURI = v.voiceURI;
+      savePrefs();
+      renderVoices(voiceSearch.value);
+    }
+    return v;
+  }
+
   function speechText(el) {
     const clone = el.cloneNode(true);
     clone.querySelectorAll('.katex-mathml, script, style').forEach(n => n.remove());
     let t = (clone.textContent || '').replace(/\s+/g, ' ').trim();
     t = t.replace(/→/g, ' implies ').replace(/∀/g, ' for all ').replace(/∃/g, ' there exists ')
          .replace(/≤/g, ' less than or equal ').replace(/≥/g, ' greater than or equal ')
-         .replace(/≠/g, ' not equal ').replace(/≈/g, ' approximately ').replace(/·/g, ', ');
+         .replace(/≠/g, ' not equal ').replace(/≈/g, ' approximately ').replace(/·/g, ', ')
+         .replace(/[∑∫√π]/g, ' ');
     return t;
   }
 
@@ -1308,41 +1415,102 @@
     const t = timeAtIndex(currentIndex);
     if (!scrubbing) scrub.value = Math.floor(t);
     elapsedEl.textContent = fmt(scrub.value);
-    nowEl.textContent = playing || paused
-      ? (segments[currentIndex]?.text.slice(0, 120) + (segments[currentIndex]?.text.length > 120 ? '…' : ''))
-      : 'Ready — pick a voice and press Play.';
+    if (!playing && !paused) {
+      nowEl.textContent = 'Ready — press Play or Preview to test your voice.';
+    }
     playBtn.textContent = playing && !paused ? 'Playing' : (paused ? 'Resume' : 'Play');
     playBtn.classList.toggle('primary', !playing || paused);
-    pauseBtn.disabled = !playing;
+    pauseBtn.disabled = !playing || paused;
     stopBtn.disabled = !playing && !paused && currentIndex === 0;
     fab.classList.toggle('is-playing', playing && !paused);
     fab.classList.toggle('is-active', panel.classList.contains('open'));
   }
 
+  function startKeepAlive() {
+    stopKeepAlive();
+    keepAliveTimer = setInterval(() => {
+      if (!playing || paused) return;
+      if (speechSynthesis.speaking && !speechSynthesis.paused) {
+        speechSynthesis.pause();
+        speechSynthesis.resume();
+      }
+    }, 12000);
+  }
+
+  function stopKeepAlive() {
+    if (keepAliveTimer) clearInterval(keepAliveTimer);
+    keepAliveTimer = null;
+  }
+
   function stop() {
+    utteranceGen++;
     speechSynthesis.cancel();
     playing = false;
     paused = false;
+    stopKeepAlive();
     updateUI();
+  }
+
+  function makeUtterance(text, voice) {
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = parseFloat(rateInput.value) || 1;
+    u.pitch = 1;
+    u.volume = 1;
+    u.lang = voice?.lang || 'en-US';
+    if (voice) u.voice = voice;
+    return u;
+  }
+
+  function speakPreview() {
+    speechSynthesis.cancel();
+    const voice = getSelectedVoice();
+    if (!voice) {
+      setStatus('No voice available. Try unchecking “Local voices only”.', 'warn');
+      return;
+    }
+    const u = makeUtterance(PREVIEW, voice);
+    u.onstart = () => setStatus('Preview playing: ' + voice.name + (voice.localService ? ' (local)' : ' (network)'), 'ok');
+    u.onerror = e => {
+      if (e.error === 'canceled' || e.error === 'interrupted') return;
+      setStatus('Preview failed (' + (e.error || 'error') + '). Try a local voice.', 'warn');
+    };
+    setTimeout(() => speechSynthesis.speak(u), 50);
   }
 
   function speakFrom(index) {
     if (!segments.length) return;
+    const voice = getSelectedVoice();
+    if (!voice) {
+      setStatus('No usable voice found.', 'warn');
+      return;
+    }
+    if (!voice.localService && (isFileProtocol || localOnlyCheck.checked)) {
+      setStatus('Network voices often fail on local files. Select a local voice.', 'warn');
+      return;
+    }
+
     currentIndex = Math.min(index, segments.length - 1);
+    utteranceGen++;
+    const gen = utteranceGen;
     speechSynthesis.cancel();
     playing = true;
     paused = false;
-    setHighlight(currentIndex);
-    updateUI();
+    startKeepAlive();
+    setStatus('Reading with ' + voice.name + (voice.localService ? ' · local' : ' · network'), 'ok');
 
-    function next() {
-      if (!playing || currentIndex >= segments.length) {
-        playing = false;
-        paused = false;
-        updateUI();
+    function speakCurrent() {
+      if (gen !== utteranceGen || !playing || currentIndex >= segments.length) {
+        if (gen === utteranceGen) {
+          playing = false;
+          paused = false;
+          stopKeepAlive();
+          updateUI();
+        }
         return;
       }
+
       const seg = segments[currentIndex];
+      const v = getSelectedVoice();
       setHighlight(currentIndex);
       nowEl.textContent = seg.text.slice(0, 140) + (seg.text.length > 140 ? '…' : '');
       if (!scrubbing) {
@@ -1350,25 +1518,39 @@
         elapsedEl.textContent = fmt(seg.start);
       }
 
-      const u = new SpeechSynthesisUtterance(seg.text);
-      u.rate = parseFloat(rateInput.value) || 1;
-      u.pitch = 1;
-      const v = voices.find(v => v.voiceURI === selectedVoiceURI);
-      if (v) u.voice = v;
+      const u = makeUtterance(seg.text, v);
+      u.onstart = () => updateUI();
 
       u.onend = () => {
+        if (gen !== utteranceGen || !playing) return;
         currentIndex++;
-        if (playing) next();
-        else updateUI();
-      };
-      u.onerror = () => {
-        currentIndex++;
-        if (playing) next();
+        setTimeout(speakCurrent, 30);
       };
 
-      speechSynthesis.speak(u);
+      u.onerror = e => {
+        if (gen !== utteranceGen) return;
+        if (e.error === 'canceled' || e.error === 'interrupted') return;
+        setStatus('Voice error: ' + (e.error || 'failed') + '. Switching to local fallback…', 'warn');
+        const fallback = bestLocalVoice();
+        if (fallback && fallback.voiceURI !== selectedVoiceURI) {
+          selectedVoiceURI = fallback.voiceURI;
+          prefs.voiceURI = fallback.voiceURI;
+          savePrefs();
+          renderVoices(voiceSearch.value);
+          setTimeout(speakCurrent, 80);
+          return;
+        }
+        currentIndex++;
+        setTimeout(speakCurrent, 30);
+      };
+
+      setTimeout(() => {
+        if (gen === utteranceGen) speechSynthesis.speak(u);
+      }, 80);
     }
-    next();
+
+    setTimeout(speakCurrent, 100);
+    updateUI();
   }
 
   function togglePanel(open) {
@@ -1377,32 +1559,40 @@
     panel.hidden = !isOpen;
     fab.setAttribute('aria-expanded', String(isOpen));
     fab.classList.toggle('is-active', isOpen);
+    if (isOpen) loadVoices();
     updateUI();
   }
 
   function renderVoices(filter) {
     const q = (filter || '').toLowerCase();
+    const localOnly = localOnlyCheck.checked;
     voiceList.innerHTML = '';
     const list = voices.filter(v => {
-      const hay = (v.name + ' ' + v.lang + (v.localService ? ' local' : '')).toLowerCase();
+      if (localOnly && !v.localService) return false;
+      const hay = (v.name + ' ' + v.lang).toLowerCase();
       return !q || hay.includes(q);
     });
     if (!list.length) {
-      voiceList.innerHTML = '<div style="padding:0.65rem;color:var(--muted);font-size:0.8125rem">No voices match.</div>';
+      voiceList.innerHTML = '<div style="padding:0.65rem;color:var(--muted);font-size:0.8125rem">No voices match. Try turning off “Local only”.</div>';
       return;
     }
     list.forEach(v => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'reader-voice' + (v.voiceURI === selectedVoiceURI ? ' selected' : '');
+      if (!v.localService) btn.classList.add('unreliable');
       btn.setAttribute('role', 'option');
-      btn.innerHTML = v.name + '<small>' + v.lang + (v.localService ? ' · local' : ' · network') + '</small>';
+      btn.innerHTML = v.name + '<small>' + v.lang + (v.localService ? ' · local ✓' : ' · network (may fail)') + '</small>';
       btn.addEventListener('click', () => {
         selectedVoiceURI = v.voiceURI;
         prefs.voiceURI = v.voiceURI;
         savePrefs();
         renderVoices(voiceSearch.value);
-        if (playing) speakFrom(currentIndex);
+        if (!v.localService) {
+          setStatus('Network voice selected — needs internet; may not work on local files.', 'warn');
+        } else {
+          setStatus('Local voice: ' + v.name, 'ok');
+        }
       });
       voiceList.appendChild(btn);
     });
@@ -1410,16 +1600,31 @@
 
   function loadVoices() {
     voices = speechSynthesis.getVoices().slice();
+    if (!voices.length) {
+      setStatus('Waiting for voices… click Preview after they load.', 'warn');
+      return;
+    }
     voices.sort((a, b) => {
       if (a.localService !== b.localService) return a.localService ? -1 : 1;
       return a.name.localeCompare(b.name);
     });
-    if (!selectedVoiceURI) {
-      const en = voices.find(v => v.lang.startsWith('en') && v.localService)
-        || voices.find(v => v.lang.startsWith('en'))
-        || voices[0];
-      selectedVoiceURI = prefs.voiceURI || (en && en.voiceURI);
-    } else if (prefs.voiceURI) selectedVoiceURI = prefs.voiceURI;
+
+    const saved = getVoice(prefs.voiceURI);
+    if (saved && (!localOnlyCheck.checked || saved.localService)) {
+      selectedVoiceURI = saved.voiceURI;
+    } else {
+      const best = bestLocalVoice();
+      selectedVoiceURI = best?.voiceURI || null;
+      if (best) {
+        prefs.voiceURI = best.voiceURI;
+        savePrefs();
+      }
+    }
+
+    const localCount = voices.filter(v => v.localService).length;
+    let msg = localCount + ' local voice' + (localCount === 1 ? '' : 's') + ' available.';
+    if (isFileProtocol) msg += ' Open via http://localhost for best results.';
+    setStatus(msg, localCount ? 'ok' : 'warn');
     renderVoices(voiceSearch.value);
   }
 
@@ -1435,12 +1640,14 @@
 
   fab.addEventListener('click', () => togglePanel());
   closeBtn.addEventListener('click', () => togglePanel(false));
+  previewBtn.addEventListener('click', speakPreview);
 
   playBtn.addEventListener('click', () => {
     if (paused) {
       speechSynthesis.resume();
       paused = false;
       playing = true;
+      startKeepAlive();
       updateUI();
       return;
     }
@@ -1452,7 +1659,7 @@
     if (!playing || paused) return;
     speechSynthesis.pause();
     paused = true;
-    playing = true;
+    stopKeepAlive();
     updateUI();
   });
 
@@ -1462,6 +1669,7 @@
     scrub.value = 0;
     elapsedEl.textContent = '0:00';
     content.querySelectorAll('.reading-active').forEach(n => n.classList.remove('reading-active'));
+    setStatus('Stopped.', '');
     updateUI();
   });
 
@@ -1470,7 +1678,13 @@
     prefs.rate = parseFloat(rateInput.value);
     savePrefs();
     recalcDurations();
-    if (playing) speakFrom(currentIndex);
+    if (playing && !paused) speakFrom(currentIndex);
+  });
+
+  localOnlyCheck.addEventListener('change', () => {
+    prefs.localOnly = localOnlyCheck.checked;
+    savePrefs();
+    loadVoices();
   });
 
   scrub.addEventListener('mousedown', () => { scrubbing = true; });
@@ -1478,7 +1692,8 @@
   scrub.addEventListener('input', () => {
     elapsedEl.textContent = fmt(scrub.value);
     const idx = indexAtTime(parseFloat(scrub.value));
-    nowEl.textContent = (segments[idx]?.text.slice(0, 120) || '') + (segments[idx] ? '…' : '');
+    const t = segments[idx]?.text || '';
+    nowEl.textContent = t.slice(0, 120) + (t.length > 120 ? '…' : '');
   });
   scrub.addEventListener('change', () => {
     scrubbing = false;
