@@ -217,10 +217,10 @@
       letter-spacing: -0.015em;
       margin: 0;
       padding-top: 0;
-      scroll-margin-top: 4.5rem;
+      scroll-margin-top: 2rem;
     }
     h2 + p { color: var(--muted); margin-bottom: 1.25rem; }
-    h3 { font-size: 1.0625rem; font-weight: 600; margin: 0; scroll-margin-top: 4.5rem; }
+    h3 { font-size: 1.0625rem; font-weight: 600; margin: 0; scroll-margin-top: 2rem; }
     h4 { font-size: 0.9375rem; font-weight: 600; margin: 1.25rem 0 0.4rem; }
     p { margin-bottom: 0.9rem; }
     ul, ol { margin: 0.4rem 0 1rem 1.25rem; }
@@ -236,45 +236,6 @@
       color: var(--accent);
       margin-bottom: 0.35rem;
     }
-    /* —— Reading clarity —— */
-    .read-context {
-      position: fixed;
-      top: 0;
-      left: var(--sidebar-current);
-      right: 0;
-      z-index: 180;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--line);
-      transition: left 0.25s var(--ease);
-    }
-    .read-context-inner {
-      max-width: var(--content-max);
-      margin: 0 auto;
-      padding: 0.45rem max(1.25rem, calc((100vw - var(--sidebar-current) - var(--content-max)) / 2));
-      padding-left: max(1.25rem, calc((100vw - var(--sidebar-current) - var(--content-max)) / 2));
-    }
-    .read-context-kicker {
-      display: block;
-      font-size: 0.625rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .read-context-path {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.35;
-    }
-    .read-context-what {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 0.1rem;
-    }
     .chapter {
       margin: 2.75rem 0 1.25rem;
       padding: 1rem 1.15rem 1.1rem;
@@ -282,7 +243,7 @@
       border: 1px solid var(--line);
       border-radius: 12px;
       border-left: 4px solid var(--accent);
-      scroll-margin-top: 4.5rem;
+      scroll-margin-top: 2rem;
     }
     .chapter-kicker {
       font-size: 0.6875rem;
@@ -296,7 +257,7 @@
       margin: 2rem 0 0.85rem;
       padding-bottom: 0.85rem;
       border-bottom: 1px solid var(--line);
-      scroll-margin-top: 4.5rem;
+      scroll-margin-top: 2rem;
     }
     .topic-head .lead {
       margin: 0.45rem 0 0;
@@ -354,7 +315,6 @@
       color: var(--muted);
       margin-bottom: 0.65rem;
     }
-    [data-read-kind] { scroll-margin-top: 5rem; }
     /* —— Skimmable layout system —— */
     .layout-legend {
       display: grid;
@@ -884,7 +844,6 @@
     .toc-pdf-btn svg { flex-shrink: 0; }
     body:not(.sidebar-open) .toc-pdf-btn .toc-pdf-label { display: none; }
     body:not(.sidebar-open) .toc-pdf-btn { padding: 0.55rem; }
-    body.is-pdf-export #read-context,
     body.is-pdf-export #reader-fab,
     body.is-pdf-export #reader-panel,
     body.is-pdf-export nav#toc { visibility: hidden !important; }
@@ -892,7 +851,6 @@
     @media print {
       @page { margin: 14mm; size: A4; }
       nav#toc,
-      #read-context,
       #reader-fab,
       #reader-panel,
       .skim-map,
@@ -1044,13 +1002,6 @@
   </nav>
 
   <main>
-  <div id="read-context" class="read-context" aria-live="polite">
-    <div class="read-context-inner">
-      <span class="read-context-kicker">You are reading</span>
-      <span class="read-context-path" id="read-path">Introduction</span>
-      <span class="read-context-what" id="read-what">How this page is organized</span>
-    </div>
-  </div>
   <div class="content">
     <header class="hero" id="intro">
       <h1>Computer Science Mathematics</h1>
@@ -1058,7 +1009,6 @@
       <div class="guide">
         <span class="guide-title">How to read this page</span>
         <ul>
-          <li><strong>Watch the top bar</strong> — it always shows which section, topic, and block type you’re on.</li>
           <li><strong>Follow the numbered chips</strong> under each topic — read in order: Idea → Variables → Rules → Example.</li>
           <li><strong>Every box has two lines at the top</strong> — a title (what it is) and a subtitle (why you’re reading it).</li>
           <li><strong>Blue variable cards</strong> decode symbols before you touch any formula.</li>
@@ -2577,10 +2527,6 @@
 </div>
 <script>
 (function readingClarity(){
-  const pathEl = document.getElementById('read-path');
-  const whatEl = document.getElementById('read-what');
-  if (!pathEl || !whatEl) return;
-
   const BLOCK = {
     start: { desc: 'Plain English intro — read this before any formulas' },
     variables: { desc: 'Symbol glossary — decode each letter before moving on' },
@@ -2667,21 +2613,16 @@
     desc.textContent = BLOCK.formula.desc;
     fb.insertBefore(desc, fb.firstChild);
     fb.insertBefore(label, fb.firstChild);
-    fb.dataset.readKind = 'formula';
-    fb.dataset.readTitle = 'Key formulas';
   });
 
   document.querySelectorAll('.plain, .box, .formula-unit, .overview').forEach(el => {
     const kind = classify(el);
-    el.dataset.readKind = kind;
     const tag = el.querySelector(':scope > .tag, :scope > .plain-label');
     if (tag) {
       enrichTag(tag, kind);
-      el.dataset.readTitle = tag.querySelector('.tag-title')?.textContent || tag.textContent.trim();
     } else if (el.classList.contains('formula-unit')) {
       const head = el.querySelector('.formula-unit-head');
       if (head) {
-        el.dataset.readTitle = head.textContent.trim();
         if (!head.dataset.enriched) {
           head.dataset.enriched = '1';
           const t = head.textContent.trim();
@@ -2689,60 +2630,9 @@
           head.classList.add('tag-stack');
         }
       }
-    } else if (el.classList.contains('overview')) {
-      el.dataset.readTitle = 'Section overview';
     }
   });
 
-  let chapter = 'Introduction';
-  let topic = 'How to use this page';
-  document.querySelectorAll('.content > *').forEach(el => {
-    if (el.classList.contains('chapter')) {
-      chapter = el.dataset.chapterTitle || el.querySelector('h2')?.textContent?.trim() || chapter;
-      topic = chapter;
-    }
-    if (el.classList.contains('topic-head')) {
-      topic = el.dataset.topicTitle || el.querySelector('h3')?.textContent?.trim() || topic;
-    }
-    if (el.dataset.readKind) {
-      el.dataset.readChapter = chapter;
-      el.dataset.readTopic = topic;
-    }
-  });
-
-  const blocks = [...document.querySelectorAll('[data-read-kind]')];
-  const hero = document.getElementById('intro');
-
-  function setContext(block) {
-    if (!block) {
-      pathEl.textContent = 'Introduction';
-      whatEl.textContent = 'How this page is organized — scroll to begin Section I';
-      return;
-    }
-    const ch = block.dataset.readChapter || chapter;
-    const top = block.dataset.readTopic || topic;
-    const title = block.dataset.readTitle || 'Content';
-    const kind = block.dataset.readKind || 'other';
-    pathEl.textContent = ch === top ? ch : ch + ' → ' + top;
-    whatEl.textContent = title + ' — ' + (BLOCK[kind]?.desc || BLOCK.other.desc);
-  }
-
-  function onScroll() {
-    const y = window.scrollY + 100;
-    if (hero && y < hero.offsetTop + hero.offsetHeight - 80) {
-      setContext(null);
-      return;
-    }
-    let current = blocks[0];
-    for (const b of blocks) {
-      if (b.offsetTop <= y) current = b;
-      else break;
-    }
-    setContext(current);
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 })();
 
 (function pdfExport(){
