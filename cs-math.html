@@ -54,27 +54,31 @@
     .toc-head {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
-      padding: 0.65rem 0.75rem;
+      gap: 0.5rem;
+      padding: 0.6rem 0.65rem 0.6rem 0.85rem;
       border-bottom: 1px solid var(--line);
       flex-shrink: 0;
       min-height: 2.75rem;
     }
-    body:not(.sidebar-open) .toc-head { justify-content: center; padding-inline: 0.5rem; }
+    body:not(.sidebar-open) .toc-head { justify-content: center; padding-inline: 0.45rem; }
     .sidebar-toggle {
       flex-shrink: 0;
-      width: 2rem;
-      height: 2rem;
-      border: none;
+      width: 1.625rem;
+      height: 1.625rem;
+      margin-left: auto;
+      border: 1px solid transparent;
       background: transparent;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
       color: var(--muted);
       display: grid;
       place-items: center;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
     }
-    .sidebar-toggle:hover { background: var(--bg); color: var(--text); }
+    body:not(.sidebar-open) .sidebar-toggle { margin-left: 0; }
+    .sidebar-toggle:hover { background: var(--bg); border-color: var(--line); color: var(--text); }
     .sidebar-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .sidebar-toggle svg { display: block; }
     .sidebar-toggle .tog-close { display: none; }
     body.sidebar-open .sidebar-toggle .tog-open { display: none; }
     body.sidebar-open .sidebar-toggle .tog-close { display: block; }
@@ -86,6 +90,8 @@
       color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
+      flex: 1;
+      min-width: 0;
     }
     body:not(.sidebar-open) .toc-title { display: none; }
     .toc-scroll {
@@ -133,7 +139,54 @@
     }
     .hero { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line); text-align: center; }
     .hero h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 0.75rem; }
-    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 58ch; margin-inline: auto; }
+    .hero-lead { color: var(--muted); font-size: 1.05rem; max-width: 62ch; margin-inline: auto; }
+    .guide {
+      text-align: left;
+      max-width: 36rem;
+      margin: 1.75rem auto 0;
+      padding: 1.1rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .guide-title {
+      display: block;
+      color: var(--text);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.65rem;
+    }
+    .guide ul { margin: 0; padding-left: 1.15rem; }
+    .guide li { margin-bottom: 0.4rem; }
+    .guide li strong { color: var(--text); font-weight: 600; }
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+      gap: 0.35rem 0.75rem;
+      margin-top: 1.25rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.8125rem;
+      text-align: left;
+    }
+    .roadmap a { color: var(--muted); text-decoration: none; }
+    .roadmap a:hover { color: var(--accent); }
+    .overview {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      margin: 0.65rem 0 1.75rem;
+      color: var(--muted);
+      font-size: 0.9375rem;
+    }
+    .overview p + p { margin-top: 0.65rem; }
+    .overview strong { color: var(--text); font-weight: 600; }
+    .lead { color: var(--muted); margin: -0.15rem 0 1.35rem; max-width: 68ch; font-size: 0.98rem; }
     h2 {
       font-size: 1.375rem;
       font-weight: 650;
@@ -510,15 +563,15 @@
 <div class="shell">
   <nav id="toc">
     <div class="toc-head">
+      <span class="toc-title">Contents</span>
       <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-controls="toc-links" aria-expanded="false" aria-label="Expand sidebar">
-        <svg class="tog-open" width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <svg class="tog-open" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <svg class="tog-close" width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M10 4L6 8l4 4M13 4v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg class="tog-close" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <span class="toc-title">Contents</span>
     </div>
     <div class="toc-scroll" id="toc-links">
     <a class="part" href="#intro" title="Introduction"><span class="toc-full">Introduction</span><span class="toc-short">⌂</span></a>
@@ -571,15 +624,42 @@
   <div class="content">
     <header class="hero" id="intro">
       <h1>Computer Science Mathematics</h1>
-      <p>A verified reference for CS math — algorithms, crypto, probability, linear algebra, and the mathematics behind machine learning and language models. Every major formula includes a symbol guide and a concrete example.</p>
+      <p class="hero-lead">A verified, single-page reference for the mathematics behind algorithms, cryptography, probability, linear algebra, and modern language models. Each topic moves from intuition to formal definitions — so you can understand the idea first, then read the rigorous math with confidence.</p>
+      <div class="guide">
+        <span class="guide-title">How to read this page</span>
+        <ul>
+          <li><strong>Section overviews</strong> (white boxes) explain why the topic matters in CS and what subtopics follow.</li>
+          <li><strong>Teal bars</strong> translate formal concepts into everyday language before the definitions.</li>
+          <li><strong>Definition / Theorem / Example boxes</strong> hold the precise, academic statements — the source of truth.</li>
+          <li><strong>Symbol glossaries</strong> decode every variable; worked examples plug in real numbers step by step.</li>
+        </ul>
+        <div class="roadmap">
+          <a href="#logic">I · Logic</a>
+          <a href="#discrete">II · Discrete</a>
+          <a href="#numbers">III · Numbers</a>
+          <a href="#probability">IV · Probability</a>
+          <a href="#linear">V · Linear algebra</a>
+          <a href="#calculus">VI · Calculus</a>
+          <a href="#analysis">VII · Algorithms</a>
+          <a href="#boolean">VIII · Boolean</a>
+          <a href="#formal">IX · Automata</a>
+          <a href="#info">X · Information</a>
+          <a href="#computability">XI · Complexity</a>
+          <a href="#ml">XII · ML &amp; LLMs</a>
+          <a href="#reference">Quick reference</a>
+        </div>
+      </div>
     </header>
 
     <!-- LOGIC -->
     <h2 id="logic">I · Logic &amp; Proof</h2>
-    <p>Logic formalizes correct reasoning. Programs evaluate boolean expressions; proofs certify that systems meet specifications.</p>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Logic is the grammar of correct reasoning. Programs evaluate boolean conditions; type checkers and SAT solvers search logical formulas; security proofs show that a system cannot reach a bad state. Proof techniques let you certify that an algorithm or protocol is correct — not just test it on examples.</p>
+      <p><strong>In this section:</strong> propositional logic (statements and connectives) → predicate logic (quantifiers over objects) → proof methods including induction and the pigeonhole principle.</p>
+    </div>
 
     <h3 id="propositional">Propositional Logic</h3>
-    <div class="plain"><strong>Plain language:</strong> A proposition is a statement that is true or false. Connectives — NOT, AND, OR, IMPLIES — build compound statements.</div>
+    <div class="plain"><strong>In plain language:</strong> A <em>proposition</em> is a statement that is either true or false — “$2+2=4$” yes, “$x+1=5$” no (it depends on $x$). Connectives — NOT ($\neg$), AND ($\land$), OR ($\lor$), IMPLIES ($\to$) — let you build compound statements from simple ones, exactly like <code>if (a &amp;&amp; !b)</code> in code.</div>
 
     <div class="box"><span class="tag">Definition</span>
       Propositional variables $p, q, \ldots$ combine via $\neg, \land, \lor, \to, \leftrightarrow$. A <em>tautology</em> is always true; a formula is <em>satisfiable</em> if some assignment makes it true.
@@ -594,7 +674,7 @@
     </div>
 
     <h3 id="predicate">Predicate Logic</h3>
-    <div class="plain"><strong>Plain language:</strong> Predicates like $Even(x)$ describe properties of objects. $\forall$ quantifies over all; $\exists$ asserts at least one.</div>
+    <div class="plain"><strong>In plain language:</strong> A <em>predicate</em> is a statement with a hole — $Even(x)$ means “$x$ is even.” Quantifiers generalize: $\forall x$ means “for every $x$” (like checking all inputs in a loop), $\exists x$ means “there exists at least one $x$” (like finding one counterexample). Predicate logic is what you need to state “for all users, if authenticated then authorized.”</div>
 
     <div class="box"><span class="tag">Definition</span>
       $\forall x \in U,\, P(x)$ holds iff $P(a)$ for every $a \in U$. $\exists x \in U,\, P(x)$ holds iff $P(a)$ for some $a \in U$.
@@ -603,6 +683,7 @@
     $$\neg \forall x\, P(x) \equiv \exists x\, \neg P(x) \qquad \neg \exists x\, P(x) \equiv \forall x\, \neg P(x)$$
 
     <h3 id="proofs">Proof Techniques</h3>
+    <p class="lead">A proof is a step-by-step argument that a claim must be true, given agreed axioms and definitions. The methods below appear throughout CS — from verifying loop invariants to showing a problem is NP-hard.</p>
 
     <h4>Direct, contrapositive, contradiction</h4>
     <ul>
@@ -612,6 +693,7 @@
     </ul>
 
     <h4>Mathematical induction</h4>
+    <div class="plain"><strong>In plain language:</strong> Induction proves a statement for every integer $n \geq n_0$ in two steps: verify the first case (base), then show that if it holds for $k$, it must hold for $k+1$ (step). Think of dominoes: push the first, and each one knocks over the next.</div>
     <div class="box"><span class="tag">Definition</span>
       To prove $\forall n \geq n_0,\, P(n)$: (1) <em>base</em> — show $P(n_0)$; (2) <em>step</em> — for arbitrary $k \geq n_0$, show $P(k) \to P(k+1)$.
     </div>
@@ -627,6 +709,7 @@
     </div>
 
     <h4>Pigeonhole principle</h4>
+    <div class="plain"><strong>In plain language:</strong> If you have more items than containers, at least one container must hold two or more. This simple counting argument proves surprising facts — like why hash collisions are inevitable when the key space exceeds the table size.</div>
     <div class="box"><span class="tag">Theorem</span>
       Placing $n+1$ objects into $n$ boxes forces some box to hold at least two. Equivalently, if $|A| > |B|$, no injection $A \to B$ exists.
     </div>
@@ -637,9 +720,13 @@
 
     <!-- DISCRETE -->
     <h2 id="discrete">II · Discrete Structures</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Discrete mathematics studies countable, distinct objects — integers, finite sets, graphs, and combinations — as opposed to continuous calculus. Almost every data structure and algorithm rests here: arrays are sequences, hash maps are functions, SQL joins are relations, social networks are graphs, and password strength is combinatorics.</p>
+      <p><strong>In this section:</strong> sets and functions → relations (equivalence and ordering) → counting (permutations, combinations) → graph theory (paths, trees, and network algorithms).</p>
+    </div>
 
     <h3 id="sets">Sets &amp; Functions</h3>
-    <div class="plain"><strong>Plain language:</strong> Sets collect distinct objects. Functions assign exactly one output per input.</div>
+    <div class="plain"><strong>In plain language:</strong> A <em>set</em> is an unordered collection of distinct objects — like the set of all valid port numbers. A <em>function</em> $f: A \to B$ assigns each input in $A$ exactly one output in $B$ (a lookup table or hash function). <em>Injective</em> means no two inputs share an output (no collisions); <em>surjective</em> means every output is hit; <em>bijective</em> means both — the function is reversible.</div>
 
     <div class="box"><span class="tag">Definition</span>
       $\mathbb{N}=\{0,1,2,\ldots\}$ (used here), $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$. $|\mathcal{P}(A)| = 2^{|A|}$ for the power set.
@@ -654,12 +741,13 @@
     </div>
 
     <h3 id="relations">Relations</h3>
+    <div class="plain"><strong>In plain language:</strong> A relation is a set of ordered pairs — “$a$ is related to $b$.” An <em>equivalence relation</em> (reflexive, symmetric, transitive) partitions objects into equivalence classes: “same remainder mod $m$” or “same connected component.” A <em>partial order</em> ranks objects where not every pair must be comparable: subset inclusion ($A \subseteq B$) or divisibility ($a \mid b$).</div>
     <div class="box"><span class="tag">Definition</span>
       $R \subseteq A \times A$. <em>Equivalence relation:</em> reflexive, symmetric, transitive — partitions $A$ into classes. <em>Partial order:</em> reflexive, antisymmetric, transitive (e.g. subset inclusion, divisibility).
     </div>
 
     <h3 id="combinatorics">Combinatorics</h3>
-    <div class="plain"><strong>Plain language:</strong> Count arrangements. Order matters → permutations. Order irrelevant → combinations.</div>
+    <div class="plain"><strong>In plain language:</strong> Combinatorics counts arrangements. If order matters — ranking users, arranging characters in a password — use <em>permutations</em>. If order does not matter — choosing a committee of 3 from 10 — use <em>combinations</em>. When categories overlap, inclusion–exclusion corrects for double-counting.</div>
 
     <div class="box"><span class="tag">Definition</span>
       $P(n,k) = \dfrac{n!}{(n-k)!}$ &nbsp;·&nbsp; $\dbinom{n}{k} = \dfrac{n!}{k!(n-k)!}$ &nbsp;·&nbsp; Multinomial: $\dbinom{n}{k_1,\ldots,k_r} = \dfrac{n!}{k_1!\cdots k_r!}$ when $\sum k_i = n$.
@@ -680,6 +768,7 @@
     </div>
 
     <h3 id="graphs">Graph Theory</h3>
+    <div class="plain"><strong>In plain language:</strong> A graph $G=(V,E)$ is a set of vertices (nodes) connected by edges (links). The web, road networks, social graphs, and dependency trees are all graphs. A <em>tree</em> is a connected acyclic graph — exactly one path between any two nodes, like a file system or parse tree.</div>
     <div class="box"><span class="tag">Definition</span>
       $G=(V,E)$; $\deg(v)$ counts incident edges. A <em>tree</em> on $n$ vertices has exactly $n-1$ edges and no cycles. A <em>walk / path / cycle</em> follow edges; paths repeat no vertices.
     </div>
@@ -689,12 +778,17 @@
       <strong>Euler (planar):</strong> $V - E + F = 2$ for connected planar embeddings.
     </div>
 
-    <div class="plain"><strong>CS:</strong> Shortest paths (Dijkstra, Bellman–Ford), MST (Kruskal, Prim), matchings, and graph coloring appear in routing, scheduling, allocation, and register assignment.</div>
+    <div class="plain"><strong>Where you see this in CS:</strong> Shortest paths (Dijkstra, Bellman–Ford), minimum spanning trees (Kruskal, Prim), matchings, and graph coloring appear in routing, scheduling, resource allocation, and compiler register assignment.</div>
 
     <!-- NUMBER THEORY -->
     <h2 id="numbers">III · Number Theory</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Number theory studies properties of integers — divisibility, primes, and remainders. It underpins modern cryptography (RSA, Diffie–Hellman), hash functions, random number generation, and error-correcting codes. The Euclidean algorithm and modular arithmetic are among the most-used algorithms in security software.</p>
+      <p><strong>In this section:</strong> greatest common divisors and prime factorization → modular arithmetic and congruences → cryptographic constructions built on hard number-theoretic problems.</p>
+    </div>
 
     <h3 id="divisibility">Divisibility &amp; GCD</h3>
+    <div class="plain"><strong>In plain language:</strong> $a$ <em>divides</em> $b$ (written $a \mid b$) when $b$ is a whole-number multiple of $a$ — like $3 \mid 12$. The <em>greatest common divisor</em> $\gcd(a,b)$ is the largest integer dividing both; when $\gcd(a,b)=1$, the numbers are <em>coprime</em> (share no common factor). The Euclidean algorithm finds $\gcd$ efficiently by repeated remainder.</div>
     <div class="box"><span class="tag">Definition</span>
       $a \mid b$ iff $b = ak$ for some $k \in \mathbb{Z}$. $\gcd(a,b)$ is the largest common divisor; $\gcd(a,b)=1$ means coprime.
     </div>
@@ -713,6 +807,7 @@
     </div>
 
     <h3 id="modular">Modular Arithmetic</h3>
+    <div class="plain"><strong>In plain language:</strong> Modular arithmetic keeps only the remainder after division — like clock arithmetic where $14 \equiv 2 \pmod{12}$. Two numbers are <em>congruent mod $m$</em> if they differ by a multiple of $m$. Addition and multiplication work normally; division requires the divisor to be coprime to the modulus. Fermat’s and Euler’s theorems power fast modular exponentiation in crypto.</div>
     <div class="box"><span class="tag">Definition</span>
       $a \equiv b \pmod{m}$ iff $m \mid (a-b)$. Addition and multiplication respect congruence. Division by $c$ mod $m$ requires $\gcd(c,m)=1$.
     </div>
@@ -731,6 +826,7 @@
     </div>
 
     <h3 id="crypto-math">Cryptography</h3>
+    <div class="plain"><strong>In plain language:</strong> Public-key cryptography relies on math problems that are easy one way and hard the other. RSA: multiplying two large primes is fast, but factoring their product is believed intractable. Diffie–Hellman: raising to a power mod $p$ is fast, but finding the discrete logarithm is hard. Security rests on these asymmetries, not on hiding the algorithm.</div>
     <div class="box"><span class="tag">Definition · RSA</span>
       Primes $p,q$; $n=pq$; $\varphi(n)=(p-1)(q-1)$. Choose $e$ with $\gcd(e,\varphi(n))=1$. Private $d \equiv e^{-1} \pmod{\varphi(n)}$. Encrypt $c \equiv m^e \pmod{n}$; decrypt $m \equiv c^d \pmod{n}$ for $0 \leq m < n$. Correctness: Euler’s theorem (with CRT handling $\gcd(m,n) \neq 1$ in practice via padding).
     </div>
@@ -741,8 +837,13 @@
 
     <!-- PROBABILITY -->
     <h2 id="probability">IV · Probability &amp; Statistics</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Probability quantifies uncertainty — the language of randomized algorithms, network reliability, spam filters, A/B tests, and machine learning. Instead of guessing, you assign numbers to outcomes, update beliefs with evidence (Bayes), and bound how far sample averages drift from expectations.</p>
+      <p><strong>In this section:</strong> probability axioms and rules → conditional probability and Bayes → random variables and distributions → Markov chains for sequential processes.</p>
+    </div>
 
     <h3 id="prob-basics">Axioms &amp; Rules</h3>
+    <div class="plain"><strong>In plain language:</strong> A probability assigns a number between 0 and 1 to each possible outcome. Certain events get 1, impossible events get 0, and the probabilities of mutually exclusive outcomes add up. The sample space $\Omega$ is the set of all possibilities; an event $A$ is a subset of $\Omega$.</div>
     <div class="box"><span class="tag">Definition</span>
       Probability space $(\Omega, \mathcal{F}, P)$: $P(\Omega)=1$, $P(A) \geq 0$, countable additivity over disjoint events.
     </div>
@@ -752,6 +853,7 @@
     </div>
 
     <h3 id="conditional">Conditional Probability, Bayes &amp; Independence</h3>
+    <div class="plain"><strong>In plain language:</strong> $P(A \mid B)$ is the probability of $A$ <em>given that</em> $B$ already happened — you restrict attention to the cases where $B$ is true. Bayes’ theorem reverses the direction: update your prior belief $P(A)$ after observing evidence $B$. Events are <em>independent</em> when knowing one tells you nothing about the other.</div>
     <div class="box"><span class="tag">Definition</span>
       $P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$ for $P(B)>0$. Events are <em>independent</em> iff $P(A \cap B)=P(A)P(B)$.
     </div>
@@ -776,6 +878,7 @@
     </div>
 
     <h3 id="rv">Random Variables</h3>
+    <div class="plain"><strong>In plain language:</strong> A random variable $X$ is a numeric label on random outcomes — like $X$ = number of heads in 10 coin flips. The <em>expected value</em> $E[X]$ is the long-run average; <em>variance</em> measures spread around that average. Linearity of expectation is one of the most useful tools in algorithm analysis.</div>
     <div class="box"><span class="tag">Definition</span>
       $X: \Omega \to \mathbb{R}$. $E[X] = \sum x\, P(X=x)$ or $\int x f_X(x)\,dx$. $\mathrm{Var}(X) = E[(X-E[X])^2] = E[X^2]-E[X]^2$. $\mathrm{Cov}(X,Y)=E[(X-E[X])(Y-E[Y])]$.
     </div>
@@ -788,6 +891,7 @@
     </div>
 
     <h3 id="distributions">Common Distributions</h3>
+    <p class="lead">Each distribution is a recipe for assigning probabilities to outcomes. The table below lists the ones that appear most often in CS — from coin flips (Bernoulli) to waiting times (Exponential) to the bell curve (Normal) that emerges from the Central Limit Theorem.</p>
     <table>
       <tr><th>Name</th><th>PMF / PDF</th><th>Mean</th><th>Variance</th><th>CS use</th></tr>
       <tr><td>Bernoulli($p$)</td><td>$P(1)=p$</td><td>$p$</td><td>$p(1-p)$</td><td>Bit / trial</td></tr>
@@ -805,15 +909,21 @@
     </div>
 
     <h3 id="markov-chains">Markov Chains</h3>
+    <div class="plain"><strong>In plain language:</strong> A Markov chain models a sequence where the next state depends only on the current state, not the full history — “memoryless” transitions. PageRank treats web surfing as a Markov chain; MCMC sampling uses Markov chains to draw samples from complex distributions in Bayesian inference.</div>
     <div class="box"><span class="tag">Definition</span>
       Sequence $\{X_t\}$ with $P(X_{t+1}=j \mid X_t=i, X_{t-1},\ldots) = P(X_{t+1}=j \mid X_t=i) = P_{ij}$. Transition matrix $P$; stationary distribution $\pi$ satisfies $\pi P = \pi$.
     </div>
-    <div class="plain"><strong>CS:</strong> PageRank is a Markov chain on the web graph. MCMC sampling drives modern Bayesian inference.</div>
+    <div class="plain"><strong>Where you see this in CS:</strong> PageRank is a Markov chain on the web graph. MCMC sampling drives modern Bayesian inference and some generative models.</div>
 
     <!-- LINEAR ALGEBRA -->
     <h2 id="linear">V · Linear Algebra</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Linear algebra is the mathematics of lists of numbers (vectors) and grids of numbers (matrices). Graphics transforms, recommendation systems, neural networks, and search engines all reduce to matrix multiplication, dot products, and eigenvalue problems. If calculus tells you how to optimize, linear algebra tells you how data is represented and transformed.</p>
+      <p><strong>In this section:</strong> vectors, dot products, and matrix multiplication → solving linear systems → eigenvalues and the SVD for dimensionality reduction.</p>
+    </div>
 
     <h3 id="vectors">Vectors &amp; Matrices</h3>
+    <div class="plain"><strong>In plain language:</strong> A vector is an ordered list of numbers — a point in space, a pixel color (RGB), or a word embedding. The <em>dot product</em> measures alignment: large when vectors point the same way, zero when orthogonal. Matrix multiplication applies a linear transformation: each output row is a weighted combination of input columns.</div>
     <div class="formula-block">$$\mathbf{u}\cdot\mathbf{v}=\sum_i u_i v_i \qquad \|\mathbf{v}\|=\sqrt{\mathbf{v}\cdot\mathbf{v}} \qquad (AB)_{ij}=\sum_k A_{ik}B_{kj}$$</div>
 
     <div class="box symbols"><span class="tag">Symbols</span>
@@ -825,9 +935,10 @@
       </dl>
     </div>
 
-    <div class="plain"><strong>CS / ML:</strong> Embeddings are vectors; each neural layer is mostly matrix multiplication followed by a nonlinearity. See <a href="#embeddings">XII · Embeddings</a> for how this powers language models.</div>
+    <div class="plain"><strong>Where you see this in CS / ML:</strong> Embeddings are vectors; each neural layer is mostly matrix multiplication followed by a nonlinearity. See <a href="#embeddings">XII · Embeddings</a> for how this powers language models.</div>
 
     <h3 id="systems">Linear Systems</h3>
+    <div class="plain"><strong>In plain language:</strong> A linear system $A\mathbf{x}=\mathbf{b}$ asks: which vector $\mathbf{x}$ satisfies a set of linear equations? The <em>rank</em> of $A$ counts independent constraints. A unique solution exists when there are as many independent equations as unknowns. The determinant (for square matrices) tells you whether the system is invertible — $\det(A) \neq 0$ means you can solve for $\mathbf{x}$ uniquely.</div>
     <div class="box"><span class="tag">Definition</span>
       $A\mathbf{x}=\mathbf{b}$ with $A \in \mathbb{R}^{m \times n}$. $\mathrm{rank}(A)$ = number of pivot columns. Unique solution for $n$ unknowns iff $\mathrm{rank}(A)=\mathrm{rank}([A|\mathbf{b}])=n$.
     </div>
@@ -837,6 +948,7 @@
     </div>
 
     <h3 id="eigen">Eigenvalues &amp; SVD</h3>
+    <div class="plain"><strong>In plain language:</strong> An <em>eigenvector</em> of matrix $A$ is a direction that $A$ only stretches or shrinks — it does not rotate. The stretch factor is the <em>eigenvalue</em> $\lambda$. The SVD ($A=U\Sigma V^T$) decomposes any matrix into rotation, scaling, and rotation — the workhorse of PCA, compression, and recommendation systems.</div>
     <div class="box"><span class="tag">Definition</span>
       $A\mathbf{v}=\lambda\mathbf{v}$, $\mathbf{v}\neq 0$. Solve via $\det(A-\lambda I)=0$. <strong>SVD:</strong> $A=U\Sigma V^T$ with orthogonal $U,V$ and diagonal $\Sigma$ — generalizes eigen-decomposition to any matrix; powers PCA and low-rank approximation.
     </div>
@@ -847,8 +959,13 @@
 
     <!-- CALCULUS -->
     <h2 id="calculus">VI · Calculus for CS</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Calculus studies change and optimization. In CS, derivatives tell you how a loss function responds to each weight (gradients), and gradient descent uses that signal to train neural networks. Multivariable calculus and the chain rule are the mathematical backbone of backpropagation.</p>
+      <p><strong>In this section:</strong> derivatives and gradients → the chain rule (backprop) → gradient descent and convex optimization.</p>
+    </div>
 
     <h3 id="derivatives">Derivatives &amp; Gradients</h3>
+    <div class="plain"><strong>In plain language:</strong> The derivative $f'(x)$ measures how fast $f$ changes when $x$ moves a tiny amount — the slope of the graph. For functions of many variables, the <em>gradient</em> $\nabla f$ collects all partial derivatives into one vector pointing steepest uphill. To minimize a loss, you move opposite to the gradient.</div>
     <div class="box"><span class="tag">Definition</span>
       $f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h}$. Rules: sum, product, quotient, chain $(f\circ g)'=(f'\circ g)\cdot g'$. Gradient $\nabla f = (\partial f/\partial x_1,\ldots,\partial f/\partial x_n)^T$ points steepest uphill.
     </div>
@@ -862,6 +979,7 @@
     </div>
 
     <h3 id="optimization">Optimization</h3>
+    <div class="plain"><strong>In plain language:</strong> Optimization finds inputs that make a function as small (or large) as possible. <em>Gradient descent</em> repeatedly takes a small step downhill: read the gradient, subtract a fraction of it from your parameters, repeat. Learning rate $\eta$ controls step size — too big overshoots, too small crawls.</div>
     <div class="formula-block">$$\theta_{t+1} = \theta_t - \eta \nabla_\theta L(\theta_t)$$</div>
 
     <div class="box symbols"><span class="tag">Symbols · gradient descent</span>
@@ -886,9 +1004,13 @@
 
     <!-- ALGORITHM ANALYSIS -->
     <h2 id="analysis">VII · Analysis of Algorithms</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Algorithm analysis predicts how running time and memory grow as input size increases — before you run expensive benchmarks. Asymptotic notation ($O$, $\Omega$, $\Theta$) abstracts away hardware and constant factors so you can compare designs. Recurrence relations and the Master theorem solve divide-and-conquer costs like merge sort.</p>
+      <p><strong>In this section:</strong> Big-O notation and growth rates → summation and log identities → recurrences, the Master theorem, and amortized analysis.</p>
+    </div>
 
     <h3 id="asymptotic">Asymptotic Notation</h3>
-    <div class="plain"><strong>Plain language:</strong> Asymptotic notation describes growth as input size $n \to \infty$, ignoring constant factors — it answers “how does this scale?”</div>
+    <div class="plain"><strong>In plain language:</strong> Asymptotic notation describes growth as input size $n \to \infty$, ignoring constant factors and lower-order terms. $O(g)$ is an upper bound (“at most this fast”), $\Omega(g)$ a lower bound (“at least this slow”), $\Theta(g)$ a tight bound (“exactly this growth rate”). It answers: “If I double the input, does runtime double, quadruple, or explode?”</div>
 
     <div class="box"><span class="tag">Definition</span>
       $f(n)=O(g(n))$ iff $\exists c,n_0: \forall n\geq n_0,\, |f(n)|\leq c|g(n)|$ (asymptotic upper bound).<br>
@@ -907,6 +1029,7 @@
     </table>
 
     <h3 id="summations">Summations &amp; Logarithms</h3>
+    <div class="plain"><strong>In plain language:</strong> Many algorithm runtimes are sums — adding up work at each loop iteration or recursion level. Closed-form summation formulas let you collapse a sum into a simple expression. Logarithms appear whenever you halve the problem size (binary search, balanced trees): $\log_2 n$ counts how many halvings fit in $n$.</div>
     <div class="box"><span class="tag">Formulas</span>
       $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$ &nbsp;·&nbsp;
       $\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}$ &nbsp;·&nbsp;
@@ -920,6 +1043,7 @@
     </div>
 
     <h3 id="recurrences">Recurrences</h3>
+    <div class="plain"><strong>In plain language:</strong> A recurrence expresses total cost in terms of costs on smaller inputs — “to sort $n$ items, sort two halves of size $n/2$ plus merge.” The Master theorem gives a recipe for divide-and-conquer recurrences. <em>Amortized</em> analysis averages cost over a sequence (e.g. dynamic array doubling is $O(1)$ per insert on average).</div>
     <div class="box"><span class="tag">Example</span>
       Merge sort: $T(n)=2T(n/2)+\Theta(n)$, $T(1)=\Theta(1)$ → $\Theta(n\log n)$ by Master theorem.
     </div>
@@ -943,6 +1067,10 @@
 
     <!-- BOOLEAN -->
     <h2 id="boolean">VIII · Boolean Algebra</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Boolean algebra is the mathematics of 0 and 1 — the logic inside every CPU gate, circuit, and conditional branch. It connects propositional logic to hardware: any boolean function can be built from AND, OR, NOT, or even from NAND alone.</p>
+    </div>
+    <div class="plain"><strong>In plain language:</strong> Boolean algebra manipulates true/false (1/0) values with AND ($\land$), OR ($\lor$), and NOT ($\neg$). De Morgan’s laws let you swap AND and OR by negating inputs and output — the same identities compilers use to simplify conditions. NAND alone is <em>functionally complete</em>: you can build any logic gate from it.</div>
     <div class="box"><span class="tag">Definition</span>
       On $\{0,1\}$: $\land,\lor,\neg$ satisfy commutativity, associativity, distributivity ($a\land(b\lor c)=(a\land b)\lor(a\land c)$), and De Morgan: $\neg(a\land b)=\neg a\lor\neg b$.
     </div>
@@ -952,7 +1080,10 @@
 
     <!-- FORMAL LANGUAGES -->
     <h2 id="formal">IX · Formal Languages &amp; Automata</h2>
-    <div class="plain"><strong>Plain language:</strong> Automata are mathematical models of computation with finite memory. Language classes form a hierarchy of expressiveness.</div>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Automata theory classifies what different kinds of machines can recognize — from regular expressions to programming languages to general computation. Compilers use grammars to parse code; regex engines implement finite automata; the Church–Turing thesis says any “realistic” algorithm is simulable by a Turing machine.</p>
+    </div>
+    <div class="plain"><strong>In plain language:</strong> An automaton is a mathematical model of a machine with finite memory. <em>Regular languages</em> (DFA/NFA) match patterns without memory of prior context — think regex. <em>Context-free grammars</em> handle nesting (parentheses, XML). <em>Turing machines</em> model any algorithm a computer can run.</div>
 
     <div class="box"><span class="tag">Definition</span>
       <strong>DFA / NFA:</strong> recognize <em>regular languages</em> — closed under union, concatenation, star; match lexers and regex (without backreferences).<br>
@@ -966,6 +1097,10 @@
 
     <!-- INFORMATION THEORY -->
     <h2 id="info">X · Information Theory</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Information theory quantifies uncertainty and compression. Shannon entropy measures the average bits needed to encode a random source; cross-entropy measures how wasteful a wrong code is. These same quantities appear as training losses in machine learning — minimizing cross-entropy is equivalent to maximizing likelihood.</p>
+    </div>
+    <div class="plain"><strong>In plain language:</strong> Entropy $H(X)$ asks: on average, how many yes/no questions do you need to identify a random outcome? A fair coin has entropy 1 bit (maximum for two outcomes). Cross-entropy compares your model’s predicted distribution $Q$ to the true distribution $P$ — the extra bits you waste by using the wrong code.</div>
     <div class="formula-block">$$H(X) = -\sum_x P(x)\log_2 P(x) \qquad H(P,Q) = -\sum_x P(x)\log_2 Q(x)$$</div>
 
     <div class="box symbols"><span class="tag">Symbols</span>
@@ -991,6 +1126,10 @@
 
     <!-- COMPUTABILITY -->
     <h2 id="computability">XI · Computability &amp; Complexity</h2>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Computability asks what problems can be solved at all; complexity asks how efficiently. The halting problem proves some questions are undecidable. The classes P and NP organize problems by feasible verification vs. feasible solving — the P vs. NP question is the deepest open problem in CS.</p>
+    </div>
+    <div class="plain"><strong>In plain language:</strong> A problem is <em>decidable</em> if an algorithm can always answer yes or no in finite time. The halting problem is not — no program can reliably detect whether arbitrary code will stop. <em>P</em> is problems solvable in polynomial time; <em>NP</em> is problems where a proposed solution can be checked quickly. <em>NP-complete</em> problems are the hardest in NP — if any one has a fast algorithm, all of NP does.</div>
     <div class="box"><span class="tag">Definition</span>
       $A$ is <em>countable</em> if a bijection $\mathbb{N}\to A$ exists. $\mathbb{Q}$ is countable; $\mathbb{R}$ is not (Cantor diagonalization).
     </div>
@@ -1007,10 +1146,13 @@
 
     <!-- ML & LANGUAGE MODELS -->
     <h2 id="ml">XII · Machine Learning &amp; Language Models</h2>
-    <p>Large language models (LLMs) are probability machines built from linear algebra, calculus, and information theory. They predict the next token, learn by gradient descent, and compose context via attention.</p>
+    <div class="overview">
+      <p><strong>Why it matters:</strong> Large language models (LLMs) are probability machines built from the math in sections V–X: vectors and matrices (embeddings, layers), calculus (gradients, backprop), probability (sampling, conditioning), and information theory (cross-entropy loss, perplexity). Understanding these pieces demystifies how GPT-class models learn and generate text.</p>
+      <p><strong>In this section:</strong> end-to-end pipeline → embeddings → softmax and cross-entropy → training and backprop → attention and transformers → inference and perplexity.</p>
+    </div>
 
     <h3 id="ml-overview">How LLMs Use Math — End to End</h3>
-    <div class="plain"><strong>Plain language:</strong> Text is split into tokens (subword pieces). Each token becomes a vector. Layers of matrix math transform those vectors; the final layer outputs scores for every possible next token. Training adjusts weights to maximize probability of the correct next token.</div>
+    <div class="plain"><strong>In plain language:</strong> Text is split into tokens (subword pieces like “hel” + “lo”). Each token becomes a vector. Stacked layers of matrix math transform those vectors; the final layer outputs a score for every possible next token. Training nudges all the weights so the model assigns high probability to the correct next token in billions of training examples.</div>
 
     <div class="box"><span class="tag">Pipeline</span>
       <ol>
@@ -1036,7 +1178,7 @@
     </div>
 
     <h3 id="embeddings">Embeddings &amp; Vector Similarity</h3>
-    <div class="plain"><strong>Plain language:</strong> An embedding is a list of numbers representing meaning. Similar words/tokens get similar vectors; the dot product measures alignment.</div>
+    <div class="plain"><strong>In plain language:</strong> An embedding is a list of numbers representing meaning in vector space. Similar words or tokens get similar vectors; the dot product (or cosine similarity) measures how aligned two meanings are. Search, recommendations, and RAG retrieval all rank by this geometry.</div>
 
     <div class="formula-block">$$\text{sim}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|} = \cos\theta$$</div>
 
@@ -1055,7 +1197,7 @@
     </div>
 
     <h3 id="softmax-ce">Softmax &amp; Cross-Entropy Loss</h3>
-    <div class="plain"><strong>Plain language:</strong> Logits are raw scores. Softmax squashes them into probabilities that sum to 1. Cross-entropy measures how surprised the model is by the true next token — this is the main training loss for LLMs.</div>
+    <div class="plain"><strong>In plain language:</strong> <em>Logits</em> are raw scores for each possible next token — unbounded numbers. <em>Softmax</em> converts them into probabilities that sum to 1. <em>Cross-entropy</em> measures how surprised the model is by the true next token: low when the model assigns it high probability, high when it assigns it low probability. This is the main training loss for LLMs.</div>
 
     <div class="formula-block">$$\text{softmax}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_j e^{z_j}} \qquad L = -\log P(y) = -\log \text{softmax}(\mathbf{z})_y$$</div>
 
@@ -1082,7 +1224,7 @@
     </div>
 
     <h3 id="training">Training, Backpropagation &amp; Optimizers</h3>
-    <div class="plain"><strong>Plain language:</strong> Forward pass computes predictions and loss. Backpropagation applies the chain rule layer-by-layer to find how each weight affects the loss. Optimizers (SGD, Adam) update weights.</div>
+    <div class="plain"><strong>In plain language:</strong> The <em>forward pass</em> runs input through the network to get predictions and compute loss. <em>Backpropagation</em> applies the chain rule backward through each layer to find how every weight affects the loss. An <em>optimizer</em> (SGD, Adam) uses those gradients to update weights — repeating this on billions of tokens is training.</div>
 
     <div class="formula-block">$$\frac{\partial L}{\partial W^{(\ell)}} = \frac{\partial L}{\partial h^{(\ell+1)}} \cdot \frac{\partial h^{(\ell+1)}}{\partial h^{(\ell)}} \cdot \frac{\partial h^{(\ell)}}{\partial W^{(\ell)}}$$</div>
 
@@ -1104,7 +1246,7 @@
     </div>
 
     <h3 id="attention">Attention &amp; Transformers</h3>
-    <div class="plain"><strong>Plain language:</strong> Attention lets each token “look at” other tokens and weight how much to borrow from each. Transformers stack this operation — that architecture powers GPT, Llama, Claude, etc.</div>
+    <div class="plain"><strong>In plain language:</strong> <em>Attention</em> lets each token “look at” every other token in the context and decide how much to borrow from each. The softmax turns raw relevance scores into weights that sum to 1. Stacking attention layers in a <em>Transformer</em> — the architecture behind GPT, Llama, Claude — is how models build long-range context.</div>
 
     <div class="formula-block">$$\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V$$</div>
 
@@ -1133,7 +1275,7 @@
     </div>
 
     <h3 id="inference">Inference, Sampling &amp; Perplexity</h3>
-    <div class="plain"><strong>Plain language:</strong> After training, the model generates text by repeatedly sampling the next token. Temperature controls randomness; perplexity measures how well the model predicts held-out text.</div>
+    <div class="plain"><strong>In plain language:</strong> After training, generation repeatedly picks a next token from the model’s probability distribution, appends it, and continues. <em>Temperature</em> scales logits before softmax — low temperature is greedy and deterministic, high temperature is creative and random. <em>Perplexity</em> measures average prediction quality on held-out text: lower means the model is less “surprised” by real data.</div>
 
     <div class="formula-block">$$P_i' = \frac{e^{z_i / \tau}}{\sum_j e^{z_j / \tau}} \qquad \text{PP} = \exp\!\left(-\frac{1}{T}\sum_{t=1}^{T} \log P(x_t \mid x_{<t})\right)$$</div>
 
@@ -1159,6 +1301,7 @@
 
     <!-- REFERENCE -->
     <h2 id="reference">Quick Reference</h2>
+    <p class="lead">A one-page cheat sheet of the most-used formulas. Each entry links back to the full section with definitions, symbol guides, and worked examples.</p>
     <table>
       <tr><th>Topic</th><th>Formula</th></tr>
       <tr><td>Binomial</td><td>$\dbinom{n}{k}=n!/(k!(n-k)!)$</td></tr>
