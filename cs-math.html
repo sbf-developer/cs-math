@@ -844,10 +844,6 @@
     .toc-pdf-btn svg { flex-shrink: 0; }
     body:not(.sidebar-open) .toc-pdf-btn .toc-pdf-label { display: none; }
     body:not(.sidebar-open) .toc-pdf-btn { padding: 0.55rem; }
-    body.is-pdf-export #reader-fab,
-    body.is-pdf-export #reader-panel,
-    body.is-pdf-export nav#toc { visibility: hidden !important; }
-    body.is-pdf-export main { padding-left: max(1.25rem, calc((100vw - var(--content-max)) / 2)) !important; }
     @media print {
       @page { margin: 14mm; size: A4; }
       nav#toc,
@@ -991,7 +987,7 @@
     <a class="part" href="#reference" title="Quick Reference"><span class="toc-full">Quick Reference</span><span class="toc-short">Ref</span></a>
     </div>
     <div class="toc-foot">
-      <button type="button" class="toc-pdf-btn" id="pdf-download" title="Build a PDF from the current page (no repo file needed). Falls back to print if the page is too large.">
+      <button type="button" class="toc-pdf-btn" id="pdf-download" title="Open print dialog — choose Save as PDF as the destination.">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M8 1v9M8 10l3-3M8 10L5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M2 12v1.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -1013,7 +1009,7 @@
           <li><strong>Every box has two lines at the top</strong> — a title (what it is) and a subtitle (why you’re reading it).</li>
           <li><strong>Blue variable cards</strong> decode symbols before you touch any formula.</li>
           <li><strong>Green “Start here” blocks</strong> are plain English only — no math background needed.</li>
-          <li><strong>Download PDF</strong> (sidebar button) exports the current page — always up to date with your latest edits.</li>
+          <li><strong>Download PDF</strong> (sidebar button) opens print — choose <em>Save as PDF</em> as the printer.</li>
         </ul>
         <div class="layout-legend" aria-label="Box color legend">
           <span class="layout-chip"><i class="c-start"></i> Start here</span>
@@ -2637,65 +2633,14 @@
 
 (function pdfExport(){
   const btn = document.getElementById('pdf-download');
-  const content = document.querySelector('.content');
-  if (!btn || !content) return;
+  if (!btn) return;
 
-  const PDF_JS = 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js';
-  const defaultHtml = btn.innerHTML;
-
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      if (window.html2pdf) return resolve();
-      const s = document.createElement('script');
-      s.src = src;
-      s.onload = () => resolve();
-      s.onerror = () => reject(new Error('PDF library failed to load'));
-      document.head.appendChild(s);
-    });
-  }
-
-  function resetBtn() {
-    btn.disabled = false;
-    btn.innerHTML = defaultHtml;
-    document.body.classList.remove('is-pdf-export');
-  }
-
-  btn.addEventListener('click', async () => {
-    btn.disabled = true;
-    btn.innerHTML = '<span class="toc-pdf-label">Building PDF…</span>';
-    document.body.classList.add('is-pdf-export');
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
     window.scrollTo(0, 0);
-    await new Promise(r => setTimeout(r, 250));
-
-    const stamp = new Date().toISOString().slice(0, 10);
-    const opts = {
-      margin: [10, 10, 12, 10],
-      filename: 'cs-math-reference-' + stamp + '.pdf',
-      image: { type: 'jpeg', quality: 0.92 },
-      html2canvas: {
-        scale: 1.25,
-        useCORS: true,
-        scrollY: 0,
-        backgroundColor: '#ffffff',
-        width: content.scrollWidth
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'], avoid: ['.box', '.plain', '.formula-unit'] }
-    };
-
-    try {
-      await loadScript(PDF_JS);
-      await html2pdf().set(opts).from(content).save();
-    } catch (err) {
-      console.warn('One-click PDF failed, opening print dialog:', err);
-      btn.innerHTML = '<span class="toc-pdf-label">Use Save as PDF…</span>';
-      window.print();
-    } finally {
-      resetBtn();
-    }
+    window.print();
   });
-
-  window.addEventListener('afterprint', resetBtn);
 })();
 
 (function(){
