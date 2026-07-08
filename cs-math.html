@@ -17,6 +17,13 @@
       --line: #e8e8e4;
       --accent: #0f766e;
       --accent-soft: #ecfdf5;
+      --vars: #0369a1;
+      --vars-soft: #f0f9ff;
+      --def: #64748b;
+      --ex: #059669;
+      --ex-soft: #ecfdf5;
+      --thm: #7c3aed;
+      --thm-soft: #f5f3ff;
       --sidebar-w: 260px;
       --sidebar-rail: 3.25rem;
       --sidebar-current: var(--sidebar-rail);
@@ -130,6 +137,7 @@
       min-height: 100vh;
       padding: 2.75rem max(1.25rem, calc((100vw - var(--sidebar-current) - var(--content-max)) / 2)) 6rem;
       padding-left: calc(var(--sidebar-current) + max(1.25rem, (100vw - var(--sidebar-current) - var(--content-max)) / 2));
+      padding-top: 3.5rem;
       transition: padding 0.25s var(--ease);
     }
     .content {
@@ -163,6 +171,22 @@
     .guide ul { margin: 0; padding-left: 1.15rem; }
     .guide li { margin-bottom: 0.4rem; }
     .guide li strong { color: var(--text); font-weight: 600; }
+    .primer { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid var(--line); }
+    .primer > p { margin-bottom: 0.75rem; font-size: 0.875rem; }
+    .notation-dl {
+      display: grid;
+      grid-template-columns: minmax(5.5rem, auto) 1fr;
+      gap: 0.35rem 1rem;
+      font-size: 0.8125rem;
+      text-align: left;
+    }
+    .notation-dl dt { color: var(--accent); font-weight: 500; }
+    .notation-dl dd { color: var(--muted); margin: 0; line-height: 1.45; }
+    .overview .start-here {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--line);
+    }
     .roadmap {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
@@ -191,31 +215,346 @@
       font-size: 1.375rem;
       font-weight: 650;
       letter-spacing: -0.015em;
-      margin: 3rem 0 1rem;
-      padding-top: 0.5rem;
-      scroll-margin-top: 1.25rem;
+      margin: 0;
+      padding-top: 0;
+      scroll-margin-top: 4.5rem;
     }
     h2 + p { color: var(--muted); margin-bottom: 1.25rem; }
-    h3 { font-size: 1.0625rem; font-weight: 600; margin: 2rem 0 0.65rem; scroll-margin-top: 1.25rem; }
+    h3 { font-size: 1.0625rem; font-weight: 600; margin: 0; scroll-margin-top: 4.5rem; }
     h4 { font-size: 0.9375rem; font-weight: 600; margin: 1.25rem 0 0.4rem; }
     p { margin-bottom: 0.9rem; }
     ul, ol { margin: 0.4rem 0 1rem 1.25rem; }
     li { margin-bottom: 0.3rem; }
     li::marker { color: var(--muted); }
-    .plain {
-      border-left: 2px solid var(--accent);
-      padding: 0.65rem 0 0.65rem 1rem;
-      margin: 1.1rem 0;
+    .plain strong { color: var(--text); font-weight: 600; }
+    .plain .plain-label {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+    /* —— Reading clarity —— */
+    .read-context {
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-current);
+      right: 0;
+      z-index: 180;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+      transition: left 0.25s var(--ease);
+    }
+    .read-context-inner {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0.45rem max(1.25rem, calc((100vw - var(--sidebar-current) - var(--content-max)) / 2));
+      padding-left: max(1.25rem, calc((100vw - var(--sidebar-current) - var(--content-max)) / 2));
+    }
+    .read-context-kicker {
+      display: block;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: var(--muted);
+    }
+    .read-context-path {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+    }
+    .read-context-what {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+    .chapter {
+      margin: 2.75rem 0 1.25rem;
+      padding: 1rem 1.15rem 1.1rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      border-left: 4px solid var(--accent);
+      scroll-margin-top: 4.5rem;
+    }
+    .chapter-kicker {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+    .topic-head {
+      margin: 2rem 0 0.85rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 4.5rem;
+    }
+    .topic-head .lead {
+      margin: 0.45rem 0 0;
       font-size: 0.9375rem;
     }
-    .plain strong { color: var(--text); font-weight: 600; }
+    .topic-read-hint {
+      margin: 0.65rem 0 0;
+      padding: 0.45rem 0.65rem;
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .topic-read-hint strong { color: var(--text); font-weight: 600; }
+    .tag-stack { display: block; margin-bottom: 0.55rem; }
+    .tag-stack .tag-title {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+    }
+    .tag-stack .tag-desc {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .box.card-vars .tag-stack .tag-title,
+    .plain .tag-stack .tag-title { color: var(--vars); }
+    .box.card-ex .tag-stack .tag-title { color: var(--ex); }
+    .box.card-thm .tag-stack .tag-title { color: var(--thm); }
+    .plain .plain-label.tag-stack .tag-title { color: var(--accent); }
+    .formula-block { overflow-x: auto; margin: 0.85rem 0; position: relative; }
+    .formula-block-label {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--def);
+      margin-bottom: 0.5rem;
+    }
+    .formula-block-desc {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--muted);
+      margin-bottom: 0.65rem;
+    }
+    [data-read-kind] { scroll-margin-top: 5rem; }
+    /* —— Skimmable layout system —— */
+    .layout-legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+      gap: 0.4rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+    }
+    .layout-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .layout-chip i {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .layout-chip i.c-start { background: var(--accent); }
+    .layout-chip i.c-vars { background: var(--vars); }
+    .layout-chip i.c-def { background: var(--def); }
+    .layout-chip i.c-ex { background: var(--ex); }
+    .layout-chip i.c-thm { background: var(--thm); }
+    .topic-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.65rem;
+      margin: -0.35rem 0 1rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+    .topic-strip-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .skim-map {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.25rem 0 1.15rem;
+      padding: 0;
+      list-style: none;
+    }
+    .skim-map a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.3rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .skim-map a:hover { border-color: var(--accent); color: var(--accent); }
+    .skim-map .n { color: var(--accent); font-weight: 700; font-size: 0.6875rem; }
+    .skim-map-label {
+      width: 100%;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+    .var-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr));
+      gap: 0.4rem;
+    }
+    .var-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.15rem 0.55rem;
+      align-items: start;
+      padding: 0.45rem 0.6rem;
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 0.8125rem;
+    }
+    .var-item .sym {
+      color: var(--vars);
+      font-weight: 600;
+      white-space: nowrap;
+      grid-row: span 2;
+      align-self: center;
+    }
+    .var-item .role {
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .var-item .mean { color: var(--muted); line-height: 1.4; grid-column: 2; }
+    .box.card-vars .tag { color: var(--vars); }
+    .pick-flow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.65rem;
+    }
+    @media (max-width: 540px) { .pick-flow { grid-template-columns: 1fr; } }
+    .pick-branch {
+      padding: 0.6rem 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      line-height: 1.45;
+    }
+    .pick-branch strong { display: block; margin-bottom: 0.2rem; color: var(--text); }
+    .formula-unit {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1rem 0;
+      background: var(--surface);
+    }
+    .formula-unit-head {
+      padding: 0.45rem 0.85rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .formula-unit-body {
+      display: grid;
+      grid-template-columns: 1fr minmax(11.5rem, 15rem);
+    }
+    @media (max-width: 680px) {
+      .formula-unit-body { grid-template-columns: 1fr; }
+    }
+    .formula-unit-math {
+      padding: 0.85rem 1rem;
+      overflow-x: auto;
+      font-size: 0.9375rem;
+    }
+    .formula-unit-vars {
+      padding: 0.65rem 0.75rem;
+      background: var(--vars-soft);
+      border-left: 1px solid var(--line);
+      font-size: 0.8125rem;
+    }
+    @media (max-width: 680px) {
+      .formula-unit-vars { border-left: none; border-top: 1px solid var(--line); }
+    }
+    .formula-unit-vars .mini {
+      display: grid;
+      gap: 0.35rem;
+    }
+    .formula-unit-vars .mini div {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.35rem 0.5rem;
+      line-height: 1.35;
+    }
+    .formula-unit-vars .mini dt { color: var(--vars); font-weight: 600; }
+    .formula-unit-vars .mini dd { color: var(--muted); margin: 0; }
     .box {
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 1rem 1.1rem;
       margin: 1rem 0;
       background: var(--surface);
+      border-left-width: 3px;
+      border-left-style: solid;
+      border-left-color: var(--line);
+    }
+    .box.card-start { border-left-color: var(--accent); background: var(--accent-soft); }
+    .box.card-vars { border-left-color: var(--vars); }
+    .box.card-def { border-left-color: var(--def); }
+    .box.card-ex { border-left-color: var(--ex); }
+    .box.card-thm { border-left-color: var(--thm); background: var(--thm-soft); }
+    .box.card-key { border-left-color: var(--accent); background: #fafafa; }
+    .box.symbols { border-left-color: var(--vars); }
+    .plain {
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 0 0.75rem 1rem;
+      margin: 1rem 0;
+      color: var(--muted);
+      font-size: 0.9375rem;
+      background: var(--accent-soft);
+      border-radius: 0 8px 8px 0;
     }
     .box .tag {
       display: block;
@@ -226,6 +565,9 @@
       color: var(--muted);
       margin-bottom: 0.45rem;
     }
+    .box ul { margin: 0.35rem 0 0 1.1rem; font-size: 0.9rem; }
+    .box li { margin-bottom: 0.35rem; color: var(--muted); }
+    .box li strong { color: var(--text); }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -246,7 +588,6 @@
       padding: 0.1em 0.35em;
       border-radius: 4px;
     }
-    .formula-block { overflow-x: auto; margin: 0.85rem 0; }
     .symbols dl {
       display: grid;
       grid-template-columns: minmax(5rem, auto) 1fr;
@@ -515,6 +856,79 @@
       border-radius: 6px;
       background: var(--accent-soft);
     }
+    .toc-foot {
+      flex-shrink: 0;
+      padding: 0.55rem 0.65rem 0.75rem;
+      border-top: 1px solid var(--line);
+    }
+    .toc-pdf-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid #99dccf;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .toc-pdf-btn:hover:not(:disabled) { background: #d1fae5; border-color: var(--accent); }
+    .toc-pdf-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .toc-pdf-btn:disabled { opacity: 0.65; cursor: wait; }
+    .toc-pdf-btn svg { flex-shrink: 0; }
+    body:not(.sidebar-open) .toc-pdf-btn .toc-pdf-label { display: none; }
+    body:not(.sidebar-open) .toc-pdf-btn { padding: 0.55rem; }
+    body.is-pdf-export #read-context,
+    body.is-pdf-export #reader-fab,
+    body.is-pdf-export #reader-panel,
+    body.is-pdf-export nav#toc { visibility: hidden !important; }
+    body.is-pdf-export main { padding-left: max(1.25rem, calc((100vw - var(--content-max)) / 2)) !important; }
+    @media print {
+      @page { margin: 14mm; size: A4; }
+      nav#toc,
+      #read-context,
+      #reader-fab,
+      #reader-panel,
+      .skim-map,
+      .topic-read-hint,
+      .layout-legend { display: none !important; }
+      main {
+        padding: 0 !important;
+        padding-left: 0 !important;
+      }
+      .content {
+        max-width: none !important;
+        width: 100% !important;
+      }
+      body {
+        background: #fff;
+        color: #000;
+        font-size: 10.5pt;
+        line-height: 1.55;
+      }
+      .hero { border-bottom-color: #ccc; page-break-after: avoid; }
+      .chapter {
+        break-before: page;
+        page-break-before: always;
+        border: none;
+        padding-left: 0;
+        margin-top: 0;
+      }
+      .chapter:first-of-type { break-before: auto; page-break-before: auto; }
+      .overview,
+      .box,
+      .plain,
+      .formula-unit,
+      .formula-block { break-inside: avoid; page-break-inside: avoid; }
+      a[href^="#"] { color: inherit; text-decoration: none; }
+      .katex { font-size: 1.05em; }
+    }
   </style>
 </head>
 <body>
@@ -618,21 +1032,63 @@
     <a class="sub" href="#inference">Inference &amp; perplexity</a>
     <a class="part" href="#reference" title="Quick Reference"><span class="toc-full">Quick Reference</span><span class="toc-short">Ref</span></a>
     </div>
+    <div class="toc-foot">
+      <button type="button" class="toc-pdf-btn" id="pdf-download" title="Build a PDF from the current page (no repo file needed). Falls back to print if the page is too large.">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1v9M8 10l3-3M8 10L5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12v1.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="toc-pdf-label">Download PDF</span>
+      </button>
+    </div>
   </nav>
 
   <main>
+  <div id="read-context" class="read-context" aria-live="polite">
+    <div class="read-context-inner">
+      <span class="read-context-kicker">You are reading</span>
+      <span class="read-context-path" id="read-path">Introduction</span>
+      <span class="read-context-what" id="read-what">How this page is organized</span>
+    </div>
+  </div>
   <div class="content">
     <header class="hero" id="intro">
       <h1>Computer Science Mathematics</h1>
-      <p class="hero-lead">A verified, single-page reference for the mathematics behind algorithms, cryptography, probability, linear algebra, and modern language models. Each topic moves from intuition to formal definitions — so you can understand the idea first, then read the rigorous math with confidence.</p>
+      <p class="hero-lead">A verified, single-page reference for the mathematics behind algorithms, cryptography, probability, linear algebra, and modern language models. <strong>No math background is assumed</strong> — each topic starts from zero, builds intuition in plain English, then states the formal CS-grade definitions.</p>
       <div class="guide">
         <span class="guide-title">How to read this page</span>
         <ul>
-          <li><strong>Section overviews</strong> (white boxes) explain why the topic matters in CS and what subtopics follow.</li>
-          <li><strong>Teal bars</strong> translate formal concepts into everyday language before the definitions.</li>
-          <li><strong>Definition / Theorem / Example boxes</strong> hold the precise, academic statements — the source of truth.</li>
-          <li><strong>Symbol glossaries</strong> decode every variable; worked examples plug in real numbers step by step.</li>
+          <li><strong>Watch the top bar</strong> — it always shows which section, topic, and block type you’re on.</li>
+          <li><strong>Follow the numbered chips</strong> under each topic — read in order: Idea → Variables → Rules → Example.</li>
+          <li><strong>Every box has two lines at the top</strong> — a title (what it is) and a subtitle (why you’re reading it).</li>
+          <li><strong>Blue variable cards</strong> decode symbols before you touch any formula.</li>
+          <li><strong>Green “Start here” blocks</strong> are plain English only — no math background needed.</li>
+          <li><strong>Download PDF</strong> (sidebar button) exports the current page — always up to date with your latest edits.</li>
         </ul>
+        <div class="layout-legend" aria-label="Box color legend">
+          <span class="layout-chip"><i class="c-start"></i> Start here</span>
+          <span class="layout-chip"><i class="c-vars"></i> Variables</span>
+          <span class="layout-chip"><i class="c-def"></i> Definition</span>
+          <span class="layout-chip"><i class="c-ex"></i> Example</span>
+          <span class="layout-chip"><i class="c-thm"></i> Theorem</span>
+        </div>
+        <div class="primer">
+          <span class="guide-title">Notation primer</span>
+          <p>Symbols are shorthand, not magic. Keep this table open while reading — every section also defines its own symbols before using them.</p>
+          <dl class="notation-dl">
+            <dt>$x^2$, $a/b$</dt><dd>exponent (repeat multiplication) / fraction — powers and ratios</dd>
+            <dt>$A_{ij}$</dt><dd>subscript — item in row $i$, column $j$ of a grid (matrix entry)</dd>
+            <dt>$x$, $n$, $k$</dt><dd>variables — placeholders for unknown numbers (like a variable in code)</dd>
+            <dt>$\mathbb{N}, \mathbb{Z}, \mathbb{R}$</dt><dd>number sets: naturals $\{0,1,2,\ldots\}$; integers $\{\ldots,-1,0,1,\ldots\}$; reals (all decimal numbers)</dd>
+            <dt>$\sum$, $\prod$</dt><dd>add up / multiply a list of terms (loops written vertically)</dd>
+            <dt>$\forall$, $\exists$</dt><dd>“for every” (check all cases) / “there exists” (find at least one)</dd>
+            <dt>$\in$</dt><dd>“belongs to” — $x \in S$ means $x$ is in set $S$</dd>
+            <dt>$P(A)$</dt><dd>probability of event $A$ — a number from 0 (never) to 1 (always)</dd>
+            <dt>$E[X]$</dt><dd>expected value — the long-run average of random quantity $X$</dd>
+            <dt>$\log$</dt><dd>logarithm — base depends on section: $\log_2$ (bits) in entropy, $\ln$ (nats) in ML loss, $\log_2$ in $O(\log n)$</dd>
+            <dt>$O(n)$</dt><dd>Big-O growth rate — how cost scales when input size grows (Section VII)</dd>
+          </dl>
+        </div>
         <div class="roadmap">
           <a href="#logic">I · Logic</a>
           <a href="#discrete">II · Discrete</a>
@@ -656,44 +1112,114 @@
     <div class="overview">
       <p><strong>Why it matters:</strong> Logic is the grammar of correct reasoning. Programs evaluate boolean conditions; type checkers and SAT solvers search logical formulas; security proofs show that a system cannot reach a bad state. Proof techniques let you certify that an algorithm or protocol is correct — not just test it on examples.</p>
       <p><strong>In this section:</strong> propositional logic (statements and connectives) → predicate logic (quantifiers over objects) → proof methods including induction and the pigeonhole principle.</p>
+      <p class="start-here"><strong>If you’re new:</strong> Think of logic as rules for true/false statements — the same true/false values as <code>bool</code> in code. You already use AND, OR, and NOT daily; this section names them precisely and shows how to prove things rigorously.</p>
     </div>
+    <nav class="skim-map" aria-label="Section I map">
+      <span class="skim-map-label">Section map</span>
+      <a href="#propositional"><span class="n">1</span> Propositions</a>
+      <a href="#predicate"><span class="n">2</span> Quantifiers</a>
+      <a href="#proofs"><span class="n">3</span> Proofs</a>
+    </nav>
 
     <h3 id="propositional">Propositional Logic</h3>
-    <div class="plain"><strong>In plain language:</strong> A <em>proposition</em> is a statement that is either true or false — “$2+2=4$” yes, “$x+1=5$” no (it depends on $x$). Connectives — NOT ($\neg$), AND ($\land$), OR ($\lor$), IMPLIES ($\to$) — let you build compound statements from simple ones, exactly like <code>if (a &amp;&amp; !b)</code> in code.</div>
+    <p class="lead">True/false statements combined with AND, OR, NOT — the same logic inside every <code>if</code> statement.</p>
+    <div class="topic-strip"><span class="topic-strip-label">In one sentence</span> Every claim is true or false; connectives combine them like boolean operators in code.</div>
+    <nav class="skim-map" aria-label="Propositional map">
+      <span class="skim-map-label">Read in order</span>
+      <a href="#prop-start"><span class="n">1</span> Idea</a>
+      <a href="#prop-vars"><span class="n">2</span> Variables</a>
+      <a href="#prop-def"><span class="n">3</span> Rules</a>
+      <a href="#prop-laws"><span class="n">4</span> Key laws</a>
+    </nav>
+    <div class="plain" id="prop-start"><span class="plain-label">Start here</span>
+    A <em>proposition</em> is a true/false statement — “$2+2=4$” is true; “$2+2=5$” is false. “$x+1=5$” is not a proposition until you fix $x$.<br><br>
+    <strong>Connectives</strong> combine propositions, exactly like boolean operators in code:<br>
+    • <strong>NOT</strong> ($\neg p$) flips true ↔ false — like <code>!p</code><br>
+    • <strong>AND</strong> ($p \land q$) true only if both are — like <code>p &amp;&amp; q</code><br>
+    • <strong>OR</strong> ($p \lor q$) true if at least one is — like <code>p || q</code><br>
+    • <strong>IMPLIES</strong> ($p \to q$) false only when $p$ is true and $q$ is false — “if it rains, the ground is wet”</div>
 
-    <div class="box"><span class="tag">Definition</span>
+    <div class="box card-vars symbols" id="prop-vars"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$p, q$</span><span class="role">Propositions</span><span class="mean">Stand for true/false statements</span></div>
+        <div class="var-item"><span class="sym">$\neg$</span><span class="role">NOT</span><span class="mean">Flips true ↔ false</span></div>
+        <div class="var-item"><span class="sym">$\land$</span><span class="role">AND</span><span class="mean">True only if both inputs true</span></div>
+        <div class="var-item"><span class="sym">$\lor$</span><span class="role">OR</span><span class="mean">True if at least one input true</span></div>
+        <div class="var-item"><span class="sym">$\to$</span><span class="role">IMPLIES</span><span class="mean">False only when true implies false</span></div>
+        <div class="var-item"><span class="sym">$\leftrightarrow$</span><span class="role">If and only if</span><span class="mean">Both directions hold — $p$ implies $q$ and $q$ implies $p$</span></div>
+      </div>
+    </div>
+
+    <div class="box card-def" id="prop-def"><span class="tag">Definition</span>
       Propositional variables $p, q, \ldots$ combine via $\neg, \land, \lor, \to, \leftrightarrow$. A <em>tautology</em> is always true; a formula is <em>satisfiable</em> if some assignment makes it true.
     </div>
 
-    <div class="formula-block">
+    <div class="formula-block" id="prop-laws">
       $$p \to q \equiv \neg p \lor q \qquad \neg(p \land q) \equiv \neg p \lor \neg q \qquad \neg(p \lor q) \equiv \neg p \land \neg q$$
     </div>
 
-    <div class="box"><span class="tag">Fact</span>
+    <div class="box card-thm"><span class="tag">Fact</span>
       3-SAT (satisfiability of formulas in conjunctive normal form with 3 literals per clause) is NP-complete — the canonical hard verification problem.
     </div>
 
     <h3 id="predicate">Predicate Logic</h3>
-    <div class="plain"><strong>In plain language:</strong> A <em>predicate</em> is a statement with a hole — $Even(x)$ means “$x$ is even.” Quantifiers generalize: $\forall x$ means “for every $x$” (like checking all inputs in a loop), $\exists x$ means “there exists at least one $x$” (like finding one counterexample). Predicate logic is what you need to state “for all users, if authenticated then authorized.”</div>
+    <p class="lead">Add variables and “for all / there exists” so you can talk about every user or find one counterexample.</p>
+    <div class="topic-strip"><span class="topic-strip-label">In one sentence</span> Predicates are templates with a blank; quantifiers say “every” or “at least one.”</div>
+    <nav class="skim-map" aria-label="Predicate map">
+      <span class="skim-map-label">Read in order</span>
+      <a href="#pred-start"><span class="n">1</span> Idea</a>
+      <a href="#pred-vars"><span class="n">2</span> Variables</a>
+      <a href="#pred-def"><span class="n">3</span> Definitions</a>
+      <a href="#pred-laws"><span class="n">4</span> Negation rules</a>
+    </nav>
+    <div class="plain" id="pred-start"><span class="plain-label">Start here</span>
+    A <em>predicate</em> is a template with a blank: $Even(x)$ means “$x$ is even.” Plug in $x=4$ → true; $x=3$ → false.<br><br>
+    $\forall x$ (“for all $x$”) makes a claim about every value — like checking every element in a loop.<br>
+    $\exists x$ (“there exists $x$”) needs just one witness — like finding one bug to break a claim.<br><br>
+    “For all authenticated users, access is granted” = $\forall u,\; Authenticated(u) \to Access(u)$.</div>
 
-    <div class="box"><span class="tag">Definition</span>
-      $\forall x \in U,\, P(x)$ holds iff $P(a)$ for every $a \in U$. $\exists x \in U,\, P(x)$ holds iff $P(a)$ for some $a \in U$.
+    <div class="box card-vars symbols" id="pred-vars"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$P(x)$</span><span class="role">Predicate</span><span class="mean">Template with a blank — true/false after plugging in $x$</span></div>
+        <div class="var-item"><span class="sym">$\forall$</span><span class="role">For all</span><span class="mean">Claim must hold for every value in the domain</span></div>
+        <div class="var-item"><span class="sym">$\exists$</span><span class="role">There exists</span><span class="mean">At least one witness makes the claim true</span></div>
+        <div class="var-item"><span class="sym">$U$</span><span class="role">Domain</span><span class="mean">Set of values $x$ is allowed to range over</span></div>
+      </div>
     </div>
 
+    <div class="box card-def" id="pred-def"><span class="tag">Definition</span>
+      <p class="walk"><strong>For all ($\forall$):</strong> “$\forall x \in U,\, P(x)$” is true <em>exactly when</em> $P(a)$ is true for <strong>every</strong> value $a$ in $U$ — no exceptions.</p>
+      <p class="walk"><strong>There exists ($\exists$):</strong> “$\exists x \in U,\, P(x)$” is true <em>exactly when</em> $P(a)$ is true for <strong>at least one</strong> value $a$ in $U$ — one witness is enough.</p>
+      <p class="walk" style="color:var(--muted);font-size:0.875rem;"><strong>Note:</strong> Textbooks often write “iff” as shorthand for “if and only if” (= “exactly when”). Same meaning as $\leftrightarrow$ in propositional logic.</p>
+    </div>
+
+    <div class="formula-block" id="pred-laws">
     $$\neg \forall x\, P(x) \equiv \exists x\, \neg P(x) \qquad \neg \exists x\, P(x) \equiv \forall x\, \neg P(x)$$
+    </div>
 
     <h3 id="proofs">Proof Techniques</h3>
-    <p class="lead">A proof is a step-by-step argument that a claim must be true, given agreed axioms and definitions. The methods below appear throughout CS — from verifying loop invariants to showing a problem is NP-hard.</p>
+    <p class="lead">A proof is a chain of steps where each step follows logically — so the conclusion must be true if the assumptions are.</p>
+    <div class="topic-strip"><span class="topic-strip-label">In one sentence</span> Testing examples is evidence; a proof is a guarantee that works for all cases.</div>
+    <nav class="skim-map" aria-label="Proofs map">
+      <span class="skim-map-label">Read in order</span>
+      <a href="#proof-direct"><span class="n">1</span> Direct &amp; contra</a>
+      <a href="#proof-induction"><span class="n">2</span> Induction</a>
+      <a href="#proof-pigeon"><span class="n">3</span> Pigeonhole</a>
+    </nav>
 
-    <h4>Direct, contrapositive, contradiction</h4>
+    <h4 id="proof-direct">Direct, contrapositive, contradiction</h4>
+    <div class="plain" id="proof-direct-start"><span class="plain-label">Start here</span>
+    <strong>Direct proof:</strong> assume the “if” part, reason step by step until the “then” part is forced. Example: “if $n$ is even, then $n^2$ is even” — write $n=2k$, square it, show it’s still twice something.<br>
+    <strong>Contrapositive:</strong> instead of proving “if $p$ then $q$”, prove the equivalent “if not $q$ then not $p$” — sometimes easier.<br>
+    <strong>Contradiction:</strong> assume the opposite of what you want to prove and show that leads to something impossible (like $0=1$).</div>
     <ul>
       <li><strong>Direct:</strong> assume $p$, derive $q$ to prove $p \to q$.</li>
       <li><strong>Contrapositive:</strong> prove $\neg q \to \neg p$ (equivalent to $p \to q$).</li>
       <li><strong>Contradiction:</strong> assume $\neg p$, derive $R \land \neg R$.</li>
     </ul>
 
-    <h4>Mathematical induction</h4>
-    <div class="plain"><strong>In plain language:</strong> Induction proves a statement for every integer $n \geq n_0$ in two steps: verify the first case (base), then show that if it holds for $k$, it must hold for $k+1$ (step). Think of dominoes: push the first, and each one knocks over the next.</div>
+    <h4 id="proof-induction">Mathematical induction</h4>
+    <div class="plain"><span class="plain-label">Start here</span> Induction proves a claim for every integer $n \geq n_0$ in two steps: (1) <strong>base</strong> — show it holds for the first value; (2) <strong>step</strong> — show that if it holds for $k$, it must hold for $k+1$. Dominoes: knock over the first; each domino knocks the next — all fall.</div>
     <div class="box"><span class="tag">Definition</span>
       To prove $\forall n \geq n_0,\, P(n)$: (1) <em>base</em> — show $P(n_0)$; (2) <em>step</em> — for arbitrary $k \geq n_0$, show $P(k) \to P(k+1)$.
     </div>
@@ -708,8 +1234,8 @@
       Assume $P(n_0), \ldots, P(k)$ all hold, then prove $P(k+1)$. Equivalent to ordinary induction; useful when $P(k+1)$ depends on multiple prior values (Fibonacci, prime factorization).
     </div>
 
-    <h4>Pigeonhole principle</h4>
-    <div class="plain"><strong>In plain language:</strong> If you have more items than containers, at least one container must hold two or more. This simple counting argument proves surprising facts — like why hash collisions are inevitable when the key space exceeds the table size.</div>
+    <h4 id="proof-pigeon">Pigeonhole principle</h4>
+    <div class="plain"><span class="plain-label">Start here</span> If you have more items than containers, at least one container must hold two or more. This simple counting argument proves surprising facts — like why hash collisions are inevitable when the key space exceeds the table size.</div>
     <div class="box"><span class="tag">Theorem</span>
       Placing $n+1$ objects into $n$ boxes forces some box to hold at least two. Equivalently, if $|A| > |B|$, no injection $A \to B$ exists.
     </div>
@@ -723,12 +1249,42 @@
     <div class="overview">
       <p><strong>Why it matters:</strong> Discrete mathematics studies countable, distinct objects — integers, finite sets, graphs, and combinations — as opposed to continuous calculus. Almost every data structure and algorithm rests here: arrays are sequences, hash maps are functions, SQL joins are relations, social networks are graphs, and password strength is combinatorics.</p>
       <p><strong>In this section:</strong> sets and functions → relations (equivalence and ordering) → counting (permutations, combinations) → graph theory (paths, trees, and network algorithms).</p>
+      <p class="start-here"><strong>If you’re new:</strong> “Discrete” means separate, countable pieces — like whole apples, not sliced pie. You can list the objects. Most of CS (data, networks, passwords) lives in this world.</p>
     </div>
+    <nav class="skim-map" aria-label="Section II map">
+      <a href="#sets"><span class="n">1</span> Sets</a>
+      <a href="#relations"><span class="n">2</span> Relations</a>
+      <a href="#combinatorics"><span class="n">3</span> Combinatorics</a>
+      <a href="#graphs"><span class="n">4</span> Graphs</a>
+    </nav>
 
     <h3 id="sets">Sets &amp; Functions</h3>
-    <div class="plain"><strong>In plain language:</strong> A <em>set</em> is an unordered collection of distinct objects — like the set of all valid port numbers. A <em>function</em> $f: A \to B$ assigns each input in $A$ exactly one output in $B$ (a lookup table or hash function). <em>Injective</em> means no two inputs share an output (no collisions); <em>surjective</em> means every output is hit; <em>bijective</em> means both — the function is reversible.</div>
+    <p class="lead">A set is an unordered collection of distinct items; a function assigns exactly one output to each input.</p>
+    <div class="topic-strip"><span class="topic-strip-label">In one sentence</span> Sets = unique bags of items; functions = lookup tables with one result per key.</div>
+    <nav class="skim-map" aria-label="Sets map">
+      <span class="skim-map-label">Read in order</span>
+      <a href="#sets-start"><span class="n">1</span> Idea</a>
+      <a href="#sets-vars"><span class="n">2</span> Variables</a>
+      <a href="#sets-def"><span class="n">3</span> Definitions</a>
+    </nav>
+    <div class="plain" id="sets-start"><span class="plain-label">Start here</span>
+    Sets are like unique lists without order — the set of valid HTTP status codes, the set of user IDs. Write $x \in S$ to mean “$x$ is in $S$.”<br><br>
+    A function $f: A \to B$ maps each input in $A$ to exactly one output in $B$ — a lookup table, hash function, or API endpoint.<br>
+    • <strong>Injective</strong> (one-to-one): different inputs → different outputs — no collisions<br>
+    • <strong>Surjective</strong> (onto): every possible output gets hit by some input<br>
+    • <strong>Bijective</strong>: both — you can undo the function (decrypt, decode)</div>
 
-    <div class="box"><span class="tag">Definition</span>
+    <div class="box card-vars symbols" id="sets-vars"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$\{ \ldots \}$</span><span class="role">Set</span><span class="mean">Unordered collection of distinct elements</span></div>
+        <div class="var-item"><span class="sym">$|A|$</span><span class="role">Cardinality</span><span class="mean">How many elements in set $A$</span></div>
+        <div class="var-item"><span class="sym">$\mathcal{P}(A)$</span><span class="role">Power set</span><span class="mean">All subsets of $A$; size $2^{|A|}$</span></div>
+        <div class="var-item"><span class="sym">$f: A \to B$</span><span class="role">Function</span><span class="mean">Maps each input in $A$ to exactly one output in $B$</span></div>
+        <div class="var-item"><span class="sym">$\mathbb{N}, \mathbb{Z}, \ldots$</span><span class="role">Number sets</span><span class="mean">Naturals, integers, rationals, reals — standard domains</span></div>
+      </div>
+    </div>
+
+    <div class="box card-def" id="sets-def"><span class="tag">Definition</span>
       $\mathbb{N}=\{0,1,2,\ldots\}$ (used here), $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$. $|\mathcal{P}(A)| = 2^{|A|}$ for the power set.
     </div>
 
@@ -741,98 +1297,551 @@
     </div>
 
     <h3 id="relations">Relations</h3>
-    <div class="plain"><strong>In plain language:</strong> A relation is a set of ordered pairs — “$a$ is related to $b$.” An <em>equivalence relation</em> (reflexive, symmetric, transitive) partitions objects into equivalence classes: “same remainder mod $m$” or “same connected component.” A <em>partial order</em> ranks objects where not every pair must be comparable: subset inclusion ($A \subseteq B$) or divisibility ($a \mid b$).</div>
-    <div class="box"><span class="tag">Definition</span>
+    <p class="lead">A relation links pairs of objects — “A follows B”, “$x &lt; y$”, “module A imports B.”</p>
+    <div class="topic-strip"><span class="topic-strip-label">In one sentence</span> Equivalence relations group into buckets; partial orders rank some pairs but not all.</div>
+    <nav class="skim-map" aria-label="Relations map">
+      <span class="skim-map-label">Read in order</span>
+      <a href="#rel-start"><span class="n">1</span> Idea</a>
+      <a href="#rel-def"><span class="n">2</span> Definition</a>
+    </nav>
+    <div class="plain" id="rel-start"><span class="plain-label">Start here</span>
+    An <strong>equivalence relation</strong> groups things into buckets where every item is equivalent to itself, swaps work both ways, and chains work: “same remainder mod 5” puts 7, 12, 17 in one bucket.<br><br>
+    A <strong>partial order</strong> ranks some pairs but not all: $A \subseteq B$ means “every element of $A$ is in $B$” — but two arbitrary sets may be incomparable (neither is a subset of the other).</div>
+    <div class="box card-def" id="rel-def"><span class="tag">Definition</span>
       $R \subseteq A \times A$. <em>Equivalence relation:</em> reflexive, symmetric, transitive — partitions $A$ into classes. <em>Partial order:</em> reflexive, antisymmetric, transitive (e.g. subset inclusion, divisibility).
     </div>
 
     <h3 id="combinatorics">Combinatorics</h3>
-    <div class="plain"><strong>In plain language:</strong> Combinatorics counts arrangements. If order matters — ranking users, arranging characters in a password — use <em>permutations</em>. If order does not matter — choosing a committee of 3 from 10 — use <em>combinations</em>. When categories overlap, inclusion–exclusion corrects for double-counting.</div>
+    <p class="lead">Combinatorics answers “how many ways?” — passwords, shuffles, committee picks, search spaces. One decision splits almost every problem: does <strong>order change the outcome</strong>?</p>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Count arrangements (order matters) or selections (order ignored) — multiply independent choices</div>
+    <nav class="skim-map" aria-label="Combinatorics map">
+      <a href="#comb-start"><span class="n">1</span> Idea</a>
+      <a href="#comb-pick"><span class="n">2</span> Pick a tool</a>
+      <a href="#comb-vars"><span class="n">3</span> Variables</a>
+      <a href="#comb-formulas"><span class="n">4</span> Formulas</a>
+      <a href="#comb-theorems"><span class="n">5</span> Theorems</a>
+      <a href="#comb-ex"><span class="n">6</span> Password example</a>
+    </nav>
 
-    <div class="box"><span class="tag">Definition</span>
-      $P(n,k) = \dfrac{n!}{(n-k)!}$ &nbsp;·&nbsp; $\dbinom{n}{k} = \dfrac{n!}{k!(n-k)!}$ &nbsp;·&nbsp; Multinomial: $\dbinom{n}{k_1,\ldots,k_r} = \dfrac{n!}{k_1!\cdots k_r!}$ when $\sum k_i = n$.
+    <div class="plain" id="comb-start"><span class="plain-label">Start here</span>
+    Imagine lining up three books on a shelf: <em>ABC</em> and <em>CBA</em> are different orderings — that is a <strong>permutation</strong>. Now pick any three books to donate: <em>ABC</em> and <em>CBA</em> are the same set — that is a <strong>combination</strong>.<br><br>
+    <strong>Factorial</strong> $n! = n \cdot (n-1) \cdots 2 \cdot 1$ counts ways to order all $n$ distinct items. Convention: $0! = 1$. Example: $4! = 24$ shelf orderings of four books.<br><br>
+    <strong>Rule of product:</strong> if step A has $a$ choices and step B has $b$ choices (independent), total = $a \cdot b$. Most counting problems are “pick, then pick, then pick” multiplied together.</div>
+
+    <div class="box card-key" id="comb-pick"><span class="tag">Which tool?</span>
+      <p style="margin:0 0 0.35rem;font-size:0.8125rem;color:var(--muted);">Ask once, then pick the formula block below.</p>
+      <p style="margin:0;font-size:0.875rem;"><strong>Does order change the outcome?</strong></p>
+      <div class="pick-flow">
+        <div class="pick-branch"><strong>Yes → Permutation $P(n,k)$</strong>Arrange $k$ items from $n$ distinct choices. Race medals, PIN digit order, password character positions.</div>
+        <div class="pick-branch"><strong>No → Combination $\binom{n}{k}$</strong>Choose $k$ items from $n$; sets, not sequences. Committee members, lottery balls, hand of cards (order dealt doesn’t matter).</div>
+      </div>
+      <p style="margin:0.75rem 0 0;font-size:0.8125rem;color:var(--muted);">Quick check: 10 people, pick 3 for gold / silver / bronze → $P(10,3)=720$. Same 10, pick any 3 for a team → $\binom{10}{3}=120$ (each team counted once, not $3!$ orderings).</p>
     </div>
 
-    <div class="box"><span class="tag">Theorem</span>
-      <strong>Binomial:</strong> $(x+y)^n = \sum_{k=0}^{n} \dbinom{n}{k} x^{n-k} y^k$.<br>
-      <strong>Inclusion–Exclusion:</strong> $\displaystyle\left|\bigcup_{i=1}^{n} A_i\right| = \sum_i |A_i| - \sum_{i<j}|A_i \cap A_j| + \cdots + (-1)^{n+1}|A_1 \cap \cdots \cap A_n|$.
+    <div class="box card-vars symbols" id="comb-vars">
+      <span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$n$</span><span class="role">Pool size</span><span class="mean">Total distinct items you can choose from</span></div>
+        <div class="var-item"><span class="sym">$k$</span><span class="role">Pick count</span><span class="mean">How many items you take (arrange or select)</span></div>
+        <div class="var-item"><span class="sym">$n!$</span><span class="role">Factorial</span><span class="mean">Ways to order all $n$ items; $0!=1$ by definition</span></div>
+        <div class="var-item"><span class="sym">$P(n,k)$</span><span class="role">Permutation</span><span class="mean">Ordered $k$-tuples without reuse from $n$ items</span></div>
+        <div class="var-item"><span class="sym">$\binom{n}{k}$</span><span class="role">Combination</span><span class="mean">Unordered $k$-subsets; “$n$ choose $k$”</span></div>
+        <div class="var-item"><span class="sym">$k_i$</span><span class="role">Group sizes</span><span class="mean">In multinomial: sizes of $r$ labeled groups summing to $n$</span></div>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Fact</span>
-      <strong>Stirling (approximation):</strong> $n! \sim \sqrt{2\pi n}\left(\frac{n}{e}\right)^n$ — used to estimate combinatorial search spaces and entropy of permutations.
+    <div id="comb-formulas">
+      <div class="formula-unit">
+        <div class="formula-unit-head">Permutation (order matters)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$P(n,k) = \frac{n!}{(n-k)!} = n(n-1)\cdots(n-k+1)$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Fill $k$ slots: $n$ choices for first, $n-1$ for second, … — stop after $k$ factors.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Example</div>
+            <dl class="mini">
+              <div><dt>$P(10,3)$</dt><dd>$10 \cdot 9 \cdot 8 = 720$ medal orderings</dd></div>
+              <div><dt>$P(n,n)$</dt><dd>$n!$ — full shuffle of $n$ items</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="formula-unit">
+        <div class="formula-unit-head">Combination (order ignored)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\binom{n}{k} = \frac{n!}{k!(n-k)!}$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Every $k$-subset corresponds to $k!$ permutations — divide $P(n,k)$ by $k!$ to collapse orderings.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Example</div>
+            <dl class="mini">
+              <div><dt>$\binom{10}{3}$</dt><dd>$720 / 6 = 120$ teams</dd></div>
+              <div><dt>Symmetry</dt><dd>$\binom{n}{k}=\binom{n}{n-k}$</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="formula-unit">
+        <div class="formula-unit-head">Multinomial (split into labeled groups)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\binom{n}{k_1, k_2, \ldots, k_r} = \frac{n!}{k_1!\, k_2!\, \cdots\, k_r!} \qquad \text{when } k_1 + \cdots + k_r = n$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Arrange $n$ items when some are identical or when you partition into $r$ labeled buckets of fixed sizes.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">CS hook</div>
+            <dl class="mini">
+              <div><dt>Anagrams</dt><dd>divide by factorials of duplicate letters</dd></div>
+              <div><dt>Binomial</dt><dd>special case $r=2$, $k_2=n-k_1$</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Example</span>
-      Passwords: 8 distinct characters, exactly 3 vowels from $\{a,e,i,o,u\}$ and 5 consonants from the other 21 letters.<br>
-      $\dbinom{8}{3} \cdot P(5,3) \cdot P(21,5) = 56 \cdot 60 \cdot 2{,}441{,}880 = 8{,}204{,}716{,}800$.
+    <div id="comb-theorems">
+      <div class="formula-unit">
+        <div class="formula-unit-head">Binomial theorem</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$(x+y)^n = \sum_{k=0}^{n} \binom{n}{k} x^{n-k} y^k$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Expanding $(x+y)^n$ picks $k$ copies of $y$ and $n-k$ of $x$ — each pattern is one $\binom{n}{k}$ term.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Why CS cares</div>
+            <dl class="mini">
+              <div><dt>Coefficients</dt><dd>count binary strings with $k$ ones</dd></div>
+              <div><dt>Pascal</dt><dd>$\binom{n}{k}=\binom{n-1}{k-1}+\binom{n-1}{k}$</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="formula-unit">
+        <div class="formula-unit-head">Inclusion–exclusion (count a union without double-counting)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\left|\bigcup_{i=1}^{n} A_i\right| = \sum_i |A_i| - \sum_{i \lt j} |A_i \cap A_j| + \sum_{i \lt j \lt k} |A_i \cap A_j \cap A_k| - \cdots + (-1)^{n+1}\,|A_1 \cap \cdots \cap A_n|$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Add sizes of each set, subtract pairwise overlaps, add triple overlaps, … — alternates until no overlap remains. Same idea as $P(A \cup B)=P(A)+P(B)-P(A \cap B)$ in Section IV.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">When to use</div>
+            <dl class="mini">
+              <div><dt>Union count</dt><dd>“at least one of …” without overcounting</dd></div>
+              <div><dt>Derangements</dt><dd>classic application via complements</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="box card-thm"><span class="tag">Fact · Stirling approximation</span>
+        $$n! \approx \sqrt{2\pi n}\left(\frac{n}{e}\right)^n$$
+        <p style="margin:0.5rem 0 0;color:var(--muted);font-size:0.875rem;">Estimates huge factorials — e.g. how many permutations of a deck ($52! \approx 8 \times 10^{67}$) or the entropy of shuffles. Log form: $\ln n! \approx n\ln n - n + \tfrac{1}{2}\ln(2\pi n)$ (leading terms: $n\ln n - n$).</p>
+      </div>
+    </div>
+
+    <div class="box card-ex" id="comb-ex"><span class="tag">Example · password counting</span>
+      <p class="walk"><strong>Problem:</strong> 8-character passwords using <em>distinct</em> letters; exactly 3 vowels from $\{a,e,i,o,u\}$ and 5 distinct consonants from the other 21 letters. Order of characters matters.</p>
+      <p class="walk"><strong>Step 1 — vowel slots:</strong> choose which 3 of 8 positions hold vowels. Positions matter later, but <em>which</em> slots are vowels is an unordered subset → $\binom{8}{3} = 56$.</p>
+      <p class="walk"><strong>Step 2 — which vowels:</strong> pick and arrange 3 distinct vowels in those slots → $P(5,3) = 5 \cdot 4 \cdot 3 = 60$.</p>
+      <p class="walk"><strong>Step 3 — consonants:</strong> fill the remaining 5 slots with distinct consonants in order → $P(21,5) = 21 \cdot 20 \cdot 19 \cdot 18 \cdot 17 = 2{,}441{,}880$.</p>
+      <p class="walk"><strong>Multiply (rule of product):</strong> $\binom{8}{3} \cdot P(5,3) \cdot P(21,5) = 56 \cdot 60 \cdot 2{,}441{,}880 = \mathbf{8{,}204{,}716{,}800}$ passwords.</p>
+      <p class="walk"><strong>Reading:</strong> $\binom{8}{3}$ picks <em>where</em> vowels go; $P(\cdot,\cdot)$ handles <em>which letter</em> and <em>in what order</em> in each block.</p>
     </div>
 
     <h3 id="graphs">Graph Theory</h3>
-    <div class="plain"><strong>In plain language:</strong> A graph $G=(V,E)$ is a set of vertices (nodes) connected by edges (links). The web, road networks, social graphs, and dependency trees are all graphs. A <em>tree</em> is a connected acyclic graph — exactly one path between any two nodes, like a file system or parse tree.</div>
-    <div class="box"><span class="tag">Definition</span>
-      $G=(V,E)$; $\deg(v)$ counts incident edges. A <em>tree</em> on $n$ vertices has exactly $n-1$ edges and no cycles. A <em>walk / path / cycle</em> follow edges; paths repeat no vertices.
+    <p class="lead">Draw dots (vertices) and connect some with lines (edges). That picture is a graph — no geometry required, just “who connects to whom.”</p>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Model networks as dots + links — trace routes, spot loops, count connections</div>
+    <nav class="skim-map" aria-label="Graph theory map">
+      <a href="#graph-start"><span class="n">1</span> Idea</a>
+      <a href="#graph-words"><span class="n">2</span> Vocabulary</a>
+      <a href="#graph-vars"><span class="n">3</span> Variables</a>
+      <a href="#graph-defs"><span class="n">4</span> Structures</a>
+      <a href="#graph-theorems"><span class="n">5</span> Theorems</a>
+      <a href="#graph-ex"><span class="n">6</span> Example</a>
+      <a href="#graph-cs"><span class="n">7</span> In CS</a>
+    </nav>
+
+    <div class="plain" id="graph-start"><span class="plain-label">Start here</span>
+    Think of a graph as an <strong>adjacency list in picture form</strong>: each vertex is a node; each edge is a link. Twitter follows, web hyperlinks, flight routes, and Git parent commits are all graphs — the math is the same even when the drawing looks different.<br><br>
+    <strong>Directed</strong> edges are one-way (A follows B ≠ B follows A). <strong>Undirected</strong> edges go both ways (a mutual friendship). <strong>Weighted</strong> edges carry a cost or distance (road miles, latency).</div>
+
+    <div class="box card-key" id="graph-words"><span class="tag">Key words · don’t mix these up</span>
+      <div class="pick-flow">
+        <div class="pick-branch"><strong>Walk</strong>Follow edges vertex to vertex; vertices and edges may repeat. Like clicking random links on the web.</div>
+        <div class="pick-branch"><strong>Path</strong>A walk with <em>no repeated vertices</em>. A route that doesn’t revisit the same city.</div>
+        <div class="pick-branch"><strong>Cycle</strong>A closed path: start and end at the same vertex, length ≥ 3, no other repeats. A round trip with no backtracking shortcuts.</div>
+        <div class="pick-branch"><strong>Tree</strong>Connected, acyclic — exactly one route between any two vertices. Folder hierarchies and spanning backbones behave like trees.</div>
+      </div>
+      <p style="margin:0.75rem 0 0;font-size:0.8125rem;color:var(--muted);"><strong>Connected</strong> = you can reach every vertex from every other via some path. Disconnected graphs split into separate “islands.”</p>
     </div>
 
-    <div class="box"><span class="tag">Theorem</span>
-      <strong>Handshaking:</strong> $\sum_{v \in V} \deg(v) = 2|E|$. &nbsp;
-      <strong>Euler (planar):</strong> $V - E + F = 2$ for connected planar embeddings.
+    <div class="box card-vars symbols" id="graph-vars">
+      <span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$G$</span><span class="role">Graph</span><span class="mean">The whole structure — vertices plus edges</span></div>
+        <div class="var-item"><span class="sym">$V$</span><span class="role">Vertices</span><span class="mean">Nodes / dots; $|V| = n$ is the vertex count</span></div>
+        <div class="var-item"><span class="sym">$E$</span><span class="role">Edges</span><span class="mean">Links between vertices; $|E| = m$ is the edge count</span></div>
+        <div class="var-item"><span class="sym">$\deg(v)$</span><span class="role">Degree</span><span class="mean">How many edges touch vertex $v$ (in undirected graphs)</span></div>
+        <div class="var-item"><span class="sym">$F$</span><span class="role">Faces</span><span class="mean">Regions in a planar drawing (Euler’s formula)</span></div>
+        <div class="var-item"><span class="sym">$(u,v)$</span><span class="role">Edge</span><span class="mean">Ordered pair if directed; unordered pair $\{u,v\}$ if not</span></div>
+      </div>
     </div>
 
-    <div class="plain"><strong>Where you see this in CS:</strong> Shortest paths (Dijkstra, Bellman–Ford), minimum spanning trees (Kruskal, Prim), matchings, and graph coloring appear in routing, scheduling, resource allocation, and compiler register assignment.</div>
+    <div id="graph-defs">
+      <div class="formula-unit">
+        <div class="formula-unit-head">Graph (formal)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$G = (V, E)$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">$V$ is a set of vertices; $E$ is a set of edges. Each edge joins one or two vertices depending on whether the graph is directed or undirected.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">CS mapping</div>
+            <dl class="mini">
+              <div><dt>Vertices</dt><dd>users, pages, servers, commits</dd></div>
+              <div><dt>Edges</dt><dd>follows, links, cables, parent pointers</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="formula-unit">
+        <div class="formula-unit-head">Tree (special graph)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\text{Tree on } n \text{ vertices} \;\Rightarrow\; |E| = n - 1 \text{ and no cycles}$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Add one edge to a tree and you create exactly one cycle. Remove any edge from a connected tree and it splits.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Why it matters</div>
+            <dl class="mini">
+              <div><dt>Filesystems</dt><dd>one parent per file (usually)</dd></div>
+              <div><dt>MST</dt><dd>cheapest tree connecting all nodes</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div id="graph-theorems">
+      <div class="formula-unit">
+        <div class="formula-unit-head">Handshaking lemma</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\sum_{v \in V} \deg(v) = 2|E|$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Every edge has two endpoints — when you add up all vertex degrees, each edge is counted twice. So the sum of degrees is always even.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Quick use</div>
+            <dl class="mini">
+              <div><dt>Parity</dt><dd>an odd-degree vertex must exist in pairs</dd></div>
+              <div><dt>Sanity check</dt><dd>verify degree lists in O(n)</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="formula-unit">
+        <div class="formula-unit-head">Euler’s formula (planar graphs)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$V - E + F = 2 \qquad \text{(connected planar embedding)}$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Draw a connected graph on paper with no edge crossings: $V$ vertices, $E$ edges, $F$ faces (including the outer region). The count always balances to 2.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Consequence</div>
+            <dl class="mini">
+              <div><dt>Planar bound</dt><dd>$E \leq 3V - 6$ for $V \geq 3$</dd></div>
+              <div><dt>Maps</dt><dd>regions vs borders vs junctions</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div class="box card-ex" id="graph-ex"><span class="tag">Example · handshaking on a small graph</span>
+      <p class="walk"><strong>Graph:</strong> 4 vertices — a triangle $A$–$B$–$C$–$A$ plus a tail $C$–$D$. Edges: $AB$, $BC$, $CA$, $CD$ → $|E| = 4$.</p>
+      <p class="walk"><strong>Degrees:</strong> $\deg(A)=2$, $\deg(B)=2$, $\deg(C)=3$, $\deg(D)=1$.</p>
+      <p class="walk"><strong>Sum:</strong> $2 + 2 + 3 + 1 = 8$.</p>
+      <p class="walk"><strong>Check lemma:</strong> $2|E| = 2 \cdot 4 = 8$ ✓ — matches $\sum \deg(v)$.</p>
+      <p class="walk"><strong>Reading:</strong> edge $BC$ contributes +1 to $\deg(B)$ and +1 to $\deg(C)$ — that’s why doubling edge count gives the degree sum.</p>
+    </div>
+
+    <div class="box card-ex" id="graph-cs"><span class="tag">In CS · where graphs show up</span>
+      <p class="walk"><strong>Shortest paths:</strong> Dijkstra (non-negative weights), Bellman–Ford (handles negative edges with care) — GPS, network routing, game AI.</p>
+      <p class="walk"><strong>Minimum spanning tree:</strong> Kruskal, Prim — connect all nodes cheaply (fiber backbones, cluster wiring).</p>
+      <p class="walk"><strong>Other:</strong> matchings (assignments), graph coloring (scheduling, registers), topological sort (task deps), PageRank (web importance).</p>
+    </div>
 
     <!-- NUMBER THEORY -->
     <h2 id="numbers">III · Number Theory</h2>
     <div class="overview">
       <p><strong>Why it matters:</strong> Number theory studies properties of integers — divisibility, primes, and remainders. It underpins modern cryptography (RSA, Diffie–Hellman), hash functions, random number generation, and error-correcting codes. The Euclidean algorithm and modular arithmetic are among the most-used algorithms in security software.</p>
-      <p><strong>In this section:</strong> greatest common divisors and prime factorization → modular arithmetic and congruences → cryptographic constructions built on hard number-theoretic problems.</p>
+      <p><strong>In this section:</strong> divisibility and gcd → modular “clock” arithmetic → RSA and discrete-log hardness.</p>
+      <p class="start-here"><strong>If you’re new:</strong> Number theory is about whole-number patterns — divisibility, remainders, primes. You use it whenever you see mod, gcd, or RSA — even if you didn’t know the name.</p>
     </div>
+    <nav class="skim-map" aria-label="Section III map">
+      <a href="#divisibility"><span class="n">1</span> GCD</a>
+      <a href="#modular"><span class="n">2</span> Mod arithmetic</a>
+      <a href="#crypto-math"><span class="n">3</span> Crypto</a>
+    </nav>
 
     <h3 id="divisibility">Divisibility &amp; GCD</h3>
-    <div class="plain"><strong>In plain language:</strong> $a$ <em>divides</em> $b$ (written $a \mid b$) when $b$ is a whole-number multiple of $a$ — like $3 \mid 12$. The <em>greatest common divisor</em> $\gcd(a,b)$ is the largest integer dividing both; when $\gcd(a,b)=1$, the numbers are <em>coprime</em> (share no common factor). The Euclidean algorithm finds $\gcd$ efficiently by repeated remainder.</div>
-    <div class="box"><span class="tag">Definition</span>
-      $a \mid b$ iff $b = ak$ for some $k \in \mathbb{Z}$. $\gcd(a,b)$ is the largest common divisor; $\gcd(a,b)=1$ means coprime.
+    <p class="lead">Whole numbers can divide each other evenly or leave a remainder. The gcd is the largest number that divides both inputs — useful for simplifying fractions and crypto keys.</p>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> “Goes in evenly” → gcd finds the biggest shared factor → Euclidean algorithm computes it fast</div>
+    <nav class="skim-map" aria-label="GCD map">
+      <a href="#gcd-start"><span class="n">1</span> Idea</a>
+      <a href="#gcd-vars"><span class="n">2</span> Variables</a>
+      <a href="#gcd-defs"><span class="n">3</span> Definitions</a>
+      <a href="#gcd-ex"><span class="n">4</span> Example</a>
+    </nav>
+
+    <div class="plain" id="gcd-start"><span class="plain-label">Start here</span>
+    “$3$ divides $12$” (written $3 \mid 12$) because $12 = 3 \times 4$ with no remainder left over. The <strong>greatest common divisor</strong> $\gcd(12, 18) = 6$ is the biggest number dividing both.<br><br>
+    If $\gcd(a,b)=1$, the numbers share no common factor — they are <strong>coprime</strong> (like 8 and 15). Crypto needs coprime choices so modular inverses exist.<br><br>
+    The <strong>Euclidean algorithm</strong> replaces the larger number by its remainder until you hit 0; the last nonzero remainder is the gcd — fast even for 1000-digit integers.</div>
+
+    <div class="box card-vars symbols" id="gcd-vars">
+      <span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$a \mid b$</span><span class="role">Divides</span><span class="mean">$b$ is a whole-number multiple of $a$ (no remainder)</span></div>
+        <div class="var-item"><span class="sym">$\gcd(a,b)$</span><span class="role">GCD</span><span class="mean">Largest $d$ with $d \mid a$ and $d \mid b$</span></div>
+        <div class="var-item"><span class="sym">Coprime</span><span class="role">Relatively prime</span><span class="mean">$\gcd(a,b)=1$ — no shared factors</span></div>
+        <div class="var-item"><span class="sym">$a \bmod b$</span><span class="role">Remainder</span><span class="mean">What's left after dividing $a$ by $b$</span></div>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Theorem</span>
-      <strong>Bézout:</strong> $\exists x,y \in \mathbb{Z}: ax + by = \gcd(a,b)$. &nbsp;
-      <strong>Euclidean algorithm:</strong> $\gcd(a,b) = \gcd(b,\, a \bmod b)$ in $O(\log \min(a,b))$ steps.
+    <div id="gcd-defs">
+      <div class="formula-unit">
+        <div class="formula-unit-head">Divisibility &amp; gcd</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$a \mid b \;\Leftrightarrow\; b = ak \text{ for some integer } k$$
+            $$\gcd(a,b) = \max\{ d \in \mathbb{Z}_{\gt 0} : d \mid a \text{ and } d \mid b \}$$
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Intuition</div>
+            <dl class="mini">
+              <div><dt>Factor lists</dt><dd>gcd = product of shared prime powers</dd></div>
+              <div><dt>Example</dt><dd>$\gcd(12,18)=6$</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="formula-unit">
+        <div class="formula-unit-head">Euclidean algorithm</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\gcd(a,b) = \gcd(b,\, a \bmod b)$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Repeat until remainder 0. The gcd is the last nonzero remainder. Runs in $O(\log \min(a,b))$ steps.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Bézout</div>
+            <dl class="mini">
+              <div><dt>Identity</dt><dd>$\exists x,y: ax + by = \gcd(a,b)$</dd></div>
+              <div><dt>Extended Euclid</dt><dd>finds $x,y$ in practice</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="box card-thm"><span class="tag">Theorem · unique prime factorization</span>
+        Every integer $n \gt 1$ factors uniquely into primes — e.g. $360 = 2^3 \cdot 3^2 \cdot 5$. This is why gcd/lcm can be read off from prime lists.
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Example</span>
-      $\gcd(252,198)$: $252 = 198 + 54$; $198 = 3\cdot54 + 36$; $54 = 36 + 18$; $36 = 2\cdot18$. Result: <strong>18</strong>.
-    </div>
-
-    <div class="box"><span class="tag">Theorem</span>
-      <strong>Fundamental Theorem of Arithmetic:</strong> every integer $n > 1$ factors uniquely into primes.
+    <div class="box card-ex" id="gcd-ex"><span class="tag">Example · $\gcd(252,198)$</span>
+      <p class="walk"><strong>Step 1:</strong> $252 = 1 \cdot 198 + 54$ → work with $(198, 54)$</p>
+      <p class="walk"><strong>Step 2:</strong> $198 = 3 \cdot 54 + 36$ → $(54, 36)$</p>
+      <p class="walk"><strong>Step 3:</strong> $54 = 1 \cdot 36 + 18$ → $(36, 18)$</p>
+      <p class="walk"><strong>Step 4:</strong> $36 = 2 \cdot 18 + 0$ → stop.</p>
+      <p class="walk"><strong>Answer:</strong> last nonzero remainder = <strong>18</strong> = $\gcd(252,198)$.</p>
     </div>
 
     <h3 id="modular">Modular Arithmetic</h3>
-    <div class="plain"><strong>In plain language:</strong> Modular arithmetic keeps only the remainder after division — like clock arithmetic where $14 \equiv 2 \pmod{12}$. Two numbers are <em>congruent mod $m$</em> if they differ by a multiple of $m$. Addition and multiplication work normally; division requires the divisor to be coprime to the modulus. Fermat’s and Euler’s theorems power fast modular exponentiation in crypto.</div>
-    <div class="box"><span class="tag">Definition</span>
-      $a \equiv b \pmod{m}$ iff $m \mid (a-b)$. Addition and multiplication respect congruence. Division by $c$ mod $m$ requires $\gcd(c,m)=1$.
+    <p class="lead">Modular arithmetic keeps only the remainder after division — “clock math” where numbers wrap around.</p>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Congruence = same remainder mod $m$ → add/multiply normally → exponent rules power crypto</div>
+    <nav class="skim-map" aria-label="Modular map">
+      <a href="#mod-start"><span class="n">1</span> Idea</a>
+      <a href="#mod-vars"><span class="n">2</span> Variables</a>
+      <a href="#mod-defs"><span class="n">3</span> Rules</a>
+      <a href="#mod-ex"><span class="n">4</span> Power example</a>
+      <a href="#mod-crt"><span class="n">5</span> CRT</a>
+    </nav>
+
+    <div class="plain" id="mod-start"><span class="plain-label">Start here</span>
+    On a 12-hour clock, 14 hours after midnight lands on 2 — write $14 \equiv 2 \pmod{12}$. Two numbers are <strong>congruent mod $m$</strong> when their difference is a multiple of $m$ ($14 - 2 = 12$).<br><br>
+    You can add and multiply congruences like normal arithmetic (only the remainder matters). <strong>Division</strong> mod $m$ needs the divisor coprime to $m$ — otherwise it may not exist. RSA encryption is mostly repeated modular multiplication and exponentiation.</div>
+
+    <div class="box card-vars symbols" id="mod-vars">
+      <span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$m$</span><span class="role">Modulus</span><span class="mean">The “clock size” — wrap when you reach $m$</span></div>
+        <div class="var-item"><span class="sym">$a \equiv b \pmod m$</span><span class="role">Congruent</span><span class="mean">Same remainder when divided by $m$</span></div>
+        <div class="var-item"><span class="sym">$a \bmod m$</span><span class="role">Remainder</span><span class="mean">The residue class representative in $\{0,\ldots,m-1\}$</span></div>
+        <div class="var-item"><span class="sym">$\varphi(n)$</span><span class="role">Totient</span><span class="mean">Count of integers in $1..n$ coprime to $n$</span></div>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Theorem</span>
-      <strong>Fermat:</strong> if $p$ prime and $p \nmid a$, then $a^{p-1} \equiv 1 \pmod{p}$.<br>
-      <strong>Euler:</strong> if $\gcd(a,n)=1$, then $a^{\varphi(n)} \equiv 1 \pmod{n}$ ($\varphi$ = totient).
+    <div id="mod-defs">
+      <div class="formula-unit">
+        <div class="formula-unit-head">Congruence</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$a \equiv b \pmod{m} \;\Leftrightarrow\; m \mid (a - b)$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">If $a \equiv a' \pmod m$ and $b \equiv b' \pmod m$, then $a+b \equiv a'+b'$ and $ab \equiv a'b' \pmod m$.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Division caveat</div>
+            <dl class="mini">
+              <div><dt>Inverse</dt><dd>$c^{-1} \pmod m$ exists if and only if $\gcd(c,m)=1$</dd></div>
+              <div><dt>Example</dt><dd>no $x$ with $2x \equiv 1 \pmod 4$</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+
+      <div class="formula-unit">
+        <div class="formula-unit-head">Fermat &amp; Euler (power cycles)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\text{Fermat: if } p \text{ prime and } p \nmid a \text{, then } a^{p-1} \equiv 1 \pmod{p}$$
+            $$\text{Euler: if } \gcd(a,n)=1 \text{, then } a^{\varphi(n)} \equiv 1 \pmod{n}$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">For RSA, $\varphi(pq)=(p-1)(q-1)$ when $p,q$ are distinct primes — powers of $m$ “wrap” after multiplying $\varphi(n)$ times.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Totient examples</div>
+            <dl class="mini">
+              <div><dt>$\varphi(p)$</dt><dd>$p-1$ for prime $p$</dd></div>
+              <div><dt>$\varphi(pq)$</dt><dd>$(p-1)(q-1)$ if $p \neq q$</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Example</span>
-      $3^{100} \bmod 7$: since $3^6 \equiv 1 \pmod{7}$, remainder $100 \bmod 6 = 4$, so $3^{100} \equiv 3^4 = 81 \equiv 4 \pmod{7}$.
+    <div class="box card-ex" id="mod-ex"><span class="tag">Example · compute $3^{100} \bmod 7$</span>
+      <p class="walk"><strong>Goal:</strong> huge exponent mod 7 — use a power cycle instead of multiplying 100 times.</p>
+      <p class="walk"><strong>Step 1 — find cycle length:</strong> $7$ is prime and $7 \nmid 3$, so Fermat gives $3^{6} \equiv 1 \pmod{7}$.</p>
+      <p class="walk"><strong>Step 2 — reduce exponent:</strong> $100 = 6 \cdot 16 + 4$, so $3^{100} \equiv (3^{6})^{16} \cdot 3^{4} \equiv 1^{16} \cdot 3^{4} \pmod{7}$.</p>
+      <p class="walk"><strong>Step 3 — finish:</strong> $3^{4} = 81 \equiv 4 \pmod{7}$.</p>
+      <p class="walk"><strong>Answer:</strong> $3^{100} \equiv 4 \pmod{7}$.</p>
     </div>
 
-    <div class="box"><span class="tag">Theorem</span>
-      <strong>Chinese Remainder Theorem:</strong> if $m_1,\ldots,m_k$ are pairwise coprime, the system $x \equiv a_i \pmod{m_i}$ has a unique solution mod $m_1\cdots m_k$.
+    <div class="formula-unit" id="mod-crt">
+      <div class="formula-unit-head">Chinese Remainder Theorem (CRT)</div>
+      <div class="formula-unit-body">
+        <div class="formula-unit-math">
+          $$\text{If } \gcd(m_i, m_j)=1 \text{ for } i \neq j \text{, the system } x \equiv a_i \pmod{m_i}$$
+          $$\text{has exactly one solution } x \pmod{m_1 m_2 \cdots m_k}$$
+          <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;"><strong>Plain English:</strong> if moduli share no common factors, knowing the remainders mod each one pins down a unique number mod their product — like recovering an exact time from independent hour and minute hands.</p>
+        </div>
+        <aside class="formula-unit-vars">
+          <div class="formula-unit-vars-title">Why CS cares</div>
+          <dl class="mini">
+            <div><dt>RSA speed</dt><dd>compute mod $p$ and mod $q$, then combine</dd></div>
+            <div><dt>Sharding</dt><dd>reconstruct from parallel remainder checks</dd></div>
+          </dl>
+        </aside>
+      </div>
     </div>
 
     <h3 id="crypto-math">Cryptography</h3>
-    <div class="plain"><strong>In plain language:</strong> Public-key cryptography relies on math problems that are easy one way and hard the other. RSA: multiplying two large primes is fast, but factoring their product is believed intractable. Diffie–Hellman: raising to a power mod $p$ is fast, but finding the discrete logarithm is hard. Security rests on these asymmetries, not on hiding the algorithm.</div>
-    <div class="box"><span class="tag">Definition · RSA</span>
-      Primes $p,q$; $n=pq$; $\varphi(n)=(p-1)(q-1)$. Choose $e$ with $\gcd(e,\varphi(n))=1$. Private $d \equiv e^{-1} \pmod{\varphi(n)}$. Encrypt $c \equiv m^e \pmod{n}$; decrypt $m \equiv c^d \pmod{n}$ for $0 \leq m < n$. Correctness: Euler’s theorem (with CRT handling $\gcd(m,n) \neq 1$ in practice via padding).
+    <p class="lead">Modern crypto relies on one-way doors: easy to compute forward, believed hard to reverse without a secret key.</p>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Publish easy math (multiply, exponentiate mod $n$) — keep secret the hard reverse (factor, discrete log)</div>
+    <nav class="skim-map" aria-label="Crypto map">
+      <a href="#crypto-start"><span class="n">1</span> Idea</a>
+      <a href="#crypto-vars"><span class="n">2</span> RSA keys</a>
+      <a href="#rsa-steps"><span class="n">3</span> RSA steps</a>
+      <a href="#rsa-use"><span class="n">4</span> Encrypt/decrypt</a>
+      <a href="#dlog"><span class="n">5</span> Discrete log</a>
+    </nav>
+
+    <div class="plain" id="crypto-start"><span class="plain-label">Start here</span>
+    <strong>One-way function:</strong> multiplying two large primes is easy; factoring their product back into primes is believed hard. RSA publishes $n = p \cdot q$ but hides $p$ and $q$.<br><br>
+    Messages become numbers $m$. <strong>Encrypt</strong> with a public exponent $e$ (anyone can do $m^e \bmod n$). <strong>Decrypt</strong> with secret $d$ (only key holder can undo it). Security comes from math hardness — the formulas are public; the secret is the key.</div>
+
+    <div class="box card-vars symbols" id="crypto-vars">
+      <span class="tag">RSA variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$p, q$</span><span class="role">Secret primes</span><span class="mean">Large random primes — never published</span></div>
+        <div class="var-item"><span class="sym">$n$</span><span class="role">Modulus</span><span class="mean">Public product $n = pq$</span></div>
+        <div class="var-item"><span class="sym">$\varphi(n)$</span><span class="role">Totient</span><span class="mean">$(p-1)(q-1)$ — size of the “power cycle”</span></div>
+        <div class="var-item"><span class="sym">$e$</span><span class="role">Public exponent</span><span class="mean">Often 65537; must satisfy $\gcd(e,\varphi(n))=1$</span></div>
+        <div class="var-item"><span class="sym">$d$</span><span class="role">Private exponent</span><span class="mean">Modular inverse: $ed \equiv 1 \pmod{\varphi(n)}$</span></div>
+        <div class="var-item"><span class="sym">$m, c$</span><span class="role">Message / ciphertext</span><span class="mean">Plaintext number $m$; encrypted $c \equiv m^e \pmod n$</span></div>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Definition</span>
-      <strong>Discrete log:</strong> given $g$, prime $p$, and $h \equiv g^x \pmod{p}$, finding $x$ is computationally hard — basis of Diffie–Hellman key exchange.
+    <div id="rsa-steps">
+      <div class="formula-unit">
+        <div class="formula-unit-head">RSA key generation (what each step means)</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            <ol style="margin:0;padding-left:1.25rem;color:var(--text);font-size:0.875rem;line-height:1.55;">
+              <li>Pick two large distinct primes $p$ and $q$ (secret).</li>
+              <li>Compute $n = pq$ and publish $n$ (hard to factor).</li>
+              <li>Compute $\varphi(n) = (p-1)(q-1)$ (counts coprime residues).</li>
+              <li>Choose public $e$ with $\gcd(e, \varphi(n)) = 1$ (common: $e = 65537$).</li>
+              <li>Find private $d \equiv e^{-1} \pmod{\varphi(n)}$ — the number where $ed$ leaves remainder 1 when divided by $\varphi(n)$.</li>
+            </ol>
+            <p style="margin:0.65rem 0 0;color:var(--muted);font-size:0.875rem;"><strong>Public key:</strong> $(n, e)$ &nbsp;·&nbsp; <strong>Private key:</strong> $(n, d)$ plus knowledge of $p,q$ for speed.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Modular inverse</div>
+            <dl class="mini">
+              <div><dt>$e^{-1}$</dt><dd>$d$ such that $ed \equiv 1 \pmod{\varphi(n)}$</dd></div>
+              <div><dt>Exists when</dt><dd>$\gcd(e,\varphi(n))=1$</dd></div>
+              <div><dt>Find via</dt><dd>extended Euclidean algorithm</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div id="rsa-use">
+      <div class="formula-unit">
+        <div class="formula-unit-head">Encrypt &amp; decrypt</div>
+        <div class="formula-unit-body">
+          <div class="formula-unit-math">
+            $$\text{Encrypt: } c \equiv m^{e} \pmod{n} \qquad (0 \leq m \lt n)$$
+            $$\text{Decrypt: } m \equiv c^{d} \pmod{n}$$
+            <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;"><strong>Why decrypt works:</strong> Euler’s theorem — when $\gcd(m,n)=1$, raising to $ed \equiv 1 \pmod{\varphi(n)}$ cycles back to $m$. Real systems use padding (OAEP) and handle edge cases via CRT for speed.</p>
+          </div>
+          <aside class="formula-unit-vars">
+            <div class="formula-unit-vars-title">Tiny toy numbers</div>
+            <dl class="mini">
+              <div><dt>Keys</dt><dd>$p=3,q=11,n=33,\varphi=20,e=3,d=7$</dd></div>
+              <div><dt>$m=5$</dt><dd>$c=5^3=125\equiv 26 \pmod{33}$</dd></div>
+              <div><dt>Decrypt</dt><dd>$26^7 \equiv 5 \pmod{33}$ ✓</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-unit" id="dlog">
+      <div class="formula-unit-head">Discrete logarithm (Diffie–Hellman hardness)</div>
+      <div class="formula-unit-body">
+        <div class="formula-unit-math">
+          $$\text{Given prime } p,\text{ generator } g,\text{ and } h \equiv g^{x} \pmod{p},$$
+          $$\text{finding } x \text{ is believed hard (discrete log problem).}$$
+          <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;"><strong>Forward easy:</strong> compute $g^x \bmod p$ by repeated squaring. <strong>Reverse hard:</strong> given $h$, find $x$. Two parties can mix public values to agree on a shared secret (Diffie–Hellman) without sending the secret itself.</p>
+        </div>
+        <aside class="formula-unit-vars">
+          <div class="formula-unit-vars-title">RSA vs DH</div>
+          <dl class="mini">
+            <div><dt>RSA</dt><dd>hardness of factoring $n=pq$</dd></div>
+            <div><dt>DH / ECDH</dt><dd>hardness of discrete log</dd></div>
+          </dl>
+        </aside>
+      </div>
     </div>
 
     <!-- PROBABILITY -->
@@ -840,37 +1849,92 @@
     <div class="overview">
       <p><strong>Why it matters:</strong> Probability quantifies uncertainty — the language of randomized algorithms, network reliability, spam filters, A/B tests, and machine learning. Instead of guessing, you assign numbers to outcomes, update beliefs with evidence (Bayes), and bound how far sample averages drift from expectations.</p>
       <p><strong>In this section:</strong> probability axioms and rules → conditional probability and Bayes → random variables and distributions → Markov chains for sequential processes.</p>
+      <p class="start-here"><strong>If you’re new:</strong> Probability is a number from 0 to 1 attached to how likely something is. 0 = impossible, 1 = certain, 0.5 = a fair coin. We build from coin flips and dice to the math ML uses daily.</p>
     </div>
+    <nav class="skim-map" aria-label="Section IV map">
+      <a href="#prob-basics"><span class="n">1</span> Axioms</a>
+      <a href="#conditional"><span class="n">2</span> Bayes</a>
+      <a href="#rv"><span class="n">3</span> Random vars</a>
+      <a href="#distributions"><span class="n">4</span> Distributions</a>
+      <a href="#markov-chains"><span class="n">5</span> Markov</a>
+    </nav>
 
     <h3 id="prob-basics">Axioms &amp; Rules</h3>
-    <div class="plain"><strong>In plain language:</strong> A probability assigns a number between 0 and 1 to each possible outcome. Certain events get 1, impossible events get 0, and the probabilities of mutually exclusive outcomes add up. The sample space $\Omega$ is the set of all possibilities; an event $A$ is a subset of $\Omega$.</div>
-    <div class="box"><span class="tag">Definition</span>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Assign each outcome a number 0–1; all outcomes sum to 1</div>
+    <nav class="skim-map" aria-label="Axioms map">
+      <a href="#prob-start"><span class="n">1</span> Idea</a>
+      <a href="#prob-vars"><span class="n">2</span> Variables</a>
+      <a href="#prob-rules"><span class="n">3</span> Rules</a>
+      <a href="#prob-ex"><span class="n">4</span> Die example</a>
+    </nav>
+    <div class="plain" id="prob-start"><span class="plain-label">Start here</span>
+    Fair coin: $P(H)=0.5$, $P(T)=0.5$, sum = 1. Fair die: each face $\frac{1}{6}$. Event “even roll” = $\{2,4,6\}$ → $P=\frac{3}{6}=0.5$.</div>
+
+    <div class="box card-vars symbols" id="prob-vars">
+      <span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$\Omega$</span><span class="role">Sample space</span><span class="mean">All possible outcomes</span></div>
+        <div class="var-item"><span class="sym">$A$</span><span class="role">Event</span><span class="mean">Subset of outcomes you care about</span></div>
+        <div class="var-item"><span class="sym">$P(A)$</span><span class="role">Probability</span><span class="mean">Number from 0 to 1; chance $A$ happens</span></div>
+        <div class="var-item"><span class="sym">$A^c$</span><span class="role">Complement</span><span class="mean">“Not $A$”; $P(A^c)=1-P(A)$</span></div>
+        <div class="var-item"><span class="sym">$A \cap B$</span><span class="role">AND</span><span class="mean">Both $A$ and $B$ happen</span></div>
+        <div class="var-item"><span class="sym">$A \cup B$</span><span class="role">OR</span><span class="mean">At least one of $A$ or $B$</span></div>
+      </div>
+    </div>
+    <div class="box card-def"><span class="tag">Definition</span>
       Probability space $(\Omega, \mathcal{F}, P)$: $P(\Omega)=1$, $P(A) \geq 0$, countable additivity over disjoint events.
     </div>
 
-    <div class="box"><span class="tag">Rules</span>
+    <div class="box card-def" id="prob-rules"><span class="tag">Rules</span>
       $P(A^c)=1-P(A)$ &nbsp;·&nbsp; $P(A \cup B)=P(A)+P(B)-P(A \cap B)$ &nbsp;·&nbsp; <strong>Total probability:</strong> if $B_i$ partition $\Omega$, then $P(A)=\sum_i P(A|B_i)P(B_i)$.
     </div>
 
+    <div class="box card-ex" id="prob-ex"><span class="tag">Example · fair die</span>
+      <p class="walk">Let $A$ = “roll at least 4” = $\{4,5,6\}$. Each face has probability $\frac{1}{6}$, so $P(A) = \frac{1}{6}+\frac{1}{6}+\frac{1}{6} = \frac{1}{2}$.</p>
+      <p class="walk">Let $B$ = “roll odd” = $\{1,3,5\}$. $A \cap B$ = $\{5\}$, so $P(A \cap B) = \frac{1}{6}$.</p>
+      <p class="walk">Inclusion–exclusion: $P(A \cup B) = P(A)+P(B)-P(A \cap B) = \frac{1}{2}+\frac{1}{2}-\frac{1}{6} = \frac{5}{6}$ — five of six faces are either odd or at least 4 (or both).</p>
+    </div>
+
     <h3 id="conditional">Conditional Probability, Bayes &amp; Independence</h3>
-    <div class="plain"><strong>In plain language:</strong> $P(A \mid B)$ is the probability of $A$ <em>given that</em> $B$ already happened — you restrict attention to the cases where $B$ is true. Bayes’ theorem reverses the direction: update your prior belief $P(A)$ after observing evidence $B$. Events are <em>independent</em> when knowing one tells you nothing about the other.</div>
-    <div class="box"><span class="tag">Definition</span>
-      $P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}$ for $P(B)>0$. Events are <em>independent</em> iff $P(A \cap B)=P(A)P(B)$.
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Update beliefs when you learn new evidence — Bayes reverses “cause → symptom” into “symptom → cause”</div>
+    <nav class="skim-map" aria-label="Bayes map">
+      <a href="#bayes-start"><span class="n">1</span> Idea</a>
+      <a href="#bayes-vars"><span class="n">2</span> Variables</a>
+      <a href="#bayes-formula"><span class="n">3</span> Formula</a>
+      <a href="#bayes-ex"><span class="n">4</span> Spam example</a>
+    </nav>
+    <div class="plain" id="bayes-start"><span class="plain-label">Start here</span>
+    $P(A \mid B)$ = “probability of $A$ given $B$ already happened.” Restrict to cases where $B$ is true; what fraction also satisfy $A$?</div>
+
+    <div class="box card-vars symbols" id="bayes-vars">
+      <span class="tag">Variables · Bayes</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$P(A)$</span><span class="role">Prior</span><span class="mean">Belief before evidence</span></div>
+        <div class="var-item"><span class="sym">$P(B \mid A)$</span><span class="role">Likelihood</span><span class="mean">How often evidence appears when $A$ true</span></div>
+        <div class="var-item"><span class="sym">$P(A \mid B)$</span><span class="role">Posterior</span><span class="mean">Updated belief after seeing $B$</span></div>
+        <div class="var-item"><span class="sym">$P(B)$</span><span class="role">Evidence</span><span class="mean">Overall rate of seeing $B$ (normalizer)</span></div>
+      </div>
     </div>
 
-    <div class="formula-block">$$P(A \mid B) = \frac{P(B \mid A)\, P(A)}{P(B)} \qquad \text{(Bayes' theorem)}$$</div>
-
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$A, B$</dt><dd>events — things that may or may not happen (e.g. $S$ = “email is spam”)</dd>
-        <dt>$P(A)$</dt><dd>prior probability of $A$ before seeing new evidence</dd>
-        <dt>$P(B \mid A)$</dt><dd>likelihood — how often $B$ occurs when $A$ is true</dd>
-        <dt>$P(A \mid B)$</dt><dd>posterior — updated belief in $A$ after observing $B$</dd>
-        <dt>$P(B)$</dt><dd>total probability of the evidence (normalizing constant)</dd>
-      </dl>
+    <div class="formula-unit" id="bayes-formula">
+      <div class="formula-unit-head">Bayes' theorem</div>
+      <div class="formula-unit-body">
+        <div class="formula-unit-math">
+          $$P(A \mid B) = \frac{P(B \mid A)\, P(A)}{P(B)}$$
+          <p style="margin-top:0.65rem;color:var(--muted);font-size:0.875rem;">Conditional: $P(A \mid B) = P(A \cap B) / P(B)$ &nbsp;·&nbsp; Independent: $P(A \cap B)=P(A)P(B)$</p>
+        </div>
+        <aside class="formula-unit-vars">
+          <div class="formula-unit-vars-title">Memory hook</div>
+          <dl class="mini">
+            <div><dt>Prior</dt><dd>before evidence</dd></div>
+            <div><dt>Likelihood</dt><dd>evidence if hypothesis true</dd></div>
+            <div><dt>Posterior</dt><dd>after evidence</dd></div>
+          </dl>
+        </aside>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Example · spam filter</span>
+    <div class="box card-ex" id="bayes-ex"><span class="tag">Example · spam filter</span>
       <p class="walk">Suppose 40% of email is spam, so $P(S)=0.4$. A word $W$ appears in 80% of spam and 5% of normal mail: $P(W|S)=0.8$, $P(W|S^c)=0.05$.</p>
       <p class="walk"><strong>Step 1 — evidence:</strong> $P(W) = P(W|S)P(S) + P(W|S^c)P(S^c) = 0.8 \cdot 0.4 + 0.05 \cdot 0.6 = 0.35$.</p>
       <p class="walk"><strong>Step 2 — posterior:</strong> $P(S|W) = \dfrac{P(W|S)P(S)}{P(W)} = \dfrac{0.32}{0.35} \approx 0.914$.</p>
@@ -878,21 +1942,123 @@
     </div>
 
     <h3 id="rv">Random Variables</h3>
-    <div class="plain"><strong>In plain language:</strong> A random variable $X$ is a numeric label on random outcomes — like $X$ = number of heads in 10 coin flips. The <em>expected value</em> $E[X]$ is the long-run average; <em>variance</em> measures spread around that average. Linearity of expectation is one of the most useful tools in algorithm analysis.</div>
-    <div class="box"><span class="tag">Definition</span>
-      $X: \Omega \to \mathbb{R}$. $E[X] = \sum x\, P(X=x)$ or $\int x f_X(x)\,dx$. $\mathrm{Var}(X) = E[(X-E[X])^2] = E[X^2]-E[X]^2$. $\mathrm{Cov}(X,Y)=E[(X-E[X])(Y-E[Y])]$.
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Turn random outcomes into numbers → compute long-run average ($E[X]$) and spread ($\mathrm{Var}$, $\sigma$)</div>
+    <nav class="skim-map" aria-label="Random variables map">
+      <a href="#rv-start"><span class="n">1</span> Idea</a>
+      <a href="#rv-vars"><span class="n">2</span> Variables</a>
+      <a href="#rv-def"><span class="n">3</span> Formulas</a>
+      <a href="#rv-ex"><span class="n">4</span> Die example</a>
+      <a href="#rv-tail"><span class="n">5</span> Tail bounds</a>
+    </nav>
+
+    <div class="plain" id="rv-start"><span class="plain-label">Start here</span>
+    An event says yes/no (“server crashed”). A <strong>random variable</strong> $X$ assigns a <strong>number</strong> instead — “how many crashes this month?” — so you can add, average, and compare.</div>
+
+    <div class="box card-vars" id="rv-vars">
+      <span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$X$</span><span class="role">Random variable</span><span class="mean">Numeric label on each random outcome</span></div>
+        <div class="var-item"><span class="sym">$E[X]$</span><span class="role">Expected value</span><span class="mean">Long-run average; “center” of outcomes</span></div>
+        <div class="var-item"><span class="sym">$\mathrm{Var}(X)$</span><span class="role">Variance</span><span class="mean">Average squared distance from $E[X]$; spread</span></div>
+        <div class="var-item"><span class="sym">$\sigma$</span><span class="role">Std deviation</span><span class="mean">$\sqrt{\mathrm{Var}(X)}$ — spread in original units</span></div>
+        <div class="var-item"><span class="sym">$P(X=x)$</span><span class="role">PMF (discrete)</span><span class="mean">Probability $X$ equals exactly $x$</span></div>
+        <div class="var-item"><span class="sym">$f_X(x)$</span><span class="role">PDF (continuous)</span><span class="mean">Density; area gives probability of ranges</span></div>
+      </div>
     </div>
 
-    <div class="box"><span class="tag">Theorem</span>
-      <strong>Linearity:</strong> $E[aX+bY]=aE[X]+bE[Y]$ always. If $X,Y$ independent: $E[XY]=E[X]E[Y]$, $\mathrm{Var}(X+Y)=\mathrm{Var}(X)+\mathrm{Var}(Y)$.<br>
-      <strong>Markov</strong> ($X \geq 0$): $P(X \geq a) \leq E[X]/a$. &nbsp;
-      <strong>Chebyshev:</strong> $P(|X-E[X]| \geq k\sigma) \leq 1/k^2$. &nbsp;
-      <strong>Chernoff</strong> (sums of independent bounded r.v.s): tail probabilities decay exponentially in $n$ — bounds error of Monte Carlo and randomized algorithms.
+    <div class="formula-unit" id="rv-def">
+      <div class="formula-unit-head">Definition · expectation &amp; variance</div>
+      <div class="formula-unit-body">
+        <div class="formula-unit-math">
+          <p style="margin-bottom:0.65rem;color:var(--muted);font-size:0.875rem;">Discrete: $E[X] = \sum_x x\, P(X=x)$ &nbsp;·&nbsp; Continuous: $E[X] = \int x f_X(x)\,dx$</p>
+          $$\mathrm{Var}(X) = E[(X-E[X])^2] = E[X^2] - E[X]^2$$
+          $$\mathrm{Cov}(X,Y) = E[(X-E[X])(Y-E[Y])]$$
+        </div>
+        <aside class="formula-unit-vars">
+          <div class="formula-unit-vars-title">In this formula</div>
+          <dl class="mini">
+            <div><dt>$E[\cdot]$</dt><dd>expectation operator — weighted average</dd></div>
+            <div><dt>$E[X^2]$</dt><dd>average of squared values (not square of average)</dd></div>
+            <div><dt>$\mathrm{Cov}$</dt><dd>do $X,Y$ move together? ($&gt;0$) or opposite ($&lt;0$)</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+
+    <div class="box card-ex" id="rv-ex">
+      <span class="tag">Example · fair die</span>
+      <p class="walk"><strong>Setup:</strong> $X$ = face showing; each $1,\ldots,6$ has $P(X=k)=\frac{1}{6}$.</p>
+      <p class="walk"><strong>$E[X]$:</strong> $\frac{1+2+3+4+5+6}{6} = 3.5$ — average roll over many trials.</p>
+      <p class="walk"><strong>$\mathrm{Var}(X)$:</strong> $E[X^2]=\frac{91}{6}$, minus $(3.5)^2$ → $\frac{35}{12}\approx 2.92$; $\sigma\approx 1.71$ faces.</p>
+      <p class="walk"><strong>Takeaway:</strong> expect 3.5; typical deviation ~1.7 faces from that average.</p>
+    </div>
+
+    <div class="box card-key">
+      <span class="tag">Key idea · linearity</span>
+      $E[aX+bY]=aE[X]+bE[Y]$ always (even if dependent). Independence needed for $\mathrm{Var}(X+Y)=\mathrm{Var}(X)+\mathrm{Var}(Y)$.
+    </div>
+
+    <h4 id="rv-tail">Tail bounds</h4>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Know the average or spread → bound how often $X$ can be extreme (without full distribution)</div>
+
+    <div class="box card-vars">
+      <span class="tag">Variables · tail bounds</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$a$</span><span class="role">Threshold</span><span class="mean">Value you ask “how often above this?”</span></div>
+        <div class="var-item"><span class="sym">$k$</span><span class="role">Chebyshev factor</span><span class="mean">How many std devs from mean ($k\sigma$)</span></div>
+        <div class="var-item"><span class="sym">$n$</span><span class="role">Sample size</span><span class="mean">Number of independent trials (Chernoff)</span></div>
+      </div>
+    </div>
+
+    <div class="formula-unit">
+      <div class="formula-unit-head">Theorem · Markov, Chebyshev, Chernoff</div>
+      <div class="formula-unit-body">
+        <div class="formula-unit-math">
+          <p><strong>Markov</strong> ($X\ge 0$): $P(X \ge a) \le E[X]/a$</p>
+          <p><strong>Chebyshev:</strong> $P(|X-E[X]| \ge k\sigma) \le 1/k^2$</p>
+          <p style="margin-top:0.5rem;color:var(--muted);font-size:0.875rem;"><strong>Chernoff:</strong> sums of independent bounded r.v.s — tails decay exponentially in $n$.</p>
+        </div>
+        <aside class="formula-unit-vars">
+          <div class="formula-unit-vars-title">When to use</div>
+          <dl class="mini">
+            <div><dt>Markov</dt><dd>only know $E[X]$, $X\ge 0$</dd></div>
+            <div><dt>Chebyshev</dt><dd>know mean + variance</dd></div>
+            <div><dt>Chernoff</dt><dd>sum of many independent trials</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+
+    <div class="box card-ex">
+      <span class="tag">Example · Markov</span>
+      <p class="walk">$E[T]=200$ ms average latency. $P(T\ge 1000) \le 200/1000 = 0.2$ → at most 20% of requests ≥ 1 s, <em>without knowing the full latency shape</em>.</p>
     </div>
 
     <h3 id="distributions">Common Distributions</h3>
-    <p class="lead">Each distribution is a recipe for assigning probabilities to outcomes. The table below lists the ones that appear most often in CS — from coin flips (Bernoulli) to waiting times (Exponential) to the bell curve (Normal) that emerges from the Central Limit Theorem.</p>
-    <table>
+    <div class="topic-strip"><span class="topic-strip-label">At a glance</span> Match your scenario → read mean &amp; variance from table → plug into PMF/PDF only when you need exact probabilities</div>
+    <nav class="skim-map" aria-label="Distributions map">
+      <a href="#dist-pick"><span class="n">1</span> Pick scenario</a>
+      <a href="#dist-vars"><span class="n">2</span> Table variables</a>
+      <a href="#dist-table"><span class="n">3</span> Formula table</a>
+      <a href="#dist-ex"><span class="n">4</span> Coin example</a>
+    </nav>
+
+    <div class="plain" id="dist-pick"><span class="plain-label">Start here</span>
+    One coin flip → <strong>Bernoulli</strong>. Count heads in $n$ flips → <strong>Binomial</strong>. Wait until first success → <strong>Geometric</strong>. Many rare events in a window → <strong>Poisson</strong>.</div>
+
+    <div class="box card-vars" id="dist-vars">
+      <span class="tag">Variables · used in the table</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$p$</span><span class="role">Success prob</span><span class="mean">Chance of “success” on one trial (0 to 1)</span></div>
+        <div class="var-item"><span class="sym">$n$</span><span class="role">Trial count</span><span class="mean">Number of independent Bernoulli trials</span></div>
+        <div class="var-item"><span class="sym">$k$</span><span class="role">Count</span><span class="mean">Observed successes (Binomial) or arrivals (Poisson)</span></div>
+        <div class="var-item"><span class="sym">$\lambda$</span><span class="role">Rate</span><span class="mean">Average arrivals per window (Poisson / Exponential)</span></div>
+        <div class="var-item"><span class="sym">$\mu$</span><span class="role">Mean</span><span class="mean">Center of Normal distribution</span></div>
+        <div class="var-item"><span class="sym">$\sigma$</span><span class="role">Spread</span><span class="mean">Standard deviation; $\sigma^2$ = variance</span></div>
+      </div>
+    </div>
+
+    <table id="dist-table">
       <tr><th>Name</th><th>PMF / PDF</th><th>Mean</th><th>Variance</th><th>CS use</th></tr>
       <tr><td>Bernoulli($p$)</td><td>$P(1)=p$</td><td>$p$</td><td>$p(1-p)$</td><td>Bit / trial</td></tr>
       <tr><td>Binomial($n,p$)</td><td>$\binom{n}{k}p^k(1-p)^{n-k}$</td><td>$np$</td><td>$np(1-p)$</td><td>$n$ trials</td></tr>
@@ -904,12 +2070,26 @@
     </table>
     <p style="font-size:0.8125rem;color:var(--muted);margin-top:-0.5rem;">*Geometric: $k$ = trial number of first success (1-indexed convention).</p>
 
+    <div class="box card-ex" id="dist-ex">
+      <span class="tag">Example · binomial coin flips</span>
+      <p class="walk">Flip a fair coin ($p=0.5$) 10 times. Let $X$ = number of heads. Then $X \sim \text{Binomial}(10, 0.5)$.</p>
+      <p class="walk"><strong>Expected heads:</strong> $E[X] = np = 10 \cdot 0.5 = 5$ — on average half the flips are heads.</p>
+      <p class="walk"><strong>Variance:</strong> $\mathrm{Var}(X) = np(1-p) = 2.5$; $\sigma \approx 1.58$ heads.</p>
+      <p class="walk"><strong>Exact probability of 7 heads:</strong> $P(X=7) = \binom{10}{7} (0.5)^{10} = 120/1024 \approx 0.117$ — about 11.7% of the time.</p>
+      <p class="walk"><strong>Reading:</strong> the table’s mean/variance columns let you reason quickly; the PMF formula gives exact probabilities when you need them (e.g. “at least 9 heads”).</p>
+    </div>
+
+    <div class="plain"><span class="plain-label">Key idea</span> Add up many independent random quantities with finite variance, normalize by $n$, and the result looks increasingly Normal — regardless of what each individual variable looked like. This is why bell curves appear everywhere: sample averages of noisy measurements, aggregated traffic, and large-scale simulation outputs.</div>
+
     <div class="box"><span class="tag">Theorem</span>
-      <strong>Central Limit Theorem:</strong> sums of i.i.d. variables with finite variance, normalized, converge in distribution to Normal — justifies Normal approximations at scale.
+      <strong>Central Limit Theorem:</strong> if $X_1,\ldots,X_n$ are i.i.d. with mean $\mu$ and variance $\sigma^2$, then $\dfrac{\bar{X}_n - \mu}{\sigma/\sqrt{n}}$ converges in distribution to $\mathcal{N}(0,1)$ as $n \to \infty$ — justifies Normal approximations for sums and averages at scale.
     </div>
 
     <h3 id="markov-chains">Markov Chains</h3>
-    <div class="plain"><strong>In plain language:</strong> A Markov chain models a sequence where the next state depends only on the current state, not the full history — “memoryless” transitions. PageRank treats web surfing as a Markov chain; MCMC sampling uses Markov chains to draw samples from complex distributions in Bayesian inference.</div>
+    <p class="lead">A Markov chain is a sequence of states where the next step depends only on where you are now — not on the full history. “Memoryless” random walks on graphs.</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    Weather tomorrow depends only on today (Markov-ish): if today is Rain, tomorrow might be Rain or Sun with fixed probabilities — yesterday’s weather is ignored once you know today’s.<br><br>
+    PageRank: a random surfer on the web follows links; the next page depends only on the current page. The <strong>stationary distribution</strong> $\pi$ is where the surfer spends most time long-term — higher $\pi_i$ means more “important” page $i$.</div>
     <div class="box"><span class="tag">Definition</span>
       Sequence $\{X_t\}$ with $P(X_{t+1}=j \mid X_t=i, X_{t-1},\ldots) = P(X_{t+1}=j \mid X_t=i) = P_{ij}$. Transition matrix $P$; stationary distribution $\pi$ satisfies $\pi P = \pi$.
     </div>
@@ -920,41 +2100,61 @@
     <div class="overview">
       <p><strong>Why it matters:</strong> Linear algebra is the mathematics of lists of numbers (vectors) and grids of numbers (matrices). Graphics transforms, recommendation systems, neural networks, and search engines all reduce to matrix multiplication, dot products, and eigenvalue problems. If calculus tells you how to optimize, linear algebra tells you how data is represented and transformed.</p>
       <p><strong>In this section:</strong> vectors, dot products, and matrix multiplication → solving linear systems → eigenvalues and the SVD for dimensionality reduction.</p>
+      <p class="start-here"><strong>If you’re new:</strong> A vector is just an ordered list of numbers — like coordinates $(3, 4)$ or RGB $(255, 128, 0)$. A matrix is a spreadsheet of numbers that transforms those lists. No geometry background required.</p>
     </div>
 
     <h3 id="vectors">Vectors &amp; Matrices</h3>
-    <div class="plain"><strong>In plain language:</strong> A vector is an ordered list of numbers — a point in space, a pixel color (RGB), or a word embedding. The <em>dot product</em> measures alignment: large when vectors point the same way, zero when orthogonal. Matrix multiplication applies a linear transformation: each output row is a weighted combination of input columns.</div>
+    <p class="lead">Write a vector as $\mathbf{v} = (v_1, v_2, \ldots, v_n)$ — a column of numbers. Two vectors of the same length can be added (add matching entries) and scaled (multiply every entry by a constant).</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    In 2D, $\mathbf{u}=(1,0)$ and $\mathbf{v}=(0,1)$ are unit vectors along the x- and y-axes. The <strong>dot product</strong> $\mathbf{u}\cdot\mathbf{v} = 1\cdot0 + 0\cdot1 = 0$ — they point in unrelated directions (orthogonal).<br><br>
+    $\mathbf{a}=(3,4)$ and $\mathbf{b}=(6,8)$ point the same direction ($\mathbf{b}=2\mathbf{a}$), so $\mathbf{a}\cdot\mathbf{b} = 3\cdot6 + 4\cdot8 = 50$ is large and positive — strong alignment.<br><br>
+    A <strong>matrix</strong> $A$ transforms vectors: each row of $A$ dotted with the input vector gives one output entry. Neural networks stack these transforms with nonlinearities between them.</div>
     <div class="formula-block">$$\mathbf{u}\cdot\mathbf{v}=\sum_i u_i v_i \qquad \|\mathbf{v}\|=\sqrt{\mathbf{v}\cdot\mathbf{v}} \qquad (AB)_{ij}=\sum_k A_{ik}B_{kj}$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$u_i, v_i$</dt><dd>components of vectors — individual numbers in the list</dd>
-        <dt>$\mathbf{u}\cdot\mathbf{v}$</dt><dd>dot product — measures alignment; zero means orthogonal</dd>
-        <dt>$A_{ik}$</dt><dd>entry in row $i$, column $k$ of matrix $A$</dd>
-        <dt>$(AB)_{ij}$</dt><dd>entry $i,j$ of product — row $i$ of $A$ dotted with column $j$ of $B$</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$u_i, v_i$</span><span class="role">Components</span><span class="mean">Individual numbers in a vector list</span></div>
+        <div class="var-item"><span class="sym">$\mathbf{u}\cdot\mathbf{v}$</span><span class="role">Dot product</span><span class="mean">Measures alignment; zero means orthogonal</span></div>
+        <div class="var-item"><span class="sym">$A_{ik}$</span><span class="role">Matrix entry</span><span class="mean">Value in row $i$, column $k$ of $A$</span></div>
+        <div class="var-item"><span class="sym">$(AB)_{ij}$</span><span class="role">Product entry</span><span class="mean">Row $i$ of $A$ dotted with column $j$ of $B$</span></div>
+      </div>
+    </div>
+
+    <div class="box"><span class="tag">Example · dot product</span>
+      <p class="walk">$\mathbf{u}=(1,2,3)$, $\mathbf{v}=(4,5,6)$. Dot product: $\mathbf{u}\cdot\mathbf{v} = 1\cdot4 + 2\cdot5 + 3\cdot6 = 4+10+18 = 32$.</p>
+      <p class="walk">Length: $\|\mathbf{u}\| = \sqrt{1^2+2^2+3^2} = \sqrt{14} \approx 3.74$. Cosine similarity divides dot product by both lengths — used in search and embeddings (Section XII).</p>
     </div>
 
     <div class="plain"><strong>Where you see this in CS / ML:</strong> Embeddings are vectors; each neural layer is mostly matrix multiplication followed by a nonlinearity. See <a href="#embeddings">XII · Embeddings</a> for how this powers language models.</div>
 
     <h3 id="systems">Linear Systems</h3>
-    <div class="plain"><strong>In plain language:</strong> A linear system $A\mathbf{x}=\mathbf{b}$ asks: which vector $\mathbf{x}$ satisfies a set of linear equations? The <em>rank</em> of $A$ counts independent constraints. A unique solution exists when there are as many independent equations as unknowns. The determinant (for square matrices) tells you whether the system is invertible — $\det(A) \neq 0$ means you can solve for $\mathbf{x}$ uniquely.</div>
+    <p class="lead">Several linear equations, several unknowns — solve for the variables that make all equations true at once.</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    Two equations, two unknowns: $x + y = 5$ and $x - y = 1$. Add them: $2x = 6 \Rightarrow x=3$, then $y=2$. Matrix form packs all equations into $A\mathbf{x}=\mathbf{b}$.<br><br>
+    <strong>Rank</strong> counts independent equations. A unique solution for $n$ unknowns needs $n$ independent equations. <strong>Determinant</strong> (square case): if $\det(A) \neq 0$, exactly one solution exists.</div>
+    <div class="box"><span class="tag">Example · 2×2 system</span>
+      <p class="walk">$2x + y = 7$, $x - y = 2$. From second: $x = y+2$. Substitute: $2(y+2)+y=7 \Rightarrow 3y=3 \Rightarrow y=1$, $x=3$.</p>
+      <p class="walk">Matrix form: $\begin{pmatrix}2&1\\1&-1\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}7\\2\end{pmatrix}$ — same problem, compact notation for code and libraries.</p>
+    </div>
     <div class="box"><span class="tag">Definition</span>
-      $A\mathbf{x}=\mathbf{b}$ with $A \in \mathbb{R}^{m \times n}$. $\mathrm{rank}(A)$ = number of pivot columns. Unique solution for $n$ unknowns iff $\mathrm{rank}(A)=\mathrm{rank}([A|\mathbf{b}])=n$.
+      $A\mathbf{x}=\mathbf{b}$ with $A \in \mathbb{R}^{m \times n}$. $\mathrm{rank}(A)$ = number of pivot columns. Unique solution for $n$ unknowns if and only if $\mathrm{rank}(A)=\mathrm{rank}([A|\mathbf{b}])=n$.
     </div>
 
     <div class="box"><span class="tag">Definition</span>
-      $\det(A) \neq 0 \iff A$ invertible. For $2\times2$: $\det = ad-bc$; inverse scales adjugate by $1/\det$.
+      $\det(A) \neq 0$ if and only if $A$ is invertible. For $2\times2$: $\det = ad-bc$; inverse scales adjugate by $1/\det$.
     </div>
 
     <h3 id="eigen">Eigenvalues &amp; SVD</h3>
-    <div class="plain"><strong>In plain language:</strong> An <em>eigenvector</em> of matrix $A$ is a direction that $A$ only stretches or shrinks — it does not rotate. The stretch factor is the <em>eigenvalue</em> $\lambda$. The SVD ($A=U\Sigma V^T$) decomposes any matrix into rotation, scaling, and rotation — the workhorse of PCA, compression, and recommendation systems.</div>
-    <div class="box"><span class="tag">Definition</span>
-      $A\mathbf{v}=\lambda\mathbf{v}$, $\mathbf{v}\neq 0$. Solve via $\det(A-\lambda I)=0$. <strong>SVD:</strong> $A=U\Sigma V^T$ with orthogonal $U,V$ and diagonal $\Sigma$ — generalizes eigen-decomposition to any matrix; powers PCA and low-rank approximation.
-    </div>
-
+    <p class="lead">Some directions survive matrix multiplication unchanged — only stretched or flipped. Those special directions are eigenvectors; the stretch factor is the eigenvalue.</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    Apply matrix $A$ to vector $\mathbf{v}$. Usually $A\mathbf{v}$ points somewhere new. An <strong>eigenvector</strong> satisfies $A\mathbf{v} = \lambda \mathbf{v}$ — same direction, scaled by $\lambda$ (the eigenvalue). PCA finds directions of maximum variance in data; PageRank uses the dominant eigenvector of a link matrix.<br><br>
+    <strong>SVD</strong> works for any matrix (even non-square): decompose into rotate → scale → rotate — used in compression, recommendations, and noise reduction.</div>
     <div class="box"><span class="tag">Example</span>
-      $A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$: characteristic polynomial $\lambda^2-7\lambda+10=(\lambda-5)(\lambda-2)$. Eigenvalues 5 and 2; eigenvector for 5 is $(1,1)^T$.
+      <p class="walk">$A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$. Characteristic polynomial $\det(A-\lambda I)=0$ gives $(\lambda-5)(\lambda-2)=0$ → eigenvalues $\lambda_1=5$, $\lambda_2=2$.</p>
+      <p class="walk">For $\lambda=5$: solve $(A-5I)\mathbf{v}=0$ → $\mathbf{v}=(1,1)^T$ is an eigenvector — applying $A$ scales that direction by 5.</p>
+    </div>
+    <div class="box"><span class="tag">Definition</span>
+      $A\mathbf{v}=\lambda\mathbf{v}$, $\mathbf{v}\neq 0$. Eigenvalues from $\det(A-\lambda I)=0$. <strong>SVD:</strong> $A=U\Sigma V^T$ with orthogonal $U,V$ and diagonal $\Sigma$ — generalizes eigen-decomposition to any matrix; powers PCA and low-rank approximation.
     </div>
 
     <!-- CALCULUS -->
@@ -962,10 +2162,14 @@
     <div class="overview">
       <p><strong>Why it matters:</strong> Calculus studies change and optimization. In CS, derivatives tell you how a loss function responds to each weight (gradients), and gradient descent uses that signal to train neural networks. Multivariable calculus and the chain rule are the mathematical backbone of backpropagation.</p>
       <p><strong>In this section:</strong> derivatives and gradients → the chain rule (backprop) → gradient descent and convex optimization.</p>
+      <p class="start-here"><strong>If you’re new:</strong> A derivative is a slope — how much output changes when input nudges a tiny bit. On a hill, slope points uphill; gradient descent walks downhill to find a minimum. That’s how models “learn.”</p>
     </div>
 
     <h3 id="derivatives">Derivatives &amp; Gradients</h3>
-    <div class="plain"><strong>In plain language:</strong> The derivative $f'(x)$ measures how fast $f$ changes when $x$ moves a tiny amount — the slope of the graph. For functions of many variables, the <em>gradient</em> $\nabla f$ collects all partial derivatives into one vector pointing steepest uphill. To minimize a loss, you move opposite to the gradient.</div>
+    <p class="lead">On a graph of $f(x)$, the derivative at a point is the slope of the tangent line — steep uphill means large positive derivative; flat means derivative near zero.</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    If $f(x) = x^2$, near $x=3$ the function goes up as $x$ increases — slope $\approx 6$. Exactly: $f'(x) = 2x$, so $f'(3)=6$. Nudge $x$ from 3 to 3.01 → $f$ rises by roughly $6 \times 0.01 = 0.06$.<br><br>
+    With two inputs $f(x,y)$, the <strong>gradient</strong> $\nabla f = \bigl(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}\bigr)$ lists the slope along each axis. It points steepest uphill; $-\nabla f$ points steepest downhill — the direction gradient descent follows.</div>
     <div class="box"><span class="tag">Definition</span>
       $f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h}$. Rules: sum, product, quotient, chain $(f\circ g)'=(f'\circ g)\cdot g'$. Gradient $\nabla f = (\partial f/\partial x_1,\ldots,\partial f/\partial x_n)^T$ points steepest uphill.
     </div>
@@ -975,21 +2179,24 @@
     </div>
 
     <div class="box"><span class="tag">Example</span>
-      $f(x,y)=x^2y+3y$: $\partial f/\partial x=2xy$, $\partial f/\partial y=x^2+3$. At $(2,1)$: $\nabla f=(4,7)^T$.
+      <p class="walk">$f(x,y)=x^2y+3y$. Treat $y$ as constant to get $\partial f/\partial x = 2xy$. Treat $x$ as constant to get $\partial f/\partial y = x^2+3$.</p>
+      <p class="walk">At $(x,y)=(2,1)$: $\nabla f = (2\cdot2\cdot1,\; 2^2+3) = (4, 7)^T$ — moving a tiny step in the $(1,0)$ direction increases $f$ fastest in the $x$ direction with rate 4.</p>
     </div>
 
     <h3 id="optimization">Optimization</h3>
-    <div class="plain"><strong>In plain language:</strong> Optimization finds inputs that make a function as small (or large) as possible. <em>Gradient descent</em> repeatedly takes a small step downhill: read the gradient, subtract a fraction of it from your parameters, repeat. Learning rate $\eta$ controls step size — too big overshoots, too small crawls.</div>
+    <p class="lead">Find inputs that make a function as small as possible — “find the bottom of the valley.” In ML, the function is loss and the inputs are model weights.</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    Imagine standing on a hillside in fog. You feel which way is downhill and take a small step that way. Repeat. That is <strong>gradient descent</strong>: $\theta_{new} = \theta_{old} - \eta \nabla L$ — move opposite the gradient (uphill direction). $\eta$ (learning rate) is step size: too large → overshoot; too small → slow progress.</div>
     <div class="formula-block">$$\theta_{t+1} = \theta_t - \eta \nabla_\theta L(\theta_t)$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols · gradient descent</span>
-      <dl>
-        <dt>$\theta$</dt><dd>all learnable parameters (weights and biases of the model)</dd>
-        <dt>$L(\theta)$</dt><dd>loss function — a single number measuring how wrong the model is</dd>
-        <dt>$\nabla_\theta L$</dt><dd>gradient — vector of partial derivatives; points uphill on the loss surface</dd>
-        <dt>$\eta$</dt><dd>learning rate — step size (too large diverges; too small learns slowly)</dd>
-        <dt>$t$</dt><dd>iteration / training step index</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · gradient descent</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$\theta$</span><span class="role">Parameters</span><span class="mean">All learnable weights and biases</span></div>
+        <div class="var-item"><span class="sym">$L(\theta)$</span><span class="role">Loss</span><span class="mean">Single number measuring how wrong the model is</span></div>
+        <div class="var-item"><span class="sym">$\nabla_\theta L$</span><span class="role">Gradient</span><span class="mean">Partial derivatives; points uphill on the loss surface</span></div>
+        <div class="var-item"><span class="sym">$\eta$</span><span class="role">Learning rate</span><span class="mean">Step size — too large diverges, too small is slow</span></div>
+        <div class="var-item"><span class="sym">$t$</span><span class="role">Step index</span><span class="mean">Training iteration number</span></div>
+      </div>
     </div>
 
     <div class="box"><span class="tag">Example · one weight, one step</span>
@@ -1007,15 +2214,25 @@
     <div class="overview">
       <p><strong>Why it matters:</strong> Algorithm analysis predicts how running time and memory grow as input size increases — before you run expensive benchmarks. Asymptotic notation ($O$, $\Omega$, $\Theta$) abstracts away hardware and constant factors so you can compare designs. Recurrence relations and the Master theorem solve divide-and-conquer costs like merge sort.</p>
       <p><strong>In this section:</strong> Big-O notation and growth rates → summation and log identities → recurrences, the Master theorem, and amortized analysis.</p>
+      <p class="start-here"><strong>If you’re new:</strong> $O(n)$ means “if I double the input, runtime about doubles.” $O(n^2)$ means doubling input ~ quadruples work. $O(2^n)$ means adding one item can double the work — usually too slow for large inputs.</p>
     </div>
 
     <h3 id="asymptotic">Asymptotic Notation</h3>
-    <div class="plain"><strong>In plain language:</strong> Asymptotic notation describes growth as input size $n \to \infty$, ignoring constant factors and lower-order terms. $O(g)$ is an upper bound (“at most this fast”), $\Omega(g)$ a lower bound (“at least this slow”), $\Theta(g)$ a tight bound (“exactly this growth rate”). It answers: “If I double the input, does runtime double, quadruple, or explode?”</div>
+    <p class="lead">We care how cost grows as input size $n \to \infty$, not whether your laptop is 10% faster. Constants and lower-order terms are dropped — $3n^2 + 100n + 7$ behaves like $n^2$ at scale.</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    <strong>$O(g)$ — upper bound:</strong> “at most about $g$ growth.” Linear scan of $n$ items is $O(n)$ — 1 million items → about 1 million steps (times a constant).<br>
+    <strong>$\Omega(g)$ — lower bound:</strong> “at least about $g$ growth.” Any algorithm that must read every input is $\Omega(n)$.<br>
+    <strong>$\Theta(g)$ — tight bound:</strong> both $O(g)$ and $\Omega(g)$ — merge sort is $\Theta(n \log n)$, not just “at most” but “exactly this growth class.”</div>
+
+    <div class="box"><span class="tag">Example · comparing growth</span>
+      <p class="walk">Input size $n = 1{,}000$. $O(n) \approx 1{,}000$ steps; $O(n \log n) \approx 10{,}000$; $O(n^2) \approx 1{,}000{,}000$; $O(2^n)$ is astronomically larger than atoms in the universe.</p>
+      <p class="walk">That’s why binary search ($O(\log n)$) beats linear scan ($O(n)$) on sorted data, and why brute-force all subsets ($O(2^n)$) dies past ~30 items.</p>
+    </div>
 
     <div class="box"><span class="tag">Definition</span>
-      $f(n)=O(g(n))$ iff $\exists c,n_0: \forall n\geq n_0,\, |f(n)|\leq c|g(n)|$ (asymptotic upper bound).<br>
-      $f(n)=\Omega(g(n))$ iff $\exists c,n_0: \forall n\geq n_0,\, |f(n)|\geq c|g(n)|$ (asymptotic lower bound). Equivalently, $g(n)=O(f(n))$.<br>
-      $f(n)=\Theta(g(n))$ iff both $O$ and $\Omega$ (tight bound).
+      $f(n)=O(g(n))$ if and only if $\exists c,n_0: \forall n\geq n_0,\, |f(n)|\leq c|g(n)|$ (asymptotic upper bound).<br>
+      $f(n)=\Omega(g(n))$ if and only if $\exists c,n_0: \forall n\geq n_0,\, |f(n)|\geq c|g(n)|$ (asymptotic lower bound). Equivalently, $g(n)=O(f(n))$.<br>
+      $f(n)=\Theta(g(n))$ if and only if both $O$ and $\Omega$ (tight bound).
     </div>
 
     <table>
@@ -1029,7 +2246,10 @@
     </table>
 
     <h3 id="summations">Summations &amp; Logarithms</h3>
-    <div class="plain"><strong>In plain language:</strong> Many algorithm runtimes are sums — adding up work at each loop iteration or recursion level. Closed-form summation formulas let you collapse a sum into a simple expression. Logarithms appear whenever you halve the problem size (binary search, balanced trees): $\log_2 n$ counts how many halvings fit in $n$.</div>
+    <p class="lead">The symbol $\sum$ is a “for loop” that adds terms. Logarithms count how many times you must multiply (or halve) to reach a target.</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    $\sum_{i=1}^{4} i$ means $1+2+3+4 = 10$ — add $i$ as $i$ runs from 1 to 4. Algorithm analysis sums work per loop iteration to get total runtime.<br><br>
+    $\log_2 8 = 3$ because $2^3 = 8$ — three doublings to go from 1 to 8. Binary search halves the search space each step → at most $\log_2 n$ steps on $n$ sorted items.</div>
     <div class="box"><span class="tag">Formulas</span>
       $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$ &nbsp;·&nbsp;
       $\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}$ &nbsp;·&nbsp;
@@ -1043,7 +2263,10 @@
     </div>
 
     <h3 id="recurrences">Recurrences</h3>
-    <div class="plain"><strong>In plain language:</strong> A recurrence expresses total cost in terms of costs on smaller inputs — “to sort $n$ items, sort two halves of size $n/2$ plus merge.” The Master theorem gives a recipe for divide-and-conquer recurrences. <em>Amortized</em> analysis averages cost over a sequence (e.g. dynamic array doubling is $O(1)$ per insert on average).</div>
+    <p class="lead">A recurrence defines cost on size $n$ using costs on smaller sizes — “to solve $n$, solve two halves of size $n/2$ plus merge work.”</p>
+    <div class="plain"><span class="plain-label">Start here</span>
+    Merge sort: split array in half, sort each half recursively, merge — $T(n) = 2T(n/2) + n$. The <strong>Master theorem</strong> compares the merge cost $n$ to how fast subproblems multiply ($n^{\log_b a}$) and tells you the final growth rate.<br><br>
+    <strong>Amortized</strong> cost averages over many operations — dynamic arrays double capacity occasionally but $O(1)$ per insert on average.</div>
     <div class="box"><span class="tag">Example</span>
       Merge sort: $T(n)=2T(n/2)+\Theta(n)$, $T(1)=\Theta(1)$ → $\Theta(n\log n)$ by Master theorem.
     </div>
@@ -1068,9 +2291,20 @@
     <!-- BOOLEAN -->
     <h2 id="boolean">VIII · Boolean Algebra</h2>
     <div class="overview">
-      <p><strong>Why it matters:</strong> Boolean algebra is the mathematics of 0 and 1 — the logic inside every CPU gate, circuit, and conditional branch. It connects propositional logic to hardware: any boolean function can be built from AND, OR, NOT, or even from NAND alone.</p>
+      <p class="start-here"><strong>If you’re new:</strong> Boolean algebra is true/false math — the same 0/1 values inside every CPU gate and every <code>if</code> statement. Section I gave the logic; here we see the algebra hardware uses.</p>
     </div>
-    <div class="plain"><strong>In plain language:</strong> Boolean algebra manipulates true/false (1/0) values with AND ($\land$), OR ($\lor$), and NOT ($\neg$). De Morgan’s laws let you swap AND and OR by negating inputs and output — the same identities compilers use to simplify conditions. NAND alone is <em>functionally complete</em>: you can build any logic gate from it.</div>
+    <div class="plain"><span class="plain-label">Start here</span>
+    True = 1, False = 0. AND ($\land$) outputs 1 only if both inputs are 1. OR ($\lor$) outputs 1 if either input is 1. NOT ($\neg$) flips the bit.<br><br>
+    <strong>De Morgan:</strong> $\neg(a \land b) = \neg a \lor \neg b$ — “not (A and B)” equals “(not A) or (not B)” — the same rule compilers use to rewrite conditions.</div>
+    <div class="box"><span class="tag">Example · truth table for AND</span>
+      <table>
+        <tr><th>$a$</th><th>$b$</th><th>$a \land b$</th></tr>
+        <tr><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td></tr>
+      </table>
+    </div>
     <div class="box"><span class="tag">Definition</span>
       On $\{0,1\}$: $\land,\lor,\neg$ satisfy commutativity, associativity, distributivity ($a\land(b\lor c)=(a\land b)\lor(a\land c)$), and De Morgan: $\neg(a\land b)=\neg a\lor\neg b$.
     </div>
@@ -1081,9 +2315,13 @@
     <!-- FORMAL LANGUAGES -->
     <h2 id="formal">IX · Formal Languages &amp; Automata</h2>
     <div class="overview">
-      <p><strong>Why it matters:</strong> Automata theory classifies what different kinds of machines can recognize — from regular expressions to programming languages to general computation. Compilers use grammars to parse code; regex engines implement finite automata; the Church–Turing thesis says any “realistic” algorithm is simulable by a Turing machine.</p>
+      <p class="start-here"><strong>If you’re new:</strong> Different machines have different memory limits. Regex ≈ finite memory; nested parentheses need a stack; a full computer ≈ Turing machine. This section maps “what can be recognized” to “what hardware can do.”</p>
     </div>
-    <div class="plain"><strong>In plain language:</strong> An automaton is a mathematical model of a machine with finite memory. <em>Regular languages</em> (DFA/NFA) match patterns without memory of prior context — think regex. <em>Context-free grammars</em> handle nesting (parentheses, XML). <em>Turing machines</em> model any algorithm a computer can run.</div>
+    <div class="plain"><span class="plain-label">Start here</span>
+    Imagine a machine reading a tape one cell at a time with finite memory states. A <strong>DFA</strong> accepts or rejects strings — regex without backreferences. A <strong>pushdown automaton</strong> adds a stack — handles nested parentheses. A <strong>Turing machine</strong> has unlimited tape — models any program your laptop can run (Church–Turing thesis).</div>
+    <div class="box"><span class="tag">Hierarchy · plain language</span>
+      Regular (regex) ⊂ Context-free (most programming syntax) ⊂ Decidable ⊂ All languages — each step adds expressiveness and typically more computation power.
+    </div>
 
     <div class="box"><span class="tag">Definition</span>
       <strong>DFA / NFA:</strong> recognize <em>regular languages</em> — closed under union, concatenation, star; match lexers and regex (without backreferences).<br>
@@ -1098,21 +2336,20 @@
     <!-- INFORMATION THEORY -->
     <h2 id="info">X · Information Theory</h2>
     <div class="overview">
-      <p><strong>Why it matters:</strong> Information theory quantifies uncertainty and compression. Shannon entropy measures the average bits needed to encode a random source; cross-entropy measures how wasteful a wrong code is. These same quantities appear as training losses in machine learning — minimizing cross-entropy is equivalent to maximizing likelihood.</p>
+      <p class="start-here"><strong>If you’re new:</strong> Entropy measures surprise — how many yes/no questions on average to guess an outcome. A fair coin needs 1 question; a biased coin needs fewer. Compression and ML loss both minimize “surprise bits.”</p>
     </div>
-    <div class="plain"><strong>In plain language:</strong> Entropy $H(X)$ asks: on average, how many yes/no questions do you need to identify a random outcome? A fair coin has entropy 1 bit (maximum for two outcomes). Cross-entropy compares your model’s predicted distribution $Q$ to the true distribution $P$ — the extra bits you waste by using the wrong code.</div>
+    <div class="plain"><span class="plain-label">Start here</span> Entropy $H(X)$ asks: on average, how many yes/no questions do you need to identify a random outcome? A fair coin has entropy 1 bit (maximum for two outcomes). Cross-entropy compares your model’s predicted distribution $Q$ to the true distribution $P$ — the extra bits you waste by using the wrong code.</div>
     <div class="formula-block">$$H(X) = -\sum_x P(x)\log_2 P(x) \qquad H(P,Q) = -\sum_x P(x)\log_2 Q(x)$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$X$</dt><dd>a random variable (e.g. next character in text)</dd>
-        <dt>$P(x)$</dt><dd>true probability of outcome $x$</dd>
-        <dt>$Q(x)$</dt><dd>model’s predicted probability of $x$</dd>
-        <dt>$H(X)$</dt><dd>Shannon entropy — average bits needed to encode $X$ (uncertainty)</dd>
-        <dt>$H(P,Q)$</dt><dd>cross-entropy — average bits if we encode truth $P$ using code built for $Q$</dd>
-        <dt>$\log_2$</dt><dd>log base 2 — measures information in bits</dd>
-        <dt>$D_{KL}(P\|Q)$</dt><dd>KL divergence $= H(P,Q)-H(P)$ — extra bits from using wrong model $Q$</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$X$</span><span class="role">Random variable</span><span class="mean">What you are encoding (e.g. next character)</span></div>
+        <div class="var-item"><span class="sym">$P(x)$</span><span class="role">True prob</span><span class="mean">Actual probability of outcome $x$</span></div>
+        <div class="var-item"><span class="sym">$Q(x)$</span><span class="role">Model prob</span><span class="mean">Predicted probability of $x$</span></div>
+        <div class="var-item"><span class="sym">$H(X)$</span><span class="role">Entropy</span><span class="mean">Average bits to encode $X$; measures uncertainty</span></div>
+        <div class="var-item"><span class="sym">$H(P,Q)$</span><span class="role">Cross-entropy</span><span class="mean">Bits wasted encoding truth $P$ with code for $Q$</span></div>
+        <div class="var-item"><span class="sym">$D_{KL}$</span><span class="role">KL divergence</span><span class="mean">$H(P,Q)-H(P)$ — extra bits from wrong model</span></div>
+      </div>
     </div>
 
     <div class="box"><span class="tag">Example · fair coin vs biased model</span>
@@ -1127,9 +2364,14 @@
     <!-- COMPUTABILITY -->
     <h2 id="computability">XI · Computability &amp; Complexity</h2>
     <div class="overview">
-      <p><strong>Why it matters:</strong> Computability asks what problems can be solved at all; complexity asks how efficiently. The halting problem proves some questions are undecidable. The classes P and NP organize problems by feasible verification vs. feasible solving — the P vs. NP question is the deepest open problem in CS.</p>
+      <p class="start-here"><strong>If you’re new:</strong> Some problems have no program that always answers correctly (halting). Others have fast checkers but no known fast solvers (NP). This section draws the line between “computable,” “efficient,” and “probably hard.”</p>
     </div>
-    <div class="plain"><strong>In plain language:</strong> A problem is <em>decidable</em> if an algorithm can always answer yes or no in finite time. The halting problem is not — no program can reliably detect whether arbitrary code will stop. <em>P</em> is problems solvable in polynomial time; <em>NP</em> is problems where a proposed solution can be checked quickly. <em>NP-complete</em> problems are the hardest in NP — if any one has a fast algorithm, all of NP does.</div>
+    <div class="plain"><span class="plain-label">Start here</span>
+    A problem is <strong>decidable</strong> if some program always answers yes/no in finite time. The <strong>halting problem</strong> is not — no universal bug-finder can decide if arbitrary code stops.<br><br>
+    <strong>P</strong> = solvable quickly (polynomial time). <strong>NP</strong> = hard to solve but easy to check a proposed answer (Sudoku: hard to fill, easy to verify). <strong>NP-complete</strong> = hardest problems in NP; a fast solver for any one would crack all of NP.</div>
+    <div class="box"><span class="tag">Example · halting intuition</span>
+      <p class="walk">Program: “print hello and stop” → halts. Program: “while true: pass” → never halts. There is no single algorithm that correctly classifies <em>every</em> possible program — that impossibility is the halting theorem.</p>
+    </div>
     <div class="box"><span class="tag">Definition</span>
       $A$ is <em>countable</em> if a bijection $\mathbb{N}\to A$ exists. $\mathbb{Q}$ is countable; $\mathbb{R}$ is not (Cantor diagonalization).
     </div>
@@ -1149,10 +2391,12 @@
     <div class="overview">
       <p><strong>Why it matters:</strong> Large language models (LLMs) are probability machines built from the math in sections V–X: vectors and matrices (embeddings, layers), calculus (gradients, backprop), probability (sampling, conditioning), and information theory (cross-entropy loss, perplexity). Understanding these pieces demystifies how GPT-class models learn and generate text.</p>
       <p><strong>In this section:</strong> end-to-end pipeline → embeddings → softmax and cross-entropy → training and backprop → attention and transformers → inference and perplexity.</p>
+      <p class="start-here"><strong>If you’re new:</strong> An LLM predicts the next word by scoring every possibility, turning scores into probabilities, and learning from billions of examples. Sections V–X supply the pieces; here they snap together.</p>
     </div>
 
     <h3 id="ml-overview">How LLMs Use Math — End to End</h3>
-    <div class="plain"><strong>In plain language:</strong> Text is split into tokens (subword pieces like “hel” + “lo”). Each token becomes a vector. Stacked layers of matrix math transform those vectors; the final layer outputs a score for every possible next token. Training nudges all the weights so the model assigns high probability to the correct next token in billions of training examples.</div>
+    <p class="lead">An LLM is a next-word predictor trained on text. Every step below is matrix math or probability from earlier sections.</p>
+    <div class="plain"><span class="plain-label">Start here</span> Text is split into tokens (subword pieces like “hel” + “lo”). Each token becomes a vector. Stacked layers of matrix math transform those vectors; the final layer outputs a score for every possible next token. Training nudges all the weights so the model assigns high probability to the correct next token in billions of training examples.</div>
 
     <div class="box"><span class="tag">Pipeline</span>
       <ol>
@@ -1167,29 +2411,30 @@
 
     <div class="formula-block">$$P(x_t \mid x_1, \ldots, x_{t-1}) = \text{softmax}(\mathbf{z}_t)_{x_t}$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$x_t$</dt><dd>the token at position $t$ in the sequence</dd>
-        <dt>$x_1,\ldots,x_{t-1}$</dt><dd>all prior tokens (context the model conditions on)</dd>
-        <dt>$\mathbf{z}_t$</dt><dd>logit vector — raw scores for each vocabulary token at step $t$</dd>
-        <dt>$|V|$</dt><dd>vocabulary size (often 32k–256k tokens)</dd>
-        <dt>$P(x_t \mid \cdots)$</dt><dd>conditional probability of next token given context (the core LLM objective)</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$x_t$</span><span class="role">Token</span><span class="mean">The token at position $t$ in the sequence</span></div>
+        <div class="var-item"><span class="sym">$x_{&lt;t}$</span><span class="role">Context</span><span class="mean">All prior tokens the model conditions on</span></div>
+        <div class="var-item"><span class="sym">$\mathbf{z}_t$</span><span class="role">Logits</span><span class="mean">Raw scores for each vocabulary token at step $t$</span></div>
+        <div class="var-item"><span class="sym">$|V|$</span><span class="role">Vocab size</span><span class="mean">Number of possible tokens (often 32k–256k)</span></div>
+        <div class="var-item"><span class="sym">$P(x_t \mid \cdots)$</span><span class="role">Next-token prob</span><span class="mean">Core LLM objective — predict next token given context</span></div>
+      </div>
     </div>
 
     <h3 id="embeddings">Embeddings &amp; Vector Similarity</h3>
-    <div class="plain"><strong>In plain language:</strong> An embedding is a list of numbers representing meaning in vector space. Similar words or tokens get similar vectors; the dot product (or cosine similarity) measures how aligned two meanings are. Search, recommendations, and RAG retrieval all rank by this geometry.</div>
+    <p class="lead">Words become lists of numbers so a computer can compare meaning arithmetically — similar meanings → similar vectors.</p>
+    <div class="plain"><span class="plain-label">Start here</span> An embedding is a list of numbers representing meaning in vector space. Similar words or tokens get similar vectors; the dot product (or cosine similarity) measures how aligned two meanings are. Search, recommendations, and RAG retrieval all rank by this geometry.</div>
 
     <div class="formula-block">$$\text{sim}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|} = \cos\theta$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$\mathbf{u}, \mathbf{v}$</dt><dd>embedding vectors (e.g. 768 or 4096 dimensions)</dd>
-        <dt>$\mathbf{u} \cdot \mathbf{v}$</dt><dd>dot product $\sum_i u_i v_i$ — large when vectors point the same way</dd>
-        <dt>$\|\mathbf{u}\|$</dt><dd>vector length (L2 norm) — normalizes for magnitude</dd>
-        <dt>$\cos\theta$</dt><dd>cosine similarity in $[-1,1]$; 1 = identical direction</dd>
-        <dt>$d$</dt><dd>embedding dimension — width of every token vector</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$\mathbf{u}, \mathbf{v}$</span><span class="role">Embeddings</span><span class="mean">Vectors representing token meaning (768–4096 dims)</span></div>
+        <div class="var-item"><span class="sym">$\mathbf{u}\cdot\mathbf{v}$</span><span class="role">Dot product</span><span class="mean">Large when vectors point the same direction</span></div>
+        <div class="var-item"><span class="sym">$\|\mathbf{u}\|$</span><span class="role">Length</span><span class="mean">L2 norm — normalizes for magnitude</span></div>
+        <div class="var-item"><span class="sym">$\cos\theta$</span><span class="role">Cosine sim</span><span class="mean">Similarity in $[-1,1]$; 1 = same direction</span></div>
+        <div class="var-item"><span class="sym">$d$</span><span class="role">Dimension</span><span class="mean">Width of every token vector</span></div>
+      </div>
     </div>
 
     <div class="box"><span class="tag">Example · 2D toy embeddings</span>
@@ -1197,44 +2442,46 @@
     </div>
 
     <h3 id="softmax-ce">Softmax &amp; Cross-Entropy Loss</h3>
-    <div class="plain"><strong>In plain language:</strong> <em>Logits</em> are raw scores for each possible next token — unbounded numbers. <em>Softmax</em> converts them into probabilities that sum to 1. <em>Cross-entropy</em> measures how surprised the model is by the true next token: low when the model assigns it high probability, high when it assigns it low probability. This is the main training loss for LLMs.</div>
+    <p class="lead">Raw scores (logits) become probabilities; cross-entropy scores how wrong the model’s guess was on the true next word.</p>
+    <div class="plain"><span class="plain-label">Start here</span> <em>Logits</em> are raw scores for each possible next token — unbounded numbers. <em>Softmax</em> converts them into probabilities that sum to 1. <em>Cross-entropy</em> measures how surprised the model is by the true next token: low when the model assigns it high probability, high when it assigns it low probability. This is the main training loss for LLMs.</div>
 
     <div class="formula-block">$$\text{softmax}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_j e^{z_j}} \qquad L = -\log P(y) = -\log \text{softmax}(\mathbf{z})_y$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$z_i$</dt><dd>logit (raw score) for token $i$ before normalization</dd>
-        <dt>$e^{z_i}$</dt><dd>exponential — makes scores positive; larger logits dominate</dd>
-        <dt>$\sum_j e^{z_j}$</dt><dd>normalizer — ensures all probabilities sum to 1</dd>
-        <dt>$y$</dt><dd>true next token (ground truth from training text)</dd>
-        <dt>$L$</dt><dd>cross-entropy loss for one prediction — lower is better</dd>
-        <dt>$P(y)$</dt><dd>model’s predicted probability of the correct token</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$z_i$</span><span class="role">Logit</span><span class="mean">Raw score for token $i$ before normalization</span></div>
+        <div class="var-item"><span class="sym">$e^{z_i}$</span><span class="role">Exponent</span><span class="mean">Makes scores positive; larger logits dominate</span></div>
+        <div class="var-item"><span class="sym">$\sum_j e^{z_j}$</span><span class="role">Normalizer</span><span class="mean">Ensures all probabilities sum to 1</span></div>
+        <div class="var-item"><span class="sym">$y$</span><span class="role">Ground truth</span><span class="mean">Correct next token from training text</span></div>
+        <div class="var-item"><span class="sym">$L$</span><span class="role">Loss</span><span class="mean">Cross-entropy for one prediction — lower is better</span></div>
+        <div class="var-item"><span class="sym">$P(y)$</span><span class="role">Model prob</span><span class="mean">Predicted probability of the correct token</span></div>
+      </div>
     </div>
 
     <div class="box"><span class="tag">Example · three-token vocabulary</span>
       <p class="walk">Logits $\mathbf{z}=[2,\,1,\,0]$ for tokens {“the”, “cat”, “dog”}.</p>
       <p class="walk">$e^z = [e^2,\,e^1,\,e^0] \approx [7.39,\,2.72,\,1.00]$, sum $\approx 11.11$.</p>
-      <p class="walk">Probabilities: $P \approx [0.665,\,0.245,\,0.090]$ (natural log used here, as in most deep-learning code).</p>
+      <p class="walk">Probabilities: $P \approx [0.665,\,0.245,\,0.090]$. Loss uses $\ln$ (natural log), as in most deep-learning code.</p>
       <p class="walk">If true token is “the” ($y=0$): $L = -\log 0.665 \approx 0.41$. If true token is “dog”: $L = -\log 0.090 \approx 2.41$ — the model pays a large penalty for assigning low probability to the correct word.</p>
     </div>
 
     <div class="box"><span class="tag">Sequence loss</span>
-      For a training sequence of length $T$: $\displaystyle L_{\text{avg}} = -\frac{1}{T}\sum_{t=1}^{T} \log P(x_t \mid x_{<t})$. Each position contributes one cross-entropy term; backprop flows through all layers to update weights.
+      For a training sequence of length $T$: $\displaystyle L_{\text{avg}} = -\frac{1}{T}\sum_{t=1}^{T} \log P(x_t \mid x_{\lt t})$. Each position contributes one cross-entropy term; backprop flows through all layers to update weights.
     </div>
 
     <h3 id="training">Training, Backpropagation &amp; Optimizers</h3>
-    <div class="plain"><strong>In plain language:</strong> The <em>forward pass</em> runs input through the network to get predictions and compute loss. <em>Backpropagation</em> applies the chain rule backward through each layer to find how every weight affects the loss. An <em>optimizer</em> (SGD, Adam) uses those gradients to update weights — repeating this on billions of tokens is training.</div>
+    <p class="lead">Training = repeat: predict → measure loss → compute how each weight affected loss → nudge weights to reduce loss.</p>
+    <div class="plain"><span class="plain-label">Start here</span> The <em>forward pass</em> runs input through the network to get predictions and compute loss. <em>Backpropagation</em> applies the chain rule backward through each layer to find how every weight affects the loss. An <em>optimizer</em> (SGD, Adam) uses those gradients to update weights — repeating this on billions of tokens is training.</div>
 
     <div class="formula-block">$$\frac{\partial L}{\partial W^{(\ell)}} = \frac{\partial L}{\partial h^{(\ell+1)}} \cdot \frac{\partial h^{(\ell+1)}}{\partial h^{(\ell)}} \cdot \frac{\partial h^{(\ell)}}{\partial W^{(\ell)}}$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols · backprop</span>
-      <dl>
-        <dt>$W^{(\ell)}$</dt><dd>weight matrix at layer $\ell$</dd>
-        <dt>$h^{(\ell)}$</dt><dd>hidden activations (vectors flowing between layers)</dd>
-        <dt>$\partial L / \partial W^{(\ell)}$</dt><dd>gradient — how much increasing each weight increases loss</dd>
-        <dt>chain of $\partial h / \partial h$</dt><dd>chain rule — propagates error signal backward through the network</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · backprop</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$W^{(\ell)}$</span><span class="role">Weights</span><span class="mean">Learnable matrix at layer $\ell$</span></div>
+        <div class="var-item"><span class="sym">$h^{(\ell)}$</span><span class="role">Activations</span><span class="mean">Vectors flowing between layers</span></div>
+        <div class="var-item"><span class="sym">$\partial L / \partial W$</span><span class="role">Gradient</span><span class="mean">How much each weight increases loss</span></div>
+        <div class="var-item"><span class="sym">$\partial h / \partial h$</span><span class="role">Chain rule</span><span class="mean">Propagates error signal backward layer by layer</span></div>
+      </div>
     </div>
 
     <div class="box"><span class="tag">Adam optimizer (used in most LLM training)</span>
@@ -1246,20 +2493,20 @@
     </div>
 
     <h3 id="attention">Attention &amp; Transformers</h3>
-    <div class="plain"><strong>In plain language:</strong> <em>Attention</em> lets each token “look at” every other token in the context and decide how much to borrow from each. The softmax turns raw relevance scores into weights that sum to 1. Stacking attention layers in a <em>Transformer</em> — the architecture behind GPT, Llama, Claude — is how models build long-range context.</div>
+    <p class="lead">When generating word 50, the model decides which earlier words matter most — attention assigns weights to every prior token.</p>
+    <div class="plain"><span class="plain-label">Start here</span> <em>Attention</em> lets each token “look at” every other token in the context and decide how much to borrow from each. The softmax turns raw relevance scores into weights that sum to 1. Stacking attention layers in a <em>Transformer</em> — the architecture behind GPT, Llama, Claude — is how models build long-range context.</div>
 
     <div class="formula-block">$$\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$Q$</dt><dd>queries — “what information am I seeking?” (matrix; one row per token)</dd>
-        <dt>$K$</dt><dd>keys — “what information do I contain?”</dd>
-        <dt>$V$</dt><dd>values — actual content passed forward if a token is attended to</dd>
-        <dt>$QK^\top$</dt><dd>pairwise dot products — relevance score between every query–key pair</dd>
-        <dt>$d_k$</dt><dd>key dimension — dividing by $\sqrt{d_k}$ prevents scores exploding (softmax saturation)</dd>
-        <dt>softmax$(\cdot)$</dt><dd>converts scores to attention weights (each row sums to 1)</dd>
-        <dt>$\times V$</dt><dd>weighted sum of value vectors — output for each token</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$Q$</span><span class="role">Queries</span><span class="mean">“What am I looking for?” — one row per token</span></div>
+        <div class="var-item"><span class="sym">$K$</span><span class="role">Keys</span><span class="mean">“What do I contain?” — match targets for queries</span></div>
+        <div class="var-item"><span class="sym">$V$</span><span class="role">Values</span><span class="mean">Content blended in when a token is attended to</span></div>
+        <div class="var-item"><span class="sym">$QK^\top$</span><span class="role">Scores</span><span class="mean">Pairwise relevance between every query–key pair</span></div>
+        <div class="var-item"><span class="sym">$d_k$</span><span class="role">Key dim</span><span class="mean">Scaling factor $\sqrt{d_k}$ prevents softmax saturation</span></div>
+        <div class="var-item"><span class="sym">softmax</span><span class="role">Weights</span><span class="mean">Turns scores into attention weights summing to 1</span></div>
+      </div>
     </div>
 
     <div class="box"><span class="tag">Derived from embeddings</span>
@@ -1275,24 +2522,25 @@
     </div>
 
     <h3 id="inference">Inference, Sampling &amp; Perplexity</h3>
-    <div class="plain"><strong>In plain language:</strong> After training, generation repeatedly picks a next token from the model’s probability distribution, appends it, and continues. <em>Temperature</em> scales logits before softmax — low temperature is greedy and deterministic, high temperature is creative and random. <em>Perplexity</em> measures average prediction quality on held-out text: lower means the model is less “surprised” by real data.</div>
+    <p class="lead">After training, the model generates text one token at a time by sampling from its probability distribution — temperature controls creativity.</p>
+    <div class="plain"><span class="plain-label">Start here</span> After training, generation repeatedly picks a next token from the model’s probability distribution, appends it, and continues. <em>Temperature</em> scales logits before softmax — low temperature is greedy and deterministic, high temperature is creative and random. <em>Perplexity</em> measures average prediction quality on held-out text: lower means the model is less “surprised” by real data.</div>
 
-    <div class="formula-block">$$P_i' = \frac{e^{z_i / \tau}}{\sum_j e^{z_j / \tau}} \qquad \text{PP} = \exp\!\left(-\frac{1}{T}\sum_{t=1}^{T} \log P(x_t \mid x_{<t})\right)$$</div>
+    <div class="formula-block">$$P_i' = \frac{e^{z_i / \tau}}{\sum_j e^{z_j / \tau}} \qquad \text{PP} = \exp\!\left(-\frac{1}{T}\sum_{t=1}^{T} \log P(x_t \mid x_{\lt t})\right)$$</div>
 
-    <div class="box symbols"><span class="tag">Symbols</span>
-      <dl>
-        <dt>$\tau$</dt><dd>temperature — $\tau \to 0$ picks argmax (greedy); $\tau > 1$ flattens distribution (more random)</dd>
-        <dt>$P_i'$</dt><dd>temperature-scaled probability of token $i$</dd>
-        <dt>PP</dt><dd>perplexity — “effective number of equally likely choices”; lower = better language model</dd>
-        <dt>$T$</dt><dd>number of tokens in evaluation text</dd>
-        <dt>top-$k$ / top-$p$</dt><dd>sampling heuristics — restrict random draws to likely tokens (not shown in formula, but standard in production)</dd>
-      </dl>
+    <div class="box card-vars symbols"><span class="tag">Variables · read this first</span>
+      <div class="var-grid">
+        <div class="var-item"><span class="sym">$\tau$</span><span class="role">Temperature</span><span class="mean">$\tau \to 0$ greedy; $\tau \gt 1$ more random</span></div>
+        <div class="var-item"><span class="sym">$P_i'$</span><span class="role">Scaled prob</span><span class="mean">Temperature-adjusted probability of token $i$</span></div>
+        <div class="var-item"><span class="sym">PP</span><span class="role">Perplexity</span><span class="mean">Effective choice count; lower = better model</span></div>
+        <div class="var-item"><span class="sym">$T$</span><span class="role">Eval length</span><span class="mean">Number of tokens in evaluation text</span></div>
+        <div class="var-item"><span class="sym">top-$k$ / top-$p$</span><span class="role">Sampling</span><span class="mean">Restrict draws to likely tokens in production</span></div>
+      </div>
     </div>
 
     <div class="box"><span class="tag">Example · perplexity</span>
       <p class="walk">On three test tokens the model assigns $P=0.5$, $0.25$, $0.25$ to the correct word at each step.</p>
-      <p class="walk">Average log-loss $= -\frac{1}{3}(\log 0.5 + \log 0.25 + \log 0.25) \approx 1.16$ nats.</p>
-      <p class="walk">$\text{PP} = e^{1.16} \approx 3.2$ — as if the model were uniformly guessing among roughly 3 options each step. Lower perplexity = better fit to the data.</p>
+      <p class="walk">Average log-loss $= -\frac{1}{3}(\ln 0.5 + \ln 0.25 + \ln 0.25) \approx 1.155$ nats.</p>
+      <p class="walk">$\text{PP} = e^{1.155} \approx 3.17$ — as if the model were uniformly guessing among roughly 3 equally likely options each step. Lower perplexity = better fit to the data.</p>
     </div>
 
     <div class="box"><span class="tag">ML math checklist — covered here &amp; above</span>
@@ -1317,7 +2565,7 @@
       <tr><td>Softmax</td><td>$e^{z_i}/\sum_j e^{z_j}$</td></tr>
       <tr><td>Cross-entropy</td><td>$L=-\log P(y)$</td></tr>
       <tr><td>Attention</td><td>$\mathrm{softmax}(QK^\top/\sqrt{d_k})V$</td></tr>
-      <tr><td>Perplexity</td><td>$\exp(-\frac{1}{T}\sum \log P(x_t|x_{<t}))$</td></tr>
+      <tr><td>Perplexity</td><td>$\exp(-\frac{1}{T}\sum \log P(x_t \mid x_{\lt t}))$</td></tr>
       <tr><td>Gradient descent</td><td>$\theta_{t+1}=\theta_t-\eta\nabla L$</td></tr>
     </table>
 
@@ -1328,6 +2576,238 @@
   </main>
 </div>
 <script>
+(function readingClarity(){
+  const pathEl = document.getElementById('read-path');
+  const whatEl = document.getElementById('read-what');
+  if (!pathEl || !whatEl) return;
+
+  const BLOCK = {
+    start: { desc: 'Plain English intro — read this before any formulas' },
+    variables: { desc: 'Symbol glossary — decode each letter before moving on' },
+    def: { desc: 'Formal rule — precise statement used in proofs and code' },
+    ex: { desc: 'Worked example — concrete numbers, step by step' },
+    thm: { desc: 'Theorem or fact — always true under stated conditions' },
+    key: { desc: 'Decision guide — which concept or tool applies here' },
+    formula: { desc: 'Main formula — the equation this topic revolves around' },
+    overview: { desc: 'Section overview — why this matters and what it covers' },
+    other: { desc: 'Supporting detail for this topic' }
+  };
+
+  function classify(el) {
+    if (el.classList.contains('overview')) return 'overview';
+    if (el.classList.contains('plain')) return 'start';
+    if (el.classList.contains('card-vars')) return 'variables';
+    if (el.classList.contains('card-ex')) return 'ex';
+    if (el.classList.contains('card-def')) return 'def';
+    if (el.classList.contains('card-thm')) return 'thm';
+    if (el.classList.contains('card-key')) return 'key';
+    if (el.classList.contains('formula-unit') || el.classList.contains('formula-block')) return 'formula';
+    const tag = (el.querySelector(':scope > .tag')?.textContent || '').toLowerCase();
+    if (tag.includes('example') || tag.includes('in cs')) return 'ex';
+    if (tag.includes('variable')) return 'variables';
+    if (tag.includes('theorem') || tag.includes('fact') || tag === 'rules') return 'thm';
+    if (tag.includes('definition') || tag.includes('formulas') || tag.includes('pipeline')) return 'def';
+    if (tag.includes('which') || tag.includes('key words')) return 'key';
+    return 'other';
+  }
+
+  function enrichTag(tagEl, kind) {
+    if (tagEl.dataset.enriched) return;
+    const title = tagEl.textContent.trim();
+    const info = BLOCK[kind] || BLOCK.other;
+    tagEl.dataset.enriched = '1';
+    tagEl.classList.add('tag-stack');
+    tagEl.innerHTML = '<span class="tag-title">' + title + '</span><span class="tag-desc">' + info.desc + '</span>';
+  }
+
+  document.querySelectorAll('.content > h2[id]').forEach(h2 => {
+    if (h2.closest('.chapter')) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'chapter';
+    h2.parentNode.insertBefore(wrap, h2);
+    wrap.appendChild(h2);
+    const parts = h2.textContent.split('·').map(s => s.trim());
+    const kicker = document.createElement('p');
+    kicker.className = 'chapter-kicker';
+    kicker.textContent = parts[0] || 'Section';
+    wrap.insertBefore(kicker, h2);
+    if (parts.length > 1) h2.textContent = parts.slice(1).join(' · ');
+    wrap.dataset.chapterTitle = h2.textContent.trim();
+  });
+
+  document.querySelectorAll('.content h3[id]').forEach(h3 => {
+    if (h3.closest('.topic-head')) return;
+    const head = document.createElement('header');
+    head.className = 'topic-head';
+    h3.parentNode.insertBefore(head, h3);
+    head.appendChild(h3);
+    const lead = h3.nextElementSibling;
+    if (lead?.classList.contains('lead')) head.appendChild(lead);
+    const hint = document.createElement('p');
+    hint.className = 'topic-read-hint';
+    let hasMap = false;
+    for (let sib = head.nextElementSibling; sib && !sib.classList.contains('chapter'); sib = sib.nextElementSibling) {
+      if (sib.classList.contains('skim-map')) { hasMap = true; break; }
+      if (sib.classList.contains('topic-head') || sib.matches('h2, h3')) break;
+    }
+    hint.innerHTML = hasMap
+      ? '<strong>How to read this topic:</strong> follow the numbered chips below — Idea first, then Variables, then rules and examples.'
+      : '<strong>How to read this topic:</strong> start with the green “Start here” box, then the blue Variables card, then everything else.';
+    head.appendChild(hint);
+    head.dataset.topicTitle = h3.textContent.trim();
+  });
+
+  document.querySelectorAll('.formula-block').forEach(fb => {
+    if (fb.querySelector('.formula-block-label')) return;
+    const label = document.createElement('span');
+    label.className = 'formula-block-label';
+    label.textContent = 'Key formulas';
+    const desc = document.createElement('span');
+    desc.className = 'formula-block-desc';
+    desc.textContent = BLOCK.formula.desc;
+    fb.insertBefore(desc, fb.firstChild);
+    fb.insertBefore(label, fb.firstChild);
+    fb.dataset.readKind = 'formula';
+    fb.dataset.readTitle = 'Key formulas';
+  });
+
+  document.querySelectorAll('.plain, .box, .formula-unit, .overview').forEach(el => {
+    const kind = classify(el);
+    el.dataset.readKind = kind;
+    const tag = el.querySelector(':scope > .tag, :scope > .plain-label');
+    if (tag) {
+      enrichTag(tag, kind);
+      el.dataset.readTitle = tag.querySelector('.tag-title')?.textContent || tag.textContent.trim();
+    } else if (el.classList.contains('formula-unit')) {
+      const head = el.querySelector('.formula-unit-head');
+      if (head) {
+        el.dataset.readTitle = head.textContent.trim();
+        if (!head.dataset.enriched) {
+          head.dataset.enriched = '1';
+          const t = head.textContent.trim();
+          head.innerHTML = '<span class="tag-title">' + t + '</span><span class="tag-desc">' + BLOCK.formula.desc + '</span>';
+          head.classList.add('tag-stack');
+        }
+      }
+    } else if (el.classList.contains('overview')) {
+      el.dataset.readTitle = 'Section overview';
+    }
+  });
+
+  let chapter = 'Introduction';
+  let topic = 'How to use this page';
+  document.querySelectorAll('.content > *').forEach(el => {
+    if (el.classList.contains('chapter')) {
+      chapter = el.dataset.chapterTitle || el.querySelector('h2')?.textContent?.trim() || chapter;
+      topic = chapter;
+    }
+    if (el.classList.contains('topic-head')) {
+      topic = el.dataset.topicTitle || el.querySelector('h3')?.textContent?.trim() || topic;
+    }
+    if (el.dataset.readKind) {
+      el.dataset.readChapter = chapter;
+      el.dataset.readTopic = topic;
+    }
+  });
+
+  const blocks = [...document.querySelectorAll('[data-read-kind]')];
+  const hero = document.getElementById('intro');
+
+  function setContext(block) {
+    if (!block) {
+      pathEl.textContent = 'Introduction';
+      whatEl.textContent = 'How this page is organized — scroll to begin Section I';
+      return;
+    }
+    const ch = block.dataset.readChapter || chapter;
+    const top = block.dataset.readTopic || topic;
+    const title = block.dataset.readTitle || 'Content';
+    const kind = block.dataset.readKind || 'other';
+    pathEl.textContent = ch === top ? ch : ch + ' → ' + top;
+    whatEl.textContent = title + ' — ' + (BLOCK[kind]?.desc || BLOCK.other.desc);
+  }
+
+  function onScroll() {
+    const y = window.scrollY + 100;
+    if (hero && y < hero.offsetTop + hero.offsetHeight - 80) {
+      setContext(null);
+      return;
+    }
+    let current = blocks[0];
+    for (const b of blocks) {
+      if (b.offsetTop <= y) current = b;
+      else break;
+    }
+    setContext(current);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+(function pdfExport(){
+  const btn = document.getElementById('pdf-download');
+  const content = document.querySelector('.content');
+  if (!btn || !content) return;
+
+  const PDF_JS = 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js';
+  const defaultHtml = btn.innerHTML;
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (window.html2pdf) return resolve();
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('PDF library failed to load'));
+      document.head.appendChild(s);
+    });
+  }
+
+  function resetBtn() {
+    btn.disabled = false;
+    btn.innerHTML = defaultHtml;
+    document.body.classList.remove('is-pdf-export');
+  }
+
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="toc-pdf-label">Building PDF…</span>';
+    document.body.classList.add('is-pdf-export');
+    window.scrollTo(0, 0);
+    await new Promise(r => setTimeout(r, 250));
+
+    const stamp = new Date().toISOString().slice(0, 10);
+    const opts = {
+      margin: [10, 10, 12, 10],
+      filename: 'cs-math-reference-' + stamp + '.pdf',
+      image: { type: 'jpeg', quality: 0.92 },
+      html2canvas: {
+        scale: 1.25,
+        useCORS: true,
+        scrollY: 0,
+        backgroundColor: '#ffffff',
+        width: content.scrollWidth
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'], avoid: ['.box', '.plain', '.formula-unit'] }
+    };
+
+    try {
+      await loadScript(PDF_JS);
+      await html2pdf().set(opts).from(content).save();
+    } catch (err) {
+      console.warn('One-click PDF failed, opening print dialog:', err);
+      btn.innerHTML = '<span class="toc-pdf-label">Use Save as PDF…</span>';
+      window.print();
+    } finally {
+      resetBtn();
+    }
+  });
+
+  window.addEventListener('afterprint', resetBtn);
+})();
+
 (function(){
   const body = document.body;
   const toggle = document.getElementById('sidebar-toggle');
